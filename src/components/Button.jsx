@@ -8,6 +8,7 @@ const Button = ({
   icon,
   iconSize,
   callback,
+  group,
   children,
 }) => {
   const bg =
@@ -22,7 +23,7 @@ const Button = ({
   const sz = size ? `${size}` : "";
   return (
     <button
-      className={`rounded px-4 py-2 ${
+      className={`${group ? "rounded-r" : "rounded"} px-4 py-2 ${
         !disabledBy ? `active:scale-90 ${bg}` : "bg-gray-500"
       } duration-500 text-white flex items-center justify-center ${sz}`}
       disabled={disabledBy}
