@@ -18,6 +18,8 @@ const Button = ({
       ? "bg-yellow-500"
       : type === "danger"
       ? "bg-red-500"
+      : type === "primary"
+      ? "bg-primary-500"
       : "bg-white";
   const icsz = iconSize ? `w-${iconSize} h-${iconSize}` : "w-5 h-5";
   const sz = size ? `${size}` : "";

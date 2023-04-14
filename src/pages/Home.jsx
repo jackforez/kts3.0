@@ -460,6 +460,7 @@ const Home = () => {
       <div>
         <span>đây là output</span>
         <span>{output}</span>
+        <button className="block px-4 py-2">abc</button>
       </div>
     </div>
   );
