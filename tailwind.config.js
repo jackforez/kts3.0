@@ -20,7 +20,7 @@ export default {
         ktsSecondary: "rgba(255,255,255,0.17)",
       },
       backgroundImage: {
-        "hero-login": "url('./assets/hero_login.jpg')",
+        hero: "url('./assets/imgs/hero1.jpg')",
         "hero-luna": "url('./assets/lunar-bg.jpg')",
       },
       boxShadow: {
