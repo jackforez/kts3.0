@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button, Footer, Hero, Input, Navbar } from "../components";
 import { search } from "../ultis/svgs";
 const Home = () => {
-  const [output, setOutput] = useState("");
   const [openResult, setOpenResult] = useState(false);
   const handleClick = () => {
     setOpenResult(!openResult);
