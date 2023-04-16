@@ -9,17 +9,18 @@ const Button = ({
   iconSize,
   callback,
   group,
+  style,
   children,
 }) => {
   const bg =
     type === "success"
-      ? "bg-green-500 text-white"
+      ? "bg-green-500 text-white hover:bg-green-700"
       : type === "warning"
-      ? "bg-yellow-500 text-white"
+      ? "bg-yellow-500 text-white hover:bg-yellow-700"
       : type === "danger"
-      ? "bg-red-500 text-white"
+      ? "bg-red-500 text-white hover:bg-red-700"
       : type === "primary"
-      ? "bg-primary-500 text-white"
+      ? "bg-primary-600 text-white hover:bg-primary-700"
       : type === "outline-primary"
       ? "bg-white border border-primary-500 text-primary-500 hover:text-white hover:bg-primary-500"
       : type === "outline-success"
@@ -33,7 +34,7 @@ const Button = ({
   const sz = size ? `${size}` : "";
   return (
     <button
-      className={`${group ? "rounded-r" : "rounded"} px-4 py-2 ${
+      className={`${style} ${group ? "rounded-r" : "rounded"} px-4 py-2 ${
         !disabledBy ? `active:scale-90 ${bg}` : "bg-gray-500"
       } duration-500 flex items-center justify-center ${sz}`}
       disabled={disabledBy}

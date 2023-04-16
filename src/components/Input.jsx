@@ -24,7 +24,7 @@ const Input = ({
         disabled={disabledBy}
         className={`${group ? "rounded-l" : "rounded"} block w-full ${
           !disabledBy
-            ? "focus:border-green-500 focus:ring-green-500"
+            ? "focus:border-primary-500 focus:ring-primary-500"
             : " bg-gray-400"
         }
         border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900 outline-0 `}
@@ -36,7 +36,7 @@ const Input = ({
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="w-4 h-4 text-gray-600 absolute top-2.5 right-3"
+          className="w-4 h-4 text-gray-600 absolute top-3.5 right-3"
         >
           <path strokeLinecap="round" strokeLinejoin="round" d={icon} />
         </svg>
