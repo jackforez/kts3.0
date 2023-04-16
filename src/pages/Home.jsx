@@ -11,17 +11,10 @@ const Home = () => {
     <div className="bg-[url('./assets/imgs/hero-home.jpg')] h-screen bg-cover bg-fixed bg-center bg-no-repeat overflow-hidden">
       <div className="h-screen w-full bg-black/30">
         <Navbar />
-        {/* <div className="bg-white flex max-w-screen-lg text-white relative bg-opacity-20 mx-auto backdrop-blur rounded drop-shadow-lg">
-        
-      </div> */}
-        <div className="max-w-screen-xl mx-auto">
-          <div
-            className={`bg-black/10  flex text-white backdrop-blur rounded overflow-hidden drop-shadow-lg bg-opacity-20 relative ${
-              openResult ? "w-full" : "w-1/2"
-            } duration-500`}
-          >
+        <div className="max-w-screen-xl mx-auto h-[80vh]">
+          <div className={`flex text-white  relative `}>
             <div
-              className={`${openResult ? "w-1/2" : "w-full"} px-2 py-4 z-20`}
+              className={`w-1/2 px-2 py-4 z-20 bg-black/10 rounded-md backdrop-blur drop-shadow-lg bg-opacity-20`}
             >
               <h1 className="mb-4 max-w-2xl text-4xl font-extrabold leading-none  md:text-5xl xl:text-6xl">
                 Nhanh chóng an toàn đáng tin cậy
@@ -49,9 +42,9 @@ const Home = () => {
               </div>
             </div>
             <div
-              className={`w-1/2 duration-300 left-0 absolute ${
+              className={`w-1/2 duration-300 left-0 absolute h-full ${
                 !openResult ? "opacity-0" : "translate-x-full"
-              } bg-white `}
+              } bg-black/10 backdrop-blur drop-shadow-lg bg-opacity-20`}
             >
               kết quả
             </div>
