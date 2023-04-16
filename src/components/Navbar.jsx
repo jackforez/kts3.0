@@ -23,15 +23,15 @@ const Navbar = () => {
         <div className="flex items-center">
           <Link
             to="/login"
-            className="mr-2 px-5 py-2.5 bg-white text-primary-600 rounded-md font-medium hover:bg-primary-600 hover:text-white"
+            className="mr-2 px-3 text-xs py-3 uppercase md:text-sm bg-white text-primary-600 rounded-md font-medium hover:bg-primary-600 hover:text-white"
           >
-            ĐĂNG NHẬP
+            đăng nhập
           </Link>
           <Link
             to="/dashboard/bills/new"
-            className="mr-2 text-xs rounded-md bg-primary-600 px-7 py-3 md:text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 "
+            className="mr-2 text-xs md:text-sm rounded-md bg-primary-600 px-5 uppercase py-3 font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 "
           >
-            TẠO ĐƠN
+            <span>tạo đơn</span>
           </Link>
         </div>
       </div>
