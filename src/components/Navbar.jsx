@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.svg";
-const Navbar = () => {
+const Navbar = ({ page, setPage }) => {
+  const navLinks = ["trang chủ", "giới thiệu", "dịch vụ", "liên hệ"];
+  // const [currentPage, setCurrentPage] = useState(0);
   const [showMenuMobile, setshowMenuMobile] = useState(false);
   return (
     <nav className="sticky w-full border-gray-200 px-4  py-2.5 lg:px-6">
@@ -20,6 +22,23 @@ const Navbar = () => {
             transform="matrix(.1 0 0 -.1 0 55)"
           ></path>
         </svg>
+        <div className="flex justify-between w-1/3 ">
+          {navLinks.map((l, i) => {
+            return (
+              <button
+                onClick={() => setPage(i)}
+                key={i}
+                className={`uppercase font-semibold ${
+                  page === i
+                    ? "text-white underline underline-offset-8"
+                    : "text-white/30"
+                }`}
+              >
+                {l}
+              </button>
+            );
+          })}
+        </div>
         <div className="flex items-center">
           <Link
             to="/login"

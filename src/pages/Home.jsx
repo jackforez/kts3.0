@@ -1,15 +1,20 @@
 import { useState } from "react";
 import { Button, Footer, Hero, Input, Navbar } from "../components";
 import { search } from "../ultis/svgs";
+import Contact from "./Contact";
+import About from "./About";
+import Services from "./Services";
 const Home = () => {
   const [openResult, setOpenResult] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const handleClick = () => {
     setOpenResult(!openResult);
   };
+  console.log(currentPage);
   return (
     <div className="bg-[url('./assets/imgs/hero-home.jpg')] h-screen bg-cover bg-fixed bg-center bg-no-repeat overflow-hidden">
       <div className="h-screen w-full bg-black/30">
-        <Navbar />
+        <Navbar setPage={setCurrentPage} page={currentPage} />
         <div className="max-w-screen-xl mx-auto h-[80vh]">
           <div className={`flex text-white  relative `}>
             <div
@@ -49,6 +54,9 @@ const Home = () => {
             </div>
           </div>
         </div>
+        <Contact />
+        <About />
+        <Services />
       </div>
     </div>
   );
