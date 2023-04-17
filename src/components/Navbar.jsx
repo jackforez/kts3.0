@@ -6,7 +6,7 @@ const Navbar = ({ page, setPage }) => {
   // const [currentPage, setCurrentPage] = useState(0);
   const [showMenuMobile, setshowMenuMobile] = useState(false);
   return (
-    <nav className="sticky w-full border-gray-200 px-4  py-2.5 lg:px-6">
+    <nav className="fixed z-30 w-full px-4  py-2.5 lg:px-6 h-[15vh]">
       <div className="mx-auto flex max-w-screen-xl items-center justify-between">
         <svg
           xmlns="http://www.w3.org/2000/svg"
