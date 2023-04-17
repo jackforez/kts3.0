@@ -1,16 +1,18 @@
 import { Link } from "react-router-dom";
 import img1 from "../assets/imgs/img1.jpg";
 import img2 from "../assets/imgs/img2.jpg";
-import logo from "../assets/logo.svg";
 import { Button, Input } from "../components";
 import { key } from "../ultis/svgs";
 import { userName } from "../ultis/svgs";
 import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperCore, { Autoplay } from "swiper";
 import "swiper/css";
+import "swiper/css/autoplay";
+SwiperCore.use([Autoplay]);
 const Login = () => {
   return (
     <div className="bg-[url('./assets/imgs/img1.jpg')] md:bg-[url('./assets/imgs/hero.jpg')] p-3 h-screen bg-cover bg-fixed bg-center bg-no-repeat overflow-hidden flex justify-center items-center">
-      <div className="relative lg:w-1/2 md:w-3/4 w-full py-4 md:p-0 justify-between bg-white flex text-white backdrop-blur rounded overflow-hidden drop-shadow-lg bg-opacity-10 ">
+      <div className="relative lg:w-1/2 md:w-3/4 w-full py-4 md:p-0 justify-between bg-indigo-800 flex text-white backdrop-blur rounded overflow-hidden drop-shadow bg-opacity-10 ">
         <div className="md:w-1/2 flex items-center w-full">
           <div className="w-full px-6">
             <Link
@@ -129,7 +131,13 @@ const Login = () => {
           </div>
         </div>
         <div className="w-1/2 md:block hidden max-h-[80vh]">
-          <Swiper spaceBetween={0} slidesPerView={1} className="h-full">
+          <Swiper
+            spaceBetween={0}
+            slidesPerView={1}
+            className="h-full"
+            autoplay={{ delay: 12000 }}
+            loop={true}
+          >
             <SwiperSlide className="h-full">
               <img src={img1} alt="" className="w-full h-auto object-cover" />
             </SwiperSlide>
