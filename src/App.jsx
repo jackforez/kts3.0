@@ -1,12 +1,15 @@
 import { useSelector } from "react-redux";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import { Home, Login, Register } from "./pages";
+import { ToastContainer, toast } from "react-toastify";
+import { Home, Layout, Login, Register } from "./pages";
+import { NotFound } from "./components";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const { currentUser } = useSelector((state) => state.user);
   const ProtectedRoute = ({ children }) => {
-    if (!currentUser) {
+    if (false) {
+      toast.warn("Vui lòng đăng nhập!");
       return <Navigate to="/login" />;
     }
     return children;
@@ -19,6 +22,15 @@ function App() {
           <Route index element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="*" element={<NotFound />} />
+          <Route
+            path="dashboard/*"
+            element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>

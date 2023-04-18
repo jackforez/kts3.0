@@ -6,15 +6,15 @@ const Navbar = ({ page, setPage }) => {
   // const [currentPage, setCurrentPage] = useState(0);
   const [showMenuMobile, setshowMenuMobile] = useState(false);
   return (
-    <nav className="fixed z-30 w-full px-4  py-2.5 lg:px-6 h-[15vh]">
-      <div className="mx-auto flex max-w-screen-xl items-center justify-between">
+    <nav className="fixed z-30 w-full md:px-4 px-2 lg:px-6 h-[15vh]">
+      <div className="mx-auto flex flex-wrap max-w-screen-xl items-center justify-between">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="193.333"
           height="73.333"
           version="1"
           viewBox="0 0 145 55"
-          className="w-32"
+          className="w-24 order-1"
         >
           <path
             fill="white"
@@ -22,13 +22,13 @@ const Navbar = ({ page, setPage }) => {
             transform="matrix(.1 0 0 -.1 0 55)"
           ></path>
         </svg>
-        <div className="flex justify-between w-1/3 ">
+        <div className="justify-between md:w-5/12 w-full flex order-3 md:order-2">
           {navLinks.map((l, i) => {
             return (
               <button
                 onClick={() => setPage(i)}
                 key={i}
-                className={`uppercase font-semibold ${
+                className={`uppercase font-semibold text-sm ${
                   page === i
                     ? "text-white underline underline-offset-8"
                     : "text-white/30"
@@ -39,7 +39,7 @@ const Navbar = ({ page, setPage }) => {
             );
           })}
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center order-2 md:order-3">
           <Link
             to="/login"
             className="mr-2 px-3 text-xs py-3 uppercase md:text-sm bg-white text-primary-600 rounded-md font-medium hover:bg-primary-600 hover:text-white"
@@ -48,7 +48,7 @@ const Navbar = ({ page, setPage }) => {
           </Link>
           <Link
             to="/dashboard/bills/new"
-            className="mr-2 text-xs md:text-sm rounded-md bg-primary-600 px-5 uppercase py-3 font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 "
+            className="text-xs md:text-sm rounded-md bg-primary-600 px-5 uppercase py-3 font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 "
           >
             <span>tạo đơn</span>
           </Link>

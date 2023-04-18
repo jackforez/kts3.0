@@ -9,7 +9,6 @@ const Home = () => {
   const handleClick = () => {
     setOpenResult(!openResult);
   };
-  console.log(currentPage);
   return (
     <div>
       <Navbar setPage={setCurrentPage} page={currentPage} />
@@ -22,7 +21,7 @@ const Home = () => {
         >
           <div className="w-screen bg-[url('./assets/imgs/hero-home.jpg')] h-screen bg-cover bg-fixed bg-center bg-no-repeat flex-grow-0 flex-shrink-0">
             <div className="w-full h-full bg-black/30">
-              <div className="max-w-screen-xl mx-auto h-screen md:pt-[20vh] pt-[15vh] px-2">
+              <div className="max-w-screen-xl mx-auto h-screen md:pt-[20vh] pt-[20vh] px-2">
                 <div className={`flex text-white relative w-full `}>
                   <div
                     className={`md:w-1/2 w-full px-2 py-4 z-20 bg-black/10 rounded-md backdrop-blur drop-shadow-lg bg-opacity-20 text-ellipsis`}

@@ -12,7 +12,7 @@ SwiperCore.use([Autoplay]);
 const Login = () => {
   return (
     <div className="bg-[url('./assets/imgs/img1.jpg')] md:bg-[url('./assets/imgs/hero.jpg')] p-3 h-screen bg-cover bg-fixed bg-center bg-no-repeat overflow-hidden flex justify-center items-center">
-      <div className="relative lg:w-1/2 md:w-3/4 w-full py-4 md:p-0 justify-between bg-indigo-800 flex text-white backdrop-blur rounded overflow-hidden drop-shadow bg-opacity-10 ">
+      <div className="relative lg:w-1/2 md:w-3/4 w-full py-4 md:p-0 justify-between bg-indigo-900 flex text-white backdrop-blur rounded overflow-hidden drop-shadow bg-opacity-10 ">
         <div className="md:w-1/2 flex items-center w-full">
           <div className="w-full px-6">
             <Link
