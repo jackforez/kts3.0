@@ -24,7 +24,9 @@ const Home = () => {
               <div className="max-w-screen-xl mx-auto h-screen md:pt-[20vh] pt-[20vh] px-2">
                 <div className={`flex text-white relative w-full `}>
                   <div
-                    className={`md:w-1/2 w-full px-2 py-4 z-20 bg-black/10 rounded-md backdrop-blur drop-shadow-lg bg-opacity-20 text-ellipsis`}
+                    className={`md:w-1/2 w-full px-2 py-4 z-20 bg-black/10 rounded-md backdrop-blur drop-shadow-lg bg-opacity-20 absolute ${
+                      openResult && "-translate-x-[100vw]"
+                    } duration-500`}
                   >
                     <h1 className="mb-4 max-w-2xl text-3xl font-extrabold leading-none md:text-4xl xl:text-5xl">
                       Nhanh chóng an toàn đáng tin cậy
@@ -44,19 +46,40 @@ const Home = () => {
                         group={true}
                         size={"w-1/6"}
                         type="primary"
-                        icon={search}
                         callback={handleClick}
                       >
-                        Tìm
+                        <span>Tìm</span>
                       </Button>
                     </div>
                   </div>
                   <div
-                    className={`w-1/2 duration-300 left-0 botom-0 absolute h-full ${
-                      !openResult ? "opacity-0" : "translate-x-full"
+                    className={`w-full duration-300 h-full rounded overflow-hidden ${
+                      !openResult ? `-translate-x-[100vw]` : "translate-x-0"
                     } bg-black/10 backdrop-blur drop-shadow-lg bg-opacity-20`}
                   >
-                    kết quả
+                    <div className="w-full flex justify-between items-center">
+                      <h3 className="pl-3">Chi tiết đơn hàng</h3>
+                      <button
+                        className="bg-primary-600 p-2"
+                        onClick={() => setOpenResult(false)}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="bg-white h-[60vh]">nội dung</div>
                   </div>
                 </div>
               </div>
