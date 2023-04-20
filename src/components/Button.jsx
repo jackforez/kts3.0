@@ -37,9 +37,7 @@ const Button = ({
   const sz = size ? `${size}` : "";
   return (
     <button
-      className={`${style} ${
-        group ? "rounded-r" : "rounded"
-      } md:p-2.5 px-2 py-1 ${
+      className={`${style} ${group ? "rounded-r" : "rounded"} p-2.5 ${
         !disabledBy ? `active:scale-90 ${bg}` : "bg-gray-500"
       } duration-500 ${sz}`}
       disabled={disabledBy}

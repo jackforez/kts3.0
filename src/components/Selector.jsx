@@ -1,7 +1,14 @@
 import Input from "./Input";
 import { search } from "../ultis/functions";
 import { useState } from "react";
-const Selector = ({ placehoder, size, data, output }) => {
+const Selector = ({
+  placehoder,
+  size,
+  data,
+  field,
+  toShow = "ktscorp.vn",
+  output,
+}) => {
   const [query, setQuery] = useState("");
   const [openDataTable, setOpenDataTable] = useState(false);
   const [selected, setSelected] = useState(placehoder);
@@ -10,7 +17,7 @@ const Selector = ({ placehoder, size, data, output }) => {
     size === "xs" ? "py-0.5 text-xs" : size === "sm" ? "py-1 text-sm" : "py-2";
 
   return (
-    <div className="w-full border border-green-500 rounded px-2">
+    <div className="w-full border bg-white border-primary-500 rounded px-2 relative">
       <div className={`${sz} flex justify-between`}>
         <span>{selected}</span>
         <button onClick={() => setOpenDataTable(!openDataTable)}>
@@ -31,44 +38,50 @@ const Selector = ({ placehoder, size, data, output }) => {
         </button>
       </div>
 
-      {openDataTable && (
-        <div>
-          <input
-            type="text"
-            placeholder="Nhập tên tỉnh thành để tìm kiếm"
-            className={`w-full ${sz} focus:outline-none rounded`}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setSelectedIndex(-1);
-            }}
-          />
-          <div
-            className={`h-36 overflow-y-auto divide-green-500/10 divide-y duration-500`}
-          >
-            {data && search(data, query, "name_with_type").length > 0 ? (
-              search(data, query, "name_with_type").map((el, i) => {
-                return (
-                  <div
-                    key={i}
-                    className={`cursor-pointer ${sz} ${
-                      i === selectedIndex ? "bg-green-500" : ""
-                    }`}
-                    onClick={(e) => {
-                      setSelected(e.target.textContent);
-                      output(e.target.textContent);
-                      setSelectedIndex(i);
-                    }}
-                  >
-                    {el.name_with_type}
-                  </div>
-                );
-              })
-            ) : (
-              <div className="p-2">Không có dữ liệu phù hợp</div>
-            )}
-          </div>
+      <div
+        className={`absolute bg-white w-full right-0 top-[110%] ${
+          openDataTable && "border border-primary-500"
+        } rounded`}
+      >
+        <input
+          type="text"
+          placeholder={placehoder}
+          className={`w-full ${sz} focus:outline-none rounded px-2 ${
+            !openDataTable && "hidden"
+          }`}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setSelectedIndex(-1);
+          }}
+        />
+        <div
+          className={`${
+            openDataTable ? "h-36" : "h-0"
+          } overflow-y-auto divide-ktsPrimary/20 divide-dashed divide-y duration-100`}
+        >
+          {search(data, query, field).length > 0 ? (
+            search(data, query, field).map((el, i) => {
+              return (
+                <div
+                  key={i}
+                  className={`cursor-pointer px-2 ${sz} ${
+                    i === selectedIndex ? "bg-green-500" : ""
+                  }`}
+                  onClick={(e) => {
+                    setSelected(e.target.textContent);
+                    output(e.target.textContent);
+                    setSelectedIndex(i);
+                  }}
+                >
+                  {el[toShow]}
+                </div>
+              );
+            })
+          ) : (
+            <div className="p-2">Không có dữ liệu phù hợp</div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

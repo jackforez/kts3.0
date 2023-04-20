@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ktsRequest } from "../ultis/connections";
 import { logout } from "../redux/userSlice";
-import { Button, GridData, Input } from "../components";
+import { Button, GridData, Input, Selector } from "../components";
 import { search as myFilter, toVND } from "../ultis/functions";
 import { pencil, search, trash } from "../ultis/svgs";
 import logo from "../assets/logo.svg";
@@ -192,29 +192,27 @@ const Partners = () => {
                         c.cityFullName}
                     </div>
                     <div className="w-1/3">
-                      <div className="">
-                        {c.cost.map((j, i) => {
-                          return (
-                            <span
-                              className="rounded-sm bg-gray-300 pb-0.5 inline-block m-1"
-                              key={i}
+                      {c.cost.map((j, i) => {
+                        return (
+                          <span
+                            className="rounded-sm bg-gray-300 pb-0.5 inline-block m-1"
+                            key={i}
+                          >
+                            <button
+                              className="mx-2 text-red-500 hover:font-bold"
+                              onClick={(e) => {
+                                handleRemoveCost(c, j);
+                              }}
                             >
-                              <button
-                                className="mx-2 text-red-500 hover:font-bold"
-                                onClick={(e) => {
-                                  handleRemoveCost(c, j);
-                                }}
-                              >
-                                x
-                              </button>
-                              <span className="py-0.5 px-2">{j}</span>
-                            </span>
-                          );
-                        })}
-                      </div>
+                              x
+                            </button>
+                            <span className="py-0.5 px-2">{j}</span>
+                          </span>
+                        );
+                      })}
                       {addCost === k && (
                         <div className="mt-2 flex w-full gap-2">
-                          <select
+                          {/* <select
                             id="cost"
                             className="block w-full rounded border border-gray-300 bg-gray-50 py-1 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
                             onChange={(e) => {
@@ -231,7 +229,15 @@ const Partners = () => {
                                 </option>
                               );
                             })}
-                          </select>
+                          </select> */}
+                          <Selector
+                            placehoder={"Thêm mức giá"}
+                            data={cost}
+                            field={["costName"]}
+                            toShow="costName"
+                            size={"sm"}
+                            output={setCostName}
+                          />
                           <button
                             className="rounded border border-green-600 py-0.5 px-2 font-bold text-green-700 hover:bg-green-600 hover:text-white"
                             onClick={(e) => {
