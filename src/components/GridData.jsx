@@ -1,7 +1,6 @@
 import React from "react";
 
 const GridData = ({ headers, children }) => {
-  console.log(headers);
   return (
     <div className="w-full rounded overflow-hidden">
       <div className="hidden md:flex w-full bg-ktsPrimary text-white py-3 text-xs uppercase font-semibold">

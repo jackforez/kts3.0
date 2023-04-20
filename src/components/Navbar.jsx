@@ -1,15 +1,9 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import logo from "../assets/logo.svg";
 const Navbar = ({ page, setPage }) => {
   const navLinks = ["trang chủ", "giới thiệu", "dịch vụ", "liên hệ"];
   return (
-    <nav
-      className={`fixed z-30 w-full md:px-4 px-2 lg:px-6 h-[13vh] md:h-[11vh] ${
-        page > 0 ? "bg-black/50" : ""
-      }`}
-    >
-      <div className="mx-auto flex flex-wrap max-w-screen-xl items-center justify-between">
+    <nav className={`fixed z-30 w-full ${page > 0 && "bg-black/50"}`}>
+      <div className="mx-auto flex flex-wrap max-w-screen-xl items-center justify-between md:px-4 px-2 lg:px-6 pb-4 md:pb-0">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="193.333"

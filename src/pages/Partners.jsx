@@ -4,7 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ktsRequest } from "../ultis/connections";
 import { logout } from "../redux/userSlice";
-
+import { Button, GridData, Input } from "../components";
+import { search as myFilter, toVND } from "../ultis/functions";
+import { pencil, search, trash } from "../ultis/svgs";
+import logo from "../assets/logo.svg";
 const Partners = () => {
   const nagative = useNavigate();
   const dispatch = useDispatch();
@@ -15,7 +18,10 @@ const Partners = () => {
   const [costName, setCostName] = useState([]);
   const [addCost, setAddCost] = useState(-1);
   const [cost, setCost] = useState([]);
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       try {
         const res = await ktsRequest.get("/users/children", {
@@ -124,10 +130,21 @@ const Partners = () => {
           : toast.error("Network Error!");
       });
   };
+  const headers = [
+    { title: "Đối tác", size: "w-1/6" },
+    { title: "Địa chỉ", size: "w-1/3" },
+    { title: "Mức giá áp dụng", size: "w-1/3" },
+    { title: "Thao tác", size: "w-1/6" },
+  ];
   return (
     <div className="h-full overflow-auto bg-slate-200 p-3">
       <div className="flex items-center justify-between py-3">
-        <h3 className="text-xl font-semibold">Thông tin đối tác</h3>
+        <Input
+          placehoder={"Nhập tên/số điện thoại đối tác...."}
+          size={"md:w-1/2 w-3/4"}
+          onChange={(e) => setQuery(e.target.value)}
+          icon={search}
+        />
         <Link
           to="/dashboard/partners/new"
           className="flex items-center gap-1 rounded border border-primary-600 p-2 text-xs font-semibold text-primary-600 hover:bg-primary-600 hover:text-white md:text-base"
@@ -151,165 +168,139 @@ const Partners = () => {
         </Link>
       </div>
       {/* component thông tin khách hàng */}
-      <div className="flex flex-col gap-2">
-        {customers.map((i, k) => {
-          return (
-            <div className="rounded-md bg-white drop-shadow" key={k}>
-              <div className="flex items-center justify-between border-b-2 border-red-300 p-2">
-                <div className="flex gap-3 font-semibold">
-                  <span>{i.name}</span>
-                </div>
-                <div className="flex gap-2">
-                  <button className="flex justify-between gap-1 rounded border border-primary-600 bg-white p-1 px-2 py-1 hover:bg-primary-600 hover:text-white">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="h-4 w-4"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    className="flex justify-between gap-1 rounded border border-red-600 bg-white p-1 px-2 py-1 hover:bg-red-600 hover:text-white"
-                    onClick={(e) => handleDelete(i)}
+      <div className="border border-ktsPrimary rounded-md">
+        <GridData headers={headers}>
+          <div className="divide-y divide-dashed divide-ktsPrimary bg-white shadow-lg">
+            {myFilter(customers, query, ["name", "phone"]).length > 0 ? (
+              myFilter(customers, query, ["name", "phone"]).map((c, k) => {
+                return (
+                  <div
+                    className="px-2 py-1.5 flex items-center text-sm"
+                    key={k}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="h-4 w-4"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              <div className="flex flex-col flex-wrap p-3">
-                {isAdmin && <span>ShopID: {i.shopID}</span>}
-                <span>Số điện thoại: {i.phone}</span>
-                <span>
-                  Địa chỉ:{" "}
-                  {i.address +
-                    ", " +
-                    i.wardFullName +
-                    ", " +
-                    i.districtFullName +
-                    ", " +
-                    i.cityFullName}
-                </span>
-                <div className="flex justify-between">
-                  <span>
-                    Mức giá áp dụng:
-                    {i.cost.map((j, i) => {
-                      return (
-                        <span
-                          className="ml-3 rounded-sm bg-gray-300 pb-0.5"
-                          key={i}
-                        >
-                          <button
-                            className="mx-2 text-red-500 hover:font-bold"
-                            onClick={(e) => {
-                              handleRemoveCost(i, j);
+                    <div className="w-1/6">
+                      <div>{c.name}</div>
+                      <div>{c.phone}</div>
+                    </div>
+                    <div className="w-1/3">
+                      {c.address +
+                        ", " +
+                        c.wardFullName +
+                        ", " +
+                        c.districtFullName +
+                        ", " +
+                        c.cityFullName}
+                    </div>
+                    <div className="w-1/3">
+                      <div className="">
+                        {c.cost.map((j, i) => {
+                          return (
+                            <span
+                              className="rounded-sm bg-gray-300 pb-0.5 inline-block m-1"
+                              key={i}
+                            >
+                              <button
+                                className="mx-2 text-red-500 hover:font-bold"
+                                onClick={(e) => {
+                                  handleRemoveCost(c, j);
+                                }}
+                              >
+                                x
+                              </button>
+                              <span className="py-0.5 px-2">{j}</span>
+                            </span>
+                          );
+                        })}
+                      </div>
+                      {addCost === k && (
+                        <div className="mt-2 flex w-full gap-2">
+                          <select
+                            id="cost"
+                            className="block w-full rounded border border-gray-300 bg-gray-50 py-1 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                            onChange={(e) => {
+                              setCostName(e.target.value);
                             }}
                           >
-                            x
+                            <option value="" selected disabled hidden>
+                              Chọn mức giá áp dụng
+                            </option>
+                            {cost.map((co, index) => {
+                              return (
+                                <option value={co.costName} key={index}>
+                                  {co.costName}
+                                </option>
+                              );
+                            })}
+                          </select>
+                          <button
+                            className="rounded border border-green-600 py-0.5 px-2 font-bold text-green-700 hover:bg-green-600 hover:text-white"
+                            onClick={(e) => {
+                              handleAddCost(c, costName);
+                            }}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="682.667"
+                              height="682.667"
+                              version="1"
+                              viewBox="0 0 512 512"
+                              className="h-4 w-4"
+                            >
+                              <path
+                                d="M466 4949c-62-15-153-68-197-116-22-24-55-74-72-111l-32-67V464l37-76c45-91 103-147 196-191l67-32h4191l76 37c91 45 147 103 191 196l32 67 3 1905 2 1904-343 343-342 343-1885-1c-1096-1-1901-5-1924-10zm654-805c0-486 3-667 12-698 16-55 99-138 154-154 32-9 336-12 1276-12 1397 0 1294-6 1371 80 24 26 49 66 55 88 9 29 12 218 12 696v656h205l298-298 297-297V2366c0-1414-3-1848-12-1880-16-55-99-138-154-154-23-7-67-12-97-12h-57l-2 1047-3 1048-32 67c-44 93-100 151-191 196l-76 37H944l-76-37c-91-45-147-103-191-196l-32-67-3-1048-2-1047h-57c-30 0-74 5-97 12-55 16-138 99-154 154-18 60-18 4088 0 4148 15 51 99 137 148 153 22 7 148 11 338 12l302 1v-656zm2720 1v-656l-25-24-24-25H1329l-24 25-25 24v1311h2560v-655zm314-1597c55-16 138-99 154-154 9-31 12-289 12-1058V320H800v1016c0 769 3 1027 12 1058 15 51 99 137 148 153 53 17 3138 17 3194 1z"
+                                transform="matrix(.1 0 0 -.1 0 512)"
+                              ></path>
+                              <path
+                                d="M3065 4615l-25-24v-942l25-24 24-25h542l24 25 25 24v942l-25 24-24 25h-542l-24-25zm455-495v-360h-320v720h320v-360zM1305 1975c-16-15-25-36-25-55s9-40 25-55l24-25h2462l24 25c33 32 33 78 0 110l-24 25H1329l-24-25zM1305 1495c-16-15-25-36-25-55s9-40 25-55l24-25h2462l24 25c33 32 33 78 0 110l-24 25H1329l-24-25zM1305 1015c-16-15-25-36-25-55s9-40 25-55l24-25h2462l24 25c33 32 33 78 0 110l-24 25H1329l-24-25z"
+                                transform="matrix(.1 0 0 -.1 0 512)"
+                              ></path>
+                            </svg>
                           </button>
-                          <span className="py-0.5 px-1">{j}</span>
-                        </span>
-                      );
-                    })}
-                  </span>
-                  <button
-                    className="rounded border border-green-600 py-0.5 px-1 font-bold text-green-700 hover:bg-green-600 hover:text-white"
-                    onClick={(e) => {
-                      addCost === k ? setAddCost(-1) : setAddCost(k);
-                    }}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="h-6 w-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d={
-                          addCost === k
-                            ? "M6 18L18 6M6 6l12 12"
-                            : "M12 4.5v15m7.5-7.5h-15"
-                        }
-                      />
-                    </svg>
-                  </button>
-                </div>
-                {addCost === k && (
-                  <div className="mt-2 flex w-full gap-2">
-                    <select
-                      id="cost"
-                      className="block w-full rounded border border-gray-300 bg-gray-50 py-1 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                      onChange={(e) => {
-                        setCostName(e.target.value);
-                      }}
-                    >
-                      <option value="" selected disabled hidden>
-                        Chọn mức giá áp dụng
-                      </option>
-                      {cost.map((c, index) => {
-                        return (
-                          <option value={c.costName} key={index}>
-                            {c.costName}
-                          </option>
-                        );
-                      })}
-                    </select>
-                    <button
-                      className="rounded border border-green-600 py-0.5 px-1 font-bold text-green-700 hover:bg-green-600 hover:text-white"
-                      onClick={(e) => {
-                        handleAddCost(i, costName);
-                      }}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="h-6 w-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 4.5v15m7.5-7.5h-15"
-                        />
-                      </svg>
-                    </button>
+                        </div>
+                      )}
+                    </div>
+                    <div className="w-1/6 flex justify-between md:justify-center md:gap-2">
+                      <Button
+                        type="outline-success"
+                        icon={"M6 18L18 6M6 6l12 12"}
+                        iconSize={`4 ${addCost !== k && "rotate-45"}`}
+                        title={"Thêm mức giá"}
+                        callback={() => {
+                          addCost === k ? setAddCost(-1) : setAddCost(k);
+                        }}
+                      ></Button>
+                      <Button
+                        type="outline-warning"
+                        icon={pencil}
+                        iconSize={"4"}
+                        title={"Sửa thông tin khách hàng"}
+                        callback={(e) => {}}
+                      ></Button>
+
+                      <Button
+                        type="outline-danger"
+                        icon={trash}
+                        iconSize={"4"}
+                        title={"Xóa khách hàng"}
+                      ></Button>
+                    </div>
                   </div>
+                );
+              })
+            ) : (
+              <div className="py-3 text-center">
+                {loading ? (
+                  <div className="flex h-full w-full items-center justify-center flex-col">
+                    <img src={logo} alt="" className="animate-bounce w-20" />
+                    <div>Đang tải dữ liệu ...</div>
+                  </div>
+                ) : (
+                  "Không có dữ liệu"
                 )}
               </div>
-            </div>
-          );
-        })}
+            )}
+          </div>
+        </GridData>
       </div>
     </div>
   );

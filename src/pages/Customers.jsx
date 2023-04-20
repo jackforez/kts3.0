@@ -3,6 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ktsRequest } from "../ultis/connections";
+import { Button, GridData, Input } from "../components";
+import { search as myFilter, toVND } from "../ultis/functions";
+import { pencil, trash } from "../ultis/svgs";
+import logo from "../assets/logo.svg";
+import { logout } from "../redux/userSlice";
+
 const Customers = () => {
   const nagative = useNavigate();
   const dispatch = useDispatch();
@@ -13,7 +19,11 @@ const Customers = () => {
   const [costName, setCostName] = useState([]);
   const [addCost, setAddCost] = useState(-1);
   const [cost, setCost] = useState([]);
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       try {
         const res = await ktsRequest.get("/customers", {
@@ -22,10 +32,12 @@ const Customers = () => {
           },
         });
         setCustomers(res.data);
+        setLoading(false);
       } catch (err) {
+        setLoading(false);
         if (err.response) {
           if (err.response.data.status === 403) {
-            dispatch(setMsg("Phiên làm việc hêt hạn, vui lòng đăng nhập lại!"));
+            toast.warning("Phiên làm việc hêt hạn, vui lòng đăng nhập lại!");
             dispatch(logout());
           }
         } else {
@@ -98,6 +110,12 @@ const Customers = () => {
           : toast.error("Network Error!");
       });
   };
+  const headers = [
+    { title: "Tên", size: "w-1/6" },
+    { title: "Điện thoại", size: "w-1/6" },
+    { title: "Địa chỉ", size: "w-1/2" },
+    { title: "Thao tác", size: "w-1/6" },
+  ];
   const handleRemoveCost = async (customer, cost_name) => {
     const config = {
       method: "post",
@@ -125,9 +143,11 @@ const Customers = () => {
   return (
     <div className="h-full overflow-auto bg-slate-200 p-3">
       <div className="flex items-center justify-between py-3">
-        <h3 className="text-xl font-semibold">
-          Thông tin khách hàng của {isAdmin ? "admin " : "bạn"}
-        </h3>
+        <Input
+          placehoder={"Nhập tên/số điện thoại khách hàng...."}
+          size={"w-1/3"}
+          onChange={(e) => setQuery(e.target.value)}
+        />
         <Link
           to="/dashboard/customers/new"
           className="flex items-center gap-1 rounded border border-primary-600 p-2 text-xs font-semibold text-primary-600 hover:bg-primary-600 hover:text-white md:text-base"
@@ -151,163 +171,62 @@ const Customers = () => {
         </Link>
       </div>
       {/* component thông tin khách hàng */}
-      <div className="flex flex-col gap-2">
-        {customers.map((i, k) => {
-          return (
-            <div className="rounded-md bg-white drop-shadow">
-              <div className="flex items-center justify-between border-b-2 border-red-300 p-2">
-                <div className="flex gap-3 font-semibold">
-                  <span>{i.name}</span>
-                </div>
-                <div className="flex gap-2">
-                  <button className="flex justify-between gap-1 rounded border border-primary-600 bg-white p-1 px-2 py-1 hover:bg-primary-600 hover:text-white">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="h-4 w-4"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    className="flex justify-between gap-1 rounded border border-red-600 bg-white p-1 px-2 py-1 hover:bg-red-600 hover:text-white"
-                    onClick={(e) => handleDelete(i)}
+      <div className="border border-ktsPrimary rounded-md">
+        <GridData headers={headers}>
+          <div className="divide-y divide-dashed divide-ktsPrimary bg-white shadow-lg">
+            {myFilter(customers, query, ["name", "phone"]).length > 0 ? (
+              myFilter(customers, query, ["name", "phone"]).map((c, i) => {
+                return (
+                  <div
+                    className="px-2 py-1.5 flex items-center text-sm"
+                    key={i}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="h-4 w-4"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              <div className="flex flex-col flex-wrap p-3">
-                {isAdmin && <span>ShopID: {i.shopID}</span>}
-                <span>Số điện thoại: {i.phone}</span>
-                <span>
-                  Địa chỉ:{" "}
-                  {i.address +
-                    ", " +
-                    i.wardFullName +
-                    ", " +
-                    i.districtFullName +
-                    ", " +
-                    i.cityFullName}
-                </span>
-                <div className="flex justify-between">
-                  <span>
-                    Mức giá áp dụng:
-                    {i.cost.map((j) => {
-                      // return <span key={j}> {j} </span>;
-                      return (
-                        <span className="ml-3 rounded-sm bg-gray-300 pb-0.5">
-                          <button
-                            className="mx-2 text-red-500 hover:font-bold"
-                            onClick={(e) => {
-                              handleRemoveCost(i, j);
-                            }}
-                          >
-                            x
-                          </button>
-                          <span className="py-0.5 px-1">{j}</span>
-                        </span>
-                      );
-                    })}
-                  </span>
-                  <button
-                    className="rounded border border-green-600 py-0.5 px-1 font-bold text-green-700 hover:bg-green-600 hover:text-white"
-                    onClick={(e) => {
-                      addCost === k ? setAddCost(-1) : setAddCost(k);
-                    }}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="h-6 w-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d={
-                          addCost === k
-                            ? "M6 18L18 6M6 6l12 12"
-                            : "M12 4.5v15m7.5-7.5h-15"
-                        }
-                      />
-                    </svg>
-                  </button>
-                </div>
-                {addCost === k && (
-                  <div className="mt-2 flex w-full gap-2">
-                    <select
-                      id="cost"
-                      className="block w-full rounded border border-gray-300 bg-gray-50 py-1 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                      onChange={(e) => {
-                        setCostName(e.target.value);
-                      }}
-                    >
-                      <option value="" selected disabled hidden>
-                        Chọn mức giá áp dụng
-                      </option>
-                      {cost.map((c, index) => {
-                        return (
-                          <option value={c.costName} key={index}>
-                            {c.costName}
-                          </option>
-                        );
-                      })}
-                    </select>
-                    <button
-                      className="rounded border border-green-600 py-0.5 px-1 font-bold text-green-700 hover:bg-green-600 hover:text-white"
-                      onClick={(e) => {
-                        handleAddCost(i, costName);
-                      }}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="h-6 w-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 4.5v15m7.5-7.5h-15"
-                        />
-                      </svg>
-                    </button>
+                    <div className="w-1/6">{c.name}</div>
+                    <div className="w-1/6">{c.phone}</div>
+                    <div className="w-1/2">
+                      {c.address +
+                        ", " +
+                        c.wardFullName +
+                        ", " +
+                        c.districtFullName +
+                        ", " +
+                        c.cityFullName}
+                    </div>
+                    <div className="w-1/6 flex justify-between md:justify-center md:gap-2">
+                      <Button
+                        type="outline-warning"
+                        icon={pencil}
+                        iconSize={"4"}
+                        title={"Sửa thông tin khách hàng"}
+                        callback={(e) => {
+                          setShowPrint(true);
+                          setDataPrint(JSON.stringify(b));
+                        }}
+                      ></Button>
+                      <Button
+                        type="outline-danger"
+                        icon={trash}
+                        iconSize={"4"}
+                        title={"Xóa khách hàng"}
+                      ></Button>
+                    </div>
                   </div>
+                );
+              })
+            ) : (
+              <div className="py-3 text-center">
+                {loading ? (
+                  <div className="flex h-full w-full items-center justify-center flex-col">
+                    <img src={logo} alt="" className="animate-bounce w-20" />
+                    <div>Đang tải dữ liệu ...</div>
+                  </div>
+                ) : (
+                  "Không có dữ liệu"
                 )}
               </div>
-            </div>
-          );
-        })}
+            )}
+          </div>
+        </GridData>
       </div>
     </div>
   );
