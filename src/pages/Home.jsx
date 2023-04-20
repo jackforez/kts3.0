@@ -110,7 +110,7 @@ const Home = () => {
                         <div className="">
                           <div className="space-y-2 overflow-auto p-3 text-ktsPrimary">
                             <div className="col-span-12 space-y-3  px-4 sm:col-span-9">
-                              {orderDetails.TBL_DELIVERY.length > 0 ? (
+                              {orderDetails.TBL_DELIVERY?.length > 0 ? (
                                 orderDetails.TBL_DELIVERY.map((i, index) => {
                                   return (
                                     <div

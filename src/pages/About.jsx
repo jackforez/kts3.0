@@ -51,7 +51,7 @@ const About = () => {
           váy xinh ngồi chờ anh về
         </p>
       </div>
-      <div className="h-3/4 mt-[2.5vh] overflow-auto">
+      <div className="mt-[2.5vh] overflow-auto">
         <h3 className="text-center uppercase text-3xl font-extrabold">
           our team
         </h3>
