@@ -2,7 +2,11 @@ import { Link } from "react-router-dom";
 const Navbar = ({ page, setPage }) => {
   const navLinks = ["trang chủ", "giới thiệu", "dịch vụ", "liên hệ"];
   return (
-    <nav className={`fixed z-30 w-full ${page > 0 && "bg-black/50"}`}>
+    <nav
+      className={`fixed z-30 w-full ${
+        page > 0 && "bg-ktsPrimary"
+      } duration-300`}
+    >
       <div className="mx-auto flex flex-wrap max-w-screen-xl items-center justify-between md:px-4 px-2 lg:px-6 pb-4 md:pb-0">
         <svg
           xmlns="http://www.w3.org/2000/svg"

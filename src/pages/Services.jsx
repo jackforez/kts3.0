@@ -2,12 +2,9 @@ import React from "react";
 
 const Services = () => {
   return (
-    <div className="mx-auto max-w-screen-xl px-4 pb-16 lg:py-16 mt-[8vh]">
-      <h2 class="mb-8 text-center text-3xl font-extrabold leading-tight tracking-tight text-gray-900  md:text-4xl lg:mb-16">
-        Dịch vụ
-      </h2>
+    <div className="mx-auto max-w-screen-xl px-4 pb-16 lg:py-16 mt-[8vh] h-[92vh] flex items-center">
       <div className="gap-8 md:grid md:grid-cols-3 ">
-        <div className="flex flex-col items-center gap-3 px-2 py-4 hover:rounded hover:border hover:border-[#ff5f13]">
+        <div className="flex flex-col items-center gap-3 px-2 py-4 hover:rounded hover:border hover:border-[#ff5f13] duration-500">
           <svg
             version="1.0"
             xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +79,7 @@ m-3435 -435 c87 -14 188 -94 234 -183 45 -87 45 -216 0 -303 -132 -261 -493
             </p>
           </div>
         </div>
-        <div className="flex flex-col items-center gap-3 px-2 py-4 hover:rounded hover:border hover:border-[#ff5f13]">
+        <div className="flex flex-col items-center gap-3 px-2 py-4 hover:rounded hover:border hover:border-[#ff5f13] duration-500">
           <svg
             version="1.0"
             xmlns="http://www.w3.org/2000/svg"
@@ -180,7 +177,7 @@ l0 -45 -105 0 -105 0 0 45 0 45 105 0 105 0 0 -45z m258 28 c3 -10 -13 -13
             </p>
           </div>
         </div>
-        <div className="flex flex-col items-center gap-3 px-2 py-4 hover:rounded hover:border hover:border-[#ff5f13]">
+        <div className="flex flex-col items-center gap-3 px-2 py-4 hover:rounded hover:border hover:border-[#ff5f13] duration-500">
           <svg
             version="1.0"
             xmlns="http://www.w3.org/2000/svg"

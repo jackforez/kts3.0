@@ -2,12 +2,35 @@ import { useState } from "react";
 import { Button, Footer, Hero, Input, Navbar } from "../components";
 import { Contact, About, Services } from ".";
 import { search } from "../ultis/svgs";
+import { ktsRequest } from "../ultis/connections";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const [openResult, setOpenResult] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [orderDetails, setOrderDetails] = useState({});
+  const [orderID, setOrderID] = useState("");
   const handleClick = () => {
-    setOpenResult(!openResult);
+    setLoading(true);
+    const config = {
+      method: "get",
+      url: `tracking/${orderID}}`,
+      params: {
+        id: orderID,
+      },
+    };
+
+    ktsRequest(config)
+      .then(function (response) {
+        setOrderDetails(response.data.data);
+        setLoading(false);
+        setOpenResult(!openResult);
+      })
+      .catch(function (error) {
+        setLoading(false);
+        toast.error("Network Error!");
+      });
   };
   return (
     <div>
@@ -21,7 +44,7 @@ const Home = () => {
         >
           <div className="w-screen bg-[url('./assets/imgs/hero-home.jpg')] h-screen bg-cover bg-fixed bg-center bg-no-repeat flex-grow-0 flex-shrink-0">
             <div className="w-full h-full bg-black/30">
-              <div className="max-w-screen-xl mx-auto h-screen md:pt-[20vh] pt-[20vh] px-2">
+              <div className="max-w-screen-xl mx-auto h-screen md:pt-[15vh] pt-[20vh] px-2">
                 <div className={`flex text-white relative w-full `}>
                   <div
                     className={`md:w-1/2 w-full px-2 py-4 z-20 bg-black/10 rounded-md backdrop-blur drop-shadow-lg bg-opacity-20 absolute ${
@@ -41,15 +64,18 @@ const Home = () => {
                         group={true}
                         size={"w-5/6"}
                         placehoder={"Nhập mã vận đơn của bạn..."}
+                        onChange={(e) => setOrderID(e.target.value)}
                       />
                       <Button
+                        type="primary"
                         group={true}
                         size={"w-1/6"}
-                        type="primary"
                         callback={handleClick}
-                      >
-                        <span>Tìm</span>
-                      </Button>
+                        animation={true}
+                        disabledBy={loading}
+                        loading={loading}
+                        icon={search}
+                      ></Button>
                     </div>
                   </div>
                   <div
@@ -58,7 +84,7 @@ const Home = () => {
                     } bg-black/10 backdrop-blur drop-shadow-lg bg-opacity-20`}
                   >
                     <div className="w-full flex justify-between items-center">
-                      <h3 className="pl-3">Chi tiết đơn hàng</h3>
+                      <h3 className="pl-3 uppercase">mã vận đơn: {orderID}</h3>
                       <button
                         className="bg-primary-600 p-2"
                         onClick={() => setOpenResult(false)}
@@ -79,7 +105,69 @@ const Home = () => {
                         </svg>
                       </button>
                     </div>
-                    <div className="bg-white h-[60vh]">nội dung</div>
+                    <div className="bg-white h-[70vh]">
+                      <div className=" py-4 z-50 flex w-full items-center justify-center backdrop-blur duration-500 ease-in-out">
+                        <div className="">
+                          <div className="space-y-2 overflow-auto p-3 text-ktsPrimary">
+                            <div className="col-span-12 space-y-3  px-4 sm:col-span-9">
+                              {orderDetails.TBL_DELIVERY.length > 0 ? (
+                                orderDetails.TBL_DELIVERY.map((i, index) => {
+                                  return (
+                                    <div
+                                      key={index}
+                                      className="col-span-12 border-l-4 border-orange-500 bg-red-100  px-4  sm:col-span-8 sm:space-y-8 sm:before:absolute sm:before:top-2 sm:before:bottom-0 sm:before:-left-3 sm:before:w-0.5"
+                                    >
+                                      <div className="flex flex-col">
+                                        <h6 className="font-semibold tracking-wide">
+                                          {i.STATUSTEXT}
+                                        </h6>
+                                        <p className="text-xs uppercase tracking-wide">
+                                          {i.NGAY_PHAT}
+                                        </p>
+                                        <p>{i.VI_TRI}</p>
+                                      </div>
+                                    </div>
+                                  );
+                                })
+                              ) : (
+                                <h3>Không có dữ liệu trạng thái</h3>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-start justify-between rounded-t border-b p-4">
+                            <h3 className="text-xl font-semibold text-gray-900 ">
+                              Chi tiết bill gửi
+                            </h3>
+                          </div>
+                          <div className="h-[50vh] overflow-auto overflow-y-auto p-3 text-ktsPrimary">
+                            <div className="col-span-12 space-y-0.5  px-4 sm:col-span-9">
+                              {orderDetails.TBL_DINH_VI ? (
+                                orderDetails.TBL_DINH_VI.map((i, index) => {
+                                  return (
+                                    <div
+                                      key={index}
+                                      className="col-span-12 border-l-4 border-orange-500 bg-red-100  px-4 sm:col-span-8 sm:space-y-8 sm:before:absolute sm:before:top-2 sm:before:bottom-0 sm:before:-left-3 sm:before:w-0.5"
+                                    >
+                                      <div className="flex flex-col">
+                                        <h6 className="font-semibold tracking-wide">
+                                          {i.StatusText}
+                                        </h6>
+                                        <p className="text-xs uppercase tracking-wide ">
+                                          {i.TraceDate}
+                                        </p>
+                                        <p>{i.DiaChiBuuCuc}</p>
+                                      </div>
+                                    </div>
+                                  );
+                                })
+                              ) : (
+                                <h3>Không có dữ liệu chi tiết</h3>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

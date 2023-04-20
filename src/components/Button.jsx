@@ -76,7 +76,7 @@ const Button = ({
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className={`${icsz} md:hidden`}
+                className={`${icsz}`}
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d={icon} />
               </svg>
