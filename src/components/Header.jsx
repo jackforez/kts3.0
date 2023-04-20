@@ -10,7 +10,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   return (
-    <div className="flex h-[8vh] md:h-[6vh] w-full items-center justify-end bg-white px-3 md:px-9 border-b border-ktsPrimary">
+    <div className="flex h-[8vh] w-full items-center justify-end bg-white px-3 md:px-9 border-b border-ktsPrimary">
       <h3 className="mr-4 font-bold">{currentUser?.displayName}</h3>
       <div
         className="relative flex h-9 w-9 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-orange-500 font-bold text-white"

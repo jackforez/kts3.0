@@ -36,9 +36,9 @@ const Button = ({
   const sz = size ? `${size}` : "";
   return (
     <button
-      className={`${style} ${group ? "rounded-r" : "rounded"} px-4 py-2.5 ${
+      className={`${style} ${group ? "rounded-r" : "rounded"} px-2 py-1 ${
         !disabledBy ? `active:scale-90 ${bg}` : "bg-gray-500"
-      } duration-500 flex items-center justify-center ${sz}`}
+      } duration-500 ${sz}`}
       disabled={disabledBy}
       title={title}
       onClick={callback}
@@ -66,7 +66,7 @@ const Button = ({
             ></path>
           </svg>
         ) : (
-          <div>
+          <div className="flex items-center justify-center">
             {icon && (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -74,16 +74,16 @@ const Button = ({
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className={icsz}
+                className={`${icsz} md:hidden`}
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d={icon} />
               </svg>
             )}
-            <span className="pb-0.5">{children}</span>
+            {children}
           </div>
         )
       ) : (
-        <div>
+        <div className="flex items-center justify-center">
           {icon && (
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -96,7 +96,7 @@ const Button = ({
               <path strokeLinecap="round" strokeLinejoin="round" d={icon} />
             </svg>
           )}
-          <span className="pb-0.5">{children}</span>
+          {children}
         </div>
       )}
     </button>
