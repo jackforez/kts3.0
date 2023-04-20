@@ -10,7 +10,7 @@ const Button = ({
   callback,
   group,
   style,
-  animation = true,
+  animation = false,
   loading = false,
   children,
 }) => {
@@ -36,7 +36,7 @@ const Button = ({
   const sz = size ? `${size}` : "";
   return (
     <button
-      className={`${style} ${group ? "rounded-r" : "rounded"} px-4 py-3 ${
+      className={`${style} ${group ? "rounded-r" : "rounded"} px-4 py-2.5 ${
         !disabledBy ? `active:scale-90 ${bg}` : "bg-gray-500"
       } duration-500 flex items-center justify-center ${sz}`}
       disabled={disabledBy}
