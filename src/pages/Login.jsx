@@ -27,7 +27,8 @@ const Login = () => {
       return navigate("/dashboard");
     }
   }, []);
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
     if (!username) {
       toast.warn("Tên đăng nhập không được để trống");
       return;
@@ -76,7 +77,7 @@ const Login = () => {
                 ></path>
               </svg>
             </Link>
-            <div className="w-full space-y-3">
+            <form className="w-full space-y-3" action="">
               <Input
                 placehoder="Tên đăng nhập . . ."
                 type="text"
@@ -96,10 +97,11 @@ const Login = () => {
                 type="primary"
                 size="w-full"
                 style="uppercase font-semibold"
-                callback={handleLogin}
+                callback={(e) => handleLogin(e)}
                 loading={loading}
                 disabledBy={loading}
                 animation={true}
+                clickType="submit"
               >
                 Đăng nhập
               </Button>
@@ -181,7 +183,7 @@ const Login = () => {
                   </svg>
                 </a>
               </div>
-            </div>
+            </form>
           </div>
         </div>
         <div className="w-1/2 md:block hidden max-h-[80vh]">

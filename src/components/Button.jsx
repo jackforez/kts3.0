@@ -12,6 +12,7 @@ const Button = ({
   style,
   animation = false,
   loading = false,
+  clickType = "button",
   children,
 }) => {
   const bg =
@@ -44,6 +45,7 @@ const Button = ({
       disabled={disabledBy}
       title={title}
       onClick={callback}
+      type={clickType}
     >
       {animation ? (
         loading ? (
