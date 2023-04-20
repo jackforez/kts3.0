@@ -17,7 +17,7 @@ const Selector = ({
     size === "xs" ? "py-0.5 text-xs" : size === "sm" ? "py-1 text-sm" : "py-2";
 
   return (
-    <div className="w-full border bg-white border-primary-500 rounded px-2 relative">
+    <div className="w-full border bg-white border-primary-500 rounded px-2 relative ">
       <div className={`${sz} flex justify-between`}>
         <span>{selected}</span>
         <button onClick={() => setOpenDataTable(!openDataTable)}>
