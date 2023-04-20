@@ -12,6 +12,12 @@ const Home = () => {
   const [orderDetails, setOrderDetails] = useState({});
   const [orderID, setOrderID] = useState("");
   const handleClick = () => {
+    if (!orderID) {
+      toast.warn("Vui lòng nhập mã vận đơn!", {
+        autoClose: 1000,
+      });
+      return;
+    }
     setLoading(true);
     const config = {
       method: "get",
