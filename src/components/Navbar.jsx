@@ -4,7 +4,11 @@ import logo from "../assets/logo.svg";
 const Navbar = ({ page, setPage }) => {
   const navLinks = ["trang chủ", "giới thiệu", "dịch vụ", "liên hệ"];
   return (
-    <nav className="fixed z-30 w-full md:px-4 px-2 lg:px-6 h-[15vh]">
+    <nav
+      className={`fixed z-30 w-full md:px-4 px-2 lg:px-6 h-[13vh] md:h-[11vh] ${
+        page > 0 ? "bg-black/50" : ""
+      }`}
+    >
       <div className="mx-auto flex flex-wrap max-w-screen-xl items-center justify-between">
         <svg
           xmlns="http://www.w3.org/2000/svg"

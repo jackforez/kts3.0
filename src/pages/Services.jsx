@@ -2,7 +2,7 @@ import React from "react";
 
 const Services = () => {
   return (
-    <div className="mx-auto max-w-screen-xl px-4 pb-16 lg:py-16">
+    <div className="mx-auto max-w-screen-xl px-4 pb-16 lg:py-16 mt-[8vh]">
       <h2 class="mb-8 text-center text-3xl font-extrabold leading-tight tracking-tight text-gray-900  md:text-4xl lg:mb-16">
         Dịch vụ
       </h2>
