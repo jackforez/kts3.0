@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import logo from "../assets/logo.svg";
 const Navbar = ({ page, setPage }) => {
   const navLinks = ["trang chủ", "giới thiệu", "dịch vụ", "liên hệ"];
-  // const [currentPage, setCurrentPage] = useState(0);
-  const [showMenuMobile, setshowMenuMobile] = useState(false);
   return (
     <nav className="fixed z-30 w-full md:px-4 px-2 lg:px-6 h-[15vh]">
       <div className="mx-auto flex flex-wrap max-w-screen-xl items-center justify-between">
@@ -22,7 +20,7 @@ const Navbar = ({ page, setPage }) => {
             transform="matrix(.1 0 0 -.1 0 55)"
           ></path>
         </svg>
-        <div className="justify-between md:w-5/12 w-full flex order-3 md:order-2">
+        <div className="justify-between md:w-5/12 w-full flex order-3 md:order-2 px-5">
           {navLinks.map((l, i) => {
             return (
               <button

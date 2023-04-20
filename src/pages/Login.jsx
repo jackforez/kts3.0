@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import img1 from "../assets/imgs/img1.jpg";
 import img2 from "../assets/imgs/img2.jpg";
 import { Button, Input } from "../components";
@@ -8,8 +8,49 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Autoplay } from "swiper";
 import "swiper/css";
 import "swiper/css/autoplay";
+import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { ktsRequest } from "../ultis/connections";
+import { loginFailure, loginSuccess } from "../redux/userSlice";
 SwiperCore.use([Autoplay]);
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const { currentUser } = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (currentUser) {
+      toast.success(`Xin chào ${currentUser?.displayName || "ktsCorp.vn"}`);
+      return navigate("/dashboard");
+    }
+  }, []);
+  const handleLogin = async () => {
+    if (!username) {
+      toast.warn("Tên đăng nhập không được để trống");
+      return;
+    }
+    if (!password) {
+      toast.warn("Mật khẩu không được để trống");
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await ktsRequest.post("/auth/signin", {
+        name: username,
+        password,
+      });
+      dispatch(loginSuccess(res.data));
+      navigate("/dashboard");
+      setLoading(false);
+    } catch (err) {
+      dispatch(loginFailure());
+      toast.error(err.response ? err.response.data.message : "Network Error!");
+      setLoading(false);
+    }
+  };
   return (
     <div className="bg-[url('./assets/imgs/img1.jpg')] md:bg-[url('./assets/imgs/hero.jpg')] p-3 h-screen bg-cover bg-fixed bg-center bg-no-repeat overflow-hidden flex justify-center items-center">
       <div className="relative lg:w-1/2 md:w-3/4 w-full py-4 md:p-0 justify-between bg-indigo-900 flex text-white backdrop-blur rounded overflow-hidden drop-shadow bg-opacity-10 ">
@@ -40,12 +81,24 @@ const Login = () => {
                 placehoder="Tên đăng nhập . . ."
                 type="text"
                 icon={userName}
+                value={username}
+                onChange={(e) =>
+                  setUsername(e.target.value.replace(/[^a-zA-Z0-9]/g, ""))
+                }
               />
-              <Input placehoder="Mật khẩu . . . " type="password" icon={key} />
+              <Input
+                placehoder="Mật khẩu . . . "
+                type="password"
+                icon={key}
+                onChange={(e) => setPassword(e.target.value)}
+              />
               <Button
                 type="primary"
                 size="w-full"
                 style="uppercase font-semibold"
+                callback={handleLogin}
+                loading={loading}
+                disabledBy={loading}
               >
                 Đăng nhập
               </Button>

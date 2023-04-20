@@ -6,6 +6,7 @@ import arrow from "../assets/control.png";
 
 import { dashboardConfig } from "../ultis/config";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 const Sidebar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -25,8 +26,8 @@ const Sidebar = () => {
       >
         <img
           src={arrow}
-          className={`absolute -right-3 top-4 w-7 cursor-pointer rounded-full duration-500
-           border-2 border-ktsPrimary  ${!open && "rotate-180"}`}
+          className={`absolute -right-3 top-3.5 w-7 cursor-pointer rounded-full duration-500
+           border border-ktsPrimary  ${!open && "rotate-180"}`}
           onClick={() => setOpen(!open)}
         />
         <div className="mt-3 flex items-center justify-center gap-x-4">
@@ -72,12 +73,12 @@ const Sidebar = () => {
         <div className="my-sidebar pt-6">
           {Menus.map(
             (Menu, index) =>
-              !Menu.role.includes(currentUser?.role) && (
+              Menu.role.includes(currentUser?.role) && (
                 <NavLink
                   to={Menu.path}
                   key={index}
                   onClick={() => setActive(Menu)}
-                  className={`flex  cursor-pointer items-center gap-x-4 rounded-md p-2 text-sm text-gray-300 hover:bg-light-white hover:font-bold hover:text-white
+                  className={`flex  cursor-pointer items-center gap-x-4 rounded-md p-2 text-sm text-gray-300 hover:bg-ktsSecondary hover:font-bold hover:text-white
                 ${Menu.gap ? "mt-9" : "mt-2"} ${
                     active === Menu
                       ? " bg-ktsSecondary font-bold text-white"
@@ -112,7 +113,7 @@ const Sidebar = () => {
           )}
         </div>
         <div
-          className={`bottom-10 mt-9 flex cursor-pointer items-center gap-x-4 rounded-md p-2 text-sm font-semibold text-gray-300 hover:bg-light-white`}
+          className={`bottom-10 mt-9 flex cursor-pointer items-center gap-x-4 rounded-md p-2 text-sm font-semibold text-gray-300 hover:bg-ktsSecondary hover:font-bold hover:text-white`}
           onClick={(e) => {
             e.preventDefault();
             dispatch(logout());
@@ -138,6 +139,12 @@ const Sidebar = () => {
             className={`${
               !open && "hidden"
             } absolute left-16 whitespace-pre duration-200`}
+            onClick={(e) => {
+              navigate("/login");
+              e.preventDefault();
+              toast.success(`bye ${currentUser?.displayName || "ktsCorp.vn"}`);
+              dispatch(logout());
+            }}
           >
             Đăng xuất
           </span>
