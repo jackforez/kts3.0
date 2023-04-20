@@ -11,7 +11,9 @@ const Cost = () => {
   const { currentUser } = useSelector((state) => state.user);
   const token = currentUser.token;
   const isAmin = currentUser.role === "admin";
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
+    setLoading(true);
     const getData = () => {
       const config = {
         method: "get",
@@ -25,8 +27,10 @@ const Cost = () => {
       ktsRequest(config)
         .then(function (response) {
           setCosts(response.data.data);
+          setLoading(false);
         })
         .catch(function (err) {
+          setLoading(false);
           toast.error(
             err.response ? err.response.data.message : "Network Error"
           );
@@ -120,7 +124,9 @@ const Cost = () => {
                 );
               })
             ) : (
-              <div>Không có dữ liệu</div>
+              <div className="py-3 text-center">
+                {loading ? "Đang tải dữ liệu ..." : "Không có dữ liệu"}
+              </div>
             )}
           </div>
         </GridData>

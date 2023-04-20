@@ -4,7 +4,7 @@ export const search = (list, query, feild) => {
   );
 };
 
-export const toVND = (number) => {
+export const toVND = (stringToCurency) => {
   return new Intl.NumberFormat("de-DE", {
     style: "currency",
     currency: "VND",

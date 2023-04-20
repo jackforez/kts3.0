@@ -2,9 +2,10 @@ import React, { useRef } from "react";
 import ReactToPrint from "react-to-print";
 import logo from "../assets/logo.svg";
 import Barcode from "react-barcode";
+import { toVND } from "../ultis/functions";
+
 const ToPrint = (props) => {
   const printData = JSON.parse(props.data);
-  console.log(printData);
   let componentRef = useRef();
   return (
     <div className="absolute top-0 left-0 z-50 flex h-screen w-full items-center justify-center bg-white/30 backdrop-blur-sm">
@@ -48,27 +49,14 @@ const ToPrint = (props) => {
           <div className="grid grid-cols-2 border-b-2 border-dashed border-red-300 px-6 py-3">
             <div>
               <span>Thu hộ: </span>
-              <span>
-                {new Intl.NumberFormat("de-DE", {
-                  style: "currency",
-                  currency: "VND",
-                }).format(printData.cod)}
-              </span>
+              <span>{toVND(printData.cod)}</span>
               <br />
               <span>Cước: </span>
-              <span>
-                {new Intl.NumberFormat("de-DE", {
-                  style: "currency",
-                  currency: "VND",
-                }).format(printData.ktsAmount)}
-              </span>
+              <span>{toVND(printData.ktsAmount)}</span>
               <br />
               <span>Tổng thu: </span>
               <span className="text-xl font-bold">
-                {new Intl.NumberFormat("de-DE", {
-                  style: "currency",
-                  currency: "VND",
-                }).format(printData.ktsAmount + printData.cod)}
+                {toVND(printData.ktsAmount + printData.cod)}
               </span>
             </div>
             <div>

@@ -99,6 +99,7 @@ const Login = () => {
                 callback={handleLogin}
                 loading={loading}
                 disabledBy={loading}
+                animation={true}
               >
                 Đăng nhập
               </Button>

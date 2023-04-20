@@ -36,7 +36,9 @@ const Button = ({
   const sz = size ? `${size}` : "";
   return (
     <button
-      className={`${style} ${group ? "rounded-r" : "rounded"} px-2 py-1 ${
+      className={`${style} ${
+        group ? "rounded-r" : "rounded"
+      } md:py-2.5 md:px-4 px-2 py-1 ${
         !disabledBy ? `active:scale-90 ${bg}` : "bg-gray-500"
       } duration-500 ${sz}`}
       disabled={disabledBy}
@@ -46,7 +48,7 @@ const Button = ({
       {animation ? (
         loading ? (
           <svg
-            class="h-6 w-6 animate-spin text-white"
+            class="h-6 w-6 animate-spin text-white mx-auto"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
