@@ -102,7 +102,10 @@ const Cost = () => {
             {costs?.length > 0 ? (
               costs.map((c, i) => {
                 return (
-                  <div className="px-2 py-1.5 flex items-center" key={i}>
+                  <div
+                    className="px-2 py-1.5 flex items-center bg-white"
+                    key={i}
+                  >
                     <div className="w-1/6 font-semibold">{c.costName}</div>
                     <div className="w-1/6">{c.minWeight}</div>
                     <div className="w-1/6">{c.maxWeight}</div>
