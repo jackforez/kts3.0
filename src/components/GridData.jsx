@@ -2,7 +2,7 @@ import React from "react";
 
 const GridData = ({ headers, children }) => {
   return (
-    <div className="w-full rounded overflow-hidden">
+    <div className="w-full rounded">
       <div className="hidden md:flex w-full bg-ktsPrimary text-white py-3 text-xs uppercase font-semibold">
         {headers &&
           headers.map((h, i) => {

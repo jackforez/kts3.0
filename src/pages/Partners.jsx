@@ -170,12 +170,12 @@ const Partners = () => {
       {/* component thông tin khách hàng */}
       <div className="border border-ktsPrimary rounded-md">
         <GridData headers={headers}>
-          <div className="divide-y divide-dashed divide-ktsPrimary bg-white shadow-lg">
+          <div className="divide-y divide-dashed divide-ktsPrimary bg-white shadow-lg rounded-b">
             {myFilter(customers, query, ["name", "phone"]).length > 0 ? (
               myFilter(customers, query, ["name", "phone"]).map((c, k) => {
                 return (
                   <div
-                    className="px-2 py-1.5 flex items-center text-sm"
+                    className="px-2 py-1.5 flex items-center text-sm "
                     key={k}
                   >
                     <div className="w-1/6">
@@ -191,7 +191,7 @@ const Partners = () => {
                         ", " +
                         c.cityFullName}
                     </div>
-                    <div className="w-1/3">
+                    <div className="w-1/3 relative">
                       {c.cost.map((j, i) => {
                         return (
                           <span
@@ -211,7 +211,7 @@ const Partners = () => {
                         );
                       })}
                       {addCost === k && (
-                        <div className="mt-2 flex w-full gap-2">
+                        <div className="mt-2 flex w-full gap-2 absolute -top-2 z-10">
                           {/* <select
                             id="cost"
                             className="block w-full rounded border border-gray-300 bg-gray-50 py-1 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"

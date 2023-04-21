@@ -56,7 +56,7 @@ const Selector = ({
         />
         <div
           className={`${
-            openDataTable ? "h-36" : "h-0"
+            openDataTable ? "max-h-36" : "h-0"
           } overflow-y-auto divide-ktsPrimary/20 divide-dashed divide-y duration-100`}
         >
           {search(data, query, field).length > 0 ? (
