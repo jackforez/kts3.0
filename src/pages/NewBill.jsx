@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import axios from "axios";
 import { ktsRequest } from "../ultis/connections";
-import { Input, Button, Selector } from "../components";
+import { Input, Button, Selector, Ratio } from "../components";
 import { add, minus } from "../ultis/svgs";
 const NewBill = () => {
   //đọc thông số độ rộng màn hình
@@ -47,7 +47,7 @@ const NewBill = () => {
   const [wardFullName, setWardFullName] = useState("");
   const [loading, setLoading] = useState(false);
   const [forShop, setForShop] = useState(false);
-  const [shopPay, setShopPay] = useState(true);
+  const [shopPay, setShopPay] = useState(false);
 
   const currentUser = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -104,7 +104,6 @@ const NewBill = () => {
     const getWards = async () => {
       try {
         const dName = districts.find((d) => d.name_with_type == districtName);
-        console.log(dName);
         const resw = await ktsRequest.get(`cities/wards/${dName.code}`);
         const data = Object.values(resw.data);
         setWards(data);
@@ -798,16 +797,16 @@ const NewBill = () => {
       <div className="grid md:grid-cols-2 gap-2">
         <div className="">
           <div className="rounded border border-gray-300 bg-white p-2">
-            <h3 className="uppercase font-semibold">người gửi</h3>
+            <h3 className="uppercase font-bold">người gửi</h3>
             <label className="mt-3 block">Số điện thoại: </label>
-            <Input placehoder={"người gửi"} />
+            <Input placehoder={"Số điện thoại người gửi"} type="number" />
             <label className="mt-3 block">Họ tên: </label>
-            <Input placehoder={"người gửi"} />
+            <Input placehoder={"Họ tên người gửi người gửi"} />
             <label className="mt-3 block">Địa chỉ: </label>
-            <Input placehoder={"người gửi"} />
+            <Input placehoder={"Số nhà,tên đường người gửi"} />
 
-            <div className="flex gap-1">
-              <div className="pt-1 w-1/3 z-10">
+            <div className="grid md:grid-cols-3 gap-1 pt-1">
+              <div className="w-full z-30">
                 <Selector
                   placehoder={"Tỉnh/Thành"}
                   data={cities}
@@ -817,7 +816,7 @@ const NewBill = () => {
                   output={setCityName}
                 />
               </div>
-              <div className="pt-1 w-1/3 z-10">
+              <div className="w-full z-20">
                 <Selector
                   placehoder={"Quận/Huyện"}
                   data={districts}
@@ -827,7 +826,7 @@ const NewBill = () => {
                   output={setDistrictName}
                 />
               </div>
-              <div className="pt-1 w-1/3 z-10">
+              <div className="w-full z-10">
                 <Selector
                   placehoder={"Phường/Xã"}
                   data={wards}
@@ -842,15 +841,15 @@ const NewBill = () => {
         </div>
         <div className="">
           <div className="rounded border border-gray-300 bg-white p-2">
-            <h3 className="uppercase font-semibold">người nhận</h3>
+            <h3 className="uppercase font-bold">người nhận</h3>
             <label className="mt-3 block">Số điện thoại: </label>
-            <Input placehoder={"người gửi"} />
+            <Input placehoder={"Số điện thoại người nhận"} type="number" />
             <label className="mt-3 block">Họ tên: </label>
-            <Input placehoder={"người gửi"} />
+            <Input placehoder={"Họ tên người gửi người nhận"} />
             <label className="mt-3 block">Địa chỉ: </label>
-            <Input placehoder={"người gửi"} />
-            <div className="flex gap-1">
-              <div className="pt-1 w-1/3 z-10">
+            <Input placehoder={"Số nhà,tên đường người nhận"} />
+            <div className="grid md:grid-cols-3 gap-1 pt-1">
+              <div className="w-full z-30">
                 <Selector
                   placehoder={"Tỉnh/Thành"}
                   data={cities}
@@ -860,7 +859,7 @@ const NewBill = () => {
                   output={setCityName}
                 />
               </div>
-              <div className="pt-1 w-1/3 z-10">
+              <div className="w-full z-20">
                 <Selector
                   placehoder={"Quận/Huyện"}
                   data={districts}
@@ -870,7 +869,7 @@ const NewBill = () => {
                   output={setDistrictName}
                 />
               </div>
-              <div className="pt-1 w-1/3 z-10">
+              <div className="w-full z-10">
                 <Selector
                   placehoder={"Phường/Xã"}
                   data={wards}
@@ -886,53 +885,84 @@ const NewBill = () => {
       </div>
       <div className="pt-2">
         <div className="rounded border border-gray-300 bg-white p-2">
-          <h3 className="uppercase font-semibold">hàng hóa</h3>
+          <h3 className="uppercase font-bold">hàng hóa</h3>
           <label className="mt-3 block">Nội dung hàng hóa: </label>
           <Input placehoder={"nội dung hàng hóa"} />
           <div className="grid md:grid-cols-3 grid-cols-2 gap-2">
             <div>
               <label className="mt-3 block">Trọng lượng: </label>
-              <Input placehoder={"Tính bằng gram"} type="number" />
+              <Input
+                placehoder="(gram) "
+                type="number"
+                onChange={(e) => setWeight(e.target.value)}
+              />
             </div>
             <div>
               <label className="mt-3 block">Số lượng: </label>
               <div className="flex gap-1">
-                <Button type="primary" icon={minus}></Button>
-                <Input placehoder={0} type={"number"} />
-                <Button type="primary" icon={add}></Button>
+                <Button
+                  type="primary"
+                  icon={minus}
+                  callback={() =>
+                    qty > 1 ? setQty((qty) => qty - 1) : setQty(1)
+                  }
+                ></Button>
+                <Input
+                  placehoder={0}
+                  type={"number"}
+                  textCenter={true}
+                  value={qty}
+                  onChange={(e) => setQty(parseInt(e.target.value))}
+                />
+                <Button
+                  type="primary"
+                  icon={add}
+                  callback={() => setQty((qty) => qty + 1)}
+                ></Button>
               </div>
             </div>
             <div className="col-span-2 md:col-span-1">
               <label className="mt-3 block">Thu hộ: </label>
-              <Input placehoder={"Tính bằng gram"} type="number" />
+              <Input
+                placehoder={"0"}
+                type="number"
+                onChange={(e) => setCod(e.target.value)}
+              />
             </div>
           </div>
           <div>
             <label className="mt-3 block">Ghi chú: </label>
-            <Input placehoder={"Tính bằng gram"} type="text" />
+            <Input
+              placehoder={"Ghi chú của người bán"}
+              type="text"
+              onChange={(e) => setNote(e.target.value)}
+            />
           </div>
         </div>
       </div>
-      <div className="pt-2 flex justify-between gap-2">
-        <label className="relative inline-flex cursor-pointer items-center justify-center">
-          <input
-            type="checkbox"
-            value=""
-            class="peer sr-only"
-            onChange={(e) => {
-              setShopPay(!shopPay);
-            }}
-          />
-          <div className="peer h-6 w-11 rounded-full bg-gray-300 after:absolute after:top-[11px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none"></div>
+      <div className="pt-2 flex justify-between gap-2 w-full">
+        <div className="flex items-center">
+          <Ratio output={setShopPay} />
           <span className="text-md ml-3 text-gray-900 dark:text-gray-300">
             {shopPay ? "Người gửi trả cước" : "Người nhận trả cước"}
           </span>
-        </label>
+        </div>
         <div className="flex justify-end gap-2 w-1/2">
-          <Button type="outline-danger" size="w-1/2 md:w-1/6">
+          <Button
+            type="outline-danger"
+            size="w-1/2"
+            callback={() => navigate("/dashboard/bills")}
+          >
             HỦY BỎ
           </Button>
-          <Button type="success" size="w-1/2 md:w-1/6">
+          <Button
+            type="primary"
+            size="w-1/2"
+            callback={handleClick}
+            loading={loading}
+            disabledBy={loading}
+            animation={true}
+          >
             TẠO MỚI
           </Button>
         </div>

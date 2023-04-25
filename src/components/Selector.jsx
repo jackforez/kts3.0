@@ -17,25 +17,30 @@ const Selector = ({
     size === "xs" ? "py-0.5 text-xs" : size === "sm" ? "py-1 text-sm" : "py-2";
 
   return (
-    <div className="w-full border bg-white border-primary-500 rounded px-2 relative ">
-      <div className={`${sz} flex justify-between`}>
+    <div
+      className={`w-full border bg-white ${
+        openDataTable && "border-primary-500"
+      } rounded px-2 relative`}
+    >
+      <div
+        className={`${sz} flex justify-between cursor-pointer`}
+        onClick={() => setOpenDataTable(!openDataTable)}
+      >
         <span className="truncate">{selected}</span>
-        <button onClick={() => setOpenDataTable(!openDataTable)}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className={`w-4 h-4 ${openDataTable && "rotate-180"} duration-500`}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-            />
-          </svg>
-        </button>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className={`w-4 h-4 ${openDataTable && "rotate-180"} duration-500`}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+          />
+        </svg>
       </div>
 
       <div
@@ -57,7 +62,7 @@ const Selector = ({
         <div
           className={`${
             openDataTable ? "max-h-36" : "h-0"
-          } overflow-y-auto divide-ktsPrimary/20 divide-dashed divide-y duration-100`}
+          } overflow-y-auto duration-100`}
         >
           {search(data, query, field).length > 0 ? (
             search(data, query, field).map((el, i) => {
@@ -71,6 +76,7 @@ const Selector = ({
                     setSelected(e.target.textContent);
                     output(e.target.textContent);
                     setSelectedIndex(i);
+                    setOpenDataTable(false);
                   }}
                 >
                   {el[toShow]}
