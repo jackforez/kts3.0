@@ -78,6 +78,7 @@ const Sidebar = () => {
                   to={Menu.path}
                   key={index}
                   onClick={() => setActive(Menu)}
+                  title={Menu.title}
                   className={`flex cursor-pointer items-center gap-x-4 rounded-md p-2 text-sm text-gray-300 hover:bg-ktsSecondary hover:font-bold hover:text-white
                 ${Menu.gap ? "mt-6" : "mt-2"} ${
                     active === Menu
