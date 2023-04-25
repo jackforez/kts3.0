@@ -22,6 +22,8 @@ const Input = ({
         onChange={onChange}
         disabled={disabledBy}
         className={`${group ? "rounded-l" : "rounded"} block w-full ${
+          type === "number" && "text-center"
+        } ${
           !disabledBy
             ? "focus:border-primary-500 focus:ring-primary-500"
             : " bg-gray-400"

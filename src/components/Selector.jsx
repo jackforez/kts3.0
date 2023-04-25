@@ -19,7 +19,7 @@ const Selector = ({
   return (
     <div className="w-full border bg-white border-primary-500 rounded px-2 relative ">
       <div className={`${sz} flex justify-between`}>
-        <span>{selected}</span>
+        <span className="truncate">{selected}</span>
         <button onClick={() => setOpenDataTable(!openDataTable)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +45,7 @@ const Selector = ({
       >
         <input
           type="text"
-          placeholder={placehoder}
+          placeholder="Tìm kiếm"
           className={`w-full ${sz} focus:outline-none rounded px-2 ${
             !openDataTable && "hidden"
           }`}
@@ -64,7 +64,7 @@ const Selector = ({
               return (
                 <div
                   key={i}
-                  className={`cursor-pointer px-2 ${sz} ${
+                  className={`cursor-pointer hover:bg-green-500 truncate px-2 ${sz} ${
                     i === selectedIndex ? "bg-green-500" : ""
                   }`}
                   onClick={(e) => {

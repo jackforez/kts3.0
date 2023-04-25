@@ -4,7 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 import { ktsRequest } from "../ultis/connections";
-
+import { Input, Button, Selector } from "../components";
+import { add, minus } from "../ultis/svgs";
 const NewBill = () => {
   //đọc thông số độ rộng màn hình
   const getWindowDimensions = () => {
@@ -87,51 +88,46 @@ const NewBill = () => {
   useEffect(() => {
     const getDistricts = async () => {
       try {
-        console.log("to ", cityCode);
-        console.log("to ", cityName);
-        const resd = await ktsRequest.get(`/cities/districts/${cityCode}`);
-        const cName = cities.find((city) => city.code === cityCode);
+        const cName = cities.find((city) => city.name_with_type == cityName);
+        const resd = await ktsRequest.get(`/cities/districts/${cName.code}`);
         const data = Object.values(resd.data);
         setDistricts(data);
-        setCityName(cName.name);
+        setCityCode(cName.code);
         setCityFullName(cName.name_with_type);
       } catch (error) {
         toast.error(error);
       }
     };
     getDistricts();
-  }, [cityCode]);
+  }, [cityName]);
   useEffect(() => {
     const getWards = async () => {
       try {
-        console.log("to ", districtCode);
-        console.log("to ", districtName);
-        const resw = await ktsRequest.get(`cities/wards/${districtCode}`);
+        const dName = districts.find((d) => d.name_with_type == districtName);
+        console.log(dName);
+        const resw = await ktsRequest.get(`cities/wards/${dName.code}`);
         const data = Object.values(resw.data);
-        const dName = districts.find((d) => d.code === districtCode);
         setWards(data);
-        setDistrictName(dName.name);
+        setDistrictCode(dName.code);
         setDistrictFullName(dName.name_with_type);
       } catch (error) {
         toast.error(error);
       }
     };
     getWards();
-  }, [districtCode]);
+  }, [districtName]);
   useEffect(() => {
     const getWard = () => {
       try {
-        console.log("to ", wardCode);
-        console.log("to ", wardName);
-        const wName = wards.find((w) => w.code === wardCode);
-        setWardName(wName.name);
+        const wName = wards.find((w) => w.name_with_type === wardName);
+        setWardCode(wName.code);
         setWardFullName(wName.name_with_type);
       } catch (error) {
         toast.error(error);
       }
     };
     getWard();
-  }, [wardCode]);
+  }, [wardName]);
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -221,581 +217,725 @@ const NewBill = () => {
     setLoading(false);
   };
   return (
-    <div className="h-full p-3">
-      <div className="flex items-center justify-between border-b-2 pb-3">
-        {isShop ? (
-          <span className="text-md font-bold uppercase text-gray-900 dark:text-gray-300">
-            tạo mới đơn hàng
+    // <div className="h-full p-3">
+    //   <div className="flex items-center justify-between border-b-2 pb-3">
+    //     {isShop ? (
+    //       <span className="text-md font-bold uppercase text-gray-900 dark:text-gray-300">
+    //         tạo mới đơn hàng
+    //       </span>
+    //     ) : (
+    //       <label className="relative inline-flex cursor-pointer items-center justify-center">
+    //         <input
+    //           type="checkbox"
+    //           value=""
+    //           class="peer sr-only"
+    //           onChange={(e) => {
+    //             setForShop(!forShop);
+    //           }}
+    //         />
+    //         <div className="peer h-6 w-11 rounded-full bg-gray-300 after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none"></div>
+    //         <span className="text-md ml-3 font-bold uppercase text-gray-900 dark:text-gray-300">
+    //           {forShop ? "tạo đơn cho shop" : "tạo mới đơn hàng"}
+    //         </span>
+    //       </label>
+    //     )}
+    //     <Link
+    //       to="/dashboard/bills"
+    //       className="flex items-center gap-1 rounded border border-primary-600 p-2 text-xs font-semibold text-primary-600 hover:bg-primary-600 hover:text-white md:text-base"
+    //     >
+    //       <svg
+    //         xmlns="http://www.w3.org/2000/svg"
+    //         fill="none"
+    //         viewBox="0 0 24 24"
+    //         strokeWidth={1.5}
+    //         stroke="currentColor"
+    //         className="h-6 w-6"
+    //       >
+    //         <path
+    //           strokeLinecap="round"
+    //           strokeLinejoin="round"
+    //           d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
+    //         />
+    //       </svg>
+
+    //       <span className="hidden md:block">Quay lại danh sách đơn hàng</span>
+    //     </Link>
+    //   </div>
+    //   <div className="flex flex-col gap-2 md:grid md:auto-cols-fr md:grid-flow-col">
+    //     {forShop && (
+    //       <div className="py-3">
+    //         <h3 className="font-semibold uppercase">người gửi</h3>
+    //         <div className="mt-3 flex flex-col gap-4">
+    //           <div className="relative">
+    //             <label
+    //               htmlFor="phone"
+    //               className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
+    //             >
+    //               Số điện thoại
+    //             </label>
+    //             <input
+    //               type="text"
+    //               placeholder={
+    //                 window.innerWidth < 768
+    //                   ? "Số điện thoại người nhận"
+    //                   : "0123 456 789"
+    //               }
+    //               id="phone"
+    //               className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-0 focus:border-blue-500 focus:ring-blue-500"
+    //               onChange={(e) => {
+    //                 setPhone(e.target.value);
+    //               }}
+    //             />
+    //             <div
+    //               className={`${
+    //                 openSearch ? "flex " : "hidden "
+    //               } " absolute mt-1 rounded border border-gray-300 bg-gray-300 p-2`}
+    //             >
+    //               <button
+    //                 onClick={(e) => {
+    //                   e.preventDefault();
+    //                   setName(customer.name);
+    //                   setAddress(customer.address);
+    //                   setCityFullName(customer.cityFullName);
+    //                   setDistrictFullName(customer.districtFullName);
+    //                   setWardFullName(customer.wardFullName);
+    //                   // setCityCode(customer.cityCode);
+    //                   // setDistrictCode(customer.districtCode);
+    //                   // setWardCode(customer.wardCode);
+    //                   setOpenSearch(false);
+    //                 }}
+    //                 className="hover:text-red-500"
+    //               >
+    //                 {customer.name ? (
+    //                   <div>
+    //                     <span className="underline">{customer.name}</span>
+    //                     <span> - </span>
+    //                     <span>{customer.phone} - </span>
+    //                     <span>{customer.address}</span>
+    //                   </div>
+    //                 ) : (
+    //                   ""
+    //                 )}
+    //               </button>
+    //             </div>
+    //           </div>
+    //           <div>
+    //             <label
+    //               htmlFor="name"
+    //               className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
+    //             >
+    //               Họ tên
+    //             </label>
+    //             <input
+    //               value={name}
+    //               type="text"
+    //               placeholder={
+    //                 window.innerWidth < 768
+    //                   ? "Tên người nhận"
+    //                   : "Nguyễn Văn Tũn"
+    //               }
+    //               id="name"
+    //               className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+    //               onChange={(e) => setName(e.target.value)}
+    //             />
+    //           </div>
+    //         </div>
+    //         <div className="mt-4">
+    //           <label
+    //             htmlFor="address"
+    //             className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
+    //           >
+    //             Địa chỉ
+    //           </label>
+    //           <input
+    //             type="text"
+    //             value={address}
+    //             placeholder={
+    //               window.innerWidth < 768
+    //                 ? "Địa chỉ người nhận"
+    //                 : "Ở một vũ trụ nào đấy"
+    //             }
+    //             id="address"
+    //             className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+    //             onChange={(e) => setAddress(e.target.value)}
+    //           />
+    //           <div className="mt-2 grid grid-cols-3 gap-1">
+    //             <select
+    //               id="city"
+    //               class="mb-6 block w-full rounded border border-gray-300 bg-gray-50 p-1.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+    //               onChange={(e) => setCityCode(e.target.value)}
+    //             >
+    //               <option selected disabled hidden>
+    //                 Tỉnh/Thành
+    //               </option>
+    //               {cities.map((i) => {
+    //                 return (
+    //                   <option value={i.code} key={i.code}>
+    //                     {i.name_with_type}
+    //                   </option>
+    //                 );
+    //               })}
+    //             </select>
+    //             <select
+    //               id="district"
+    //               class="mb-6 block w-full rounded border border-gray-300 bg-gray-50 p-1.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+    //               onChange={(e) => setDistrictCode(e.target.value)}
+    //             >
+    //               <option selected disabled hidden>
+    //                 Quận/Huyện
+    //               </option>
+    //               {districts.map((i) => {
+    //                 return (
+    //                   <option value={i.code} key={i.code}>
+    //                     {i.name_with_type}
+    //                   </option>
+    //                 );
+    //               })}
+    //             </select>
+    //             <select
+    //               id="ward"
+    //               class="mb-6 block w-full rounded border border-gray-300 bg-gray-50 p-1.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+    //               onChange={(e) => {
+    //                 setWardCode(e.target.value);
+    //               }}
+    //             >
+    //               <option selected disabled hidden>
+    //                 Phường/Xã
+    //               </option>
+    //               {wards.map((i) => {
+    //                 return (
+    //                   <option value={i.code} key={i.code}>
+    //                     {i.name_with_type}
+    //                   </option>
+    //                 );
+    //               })}
+    //             </select>
+    //           </div>
+    //         </div>
+    //       </div>
+    //     )}
+    //     <div className="py-3">
+    //       <h3 className="font-semibold uppercase">người nhận</h3>
+    //       <div className="mt-3 flex flex-col gap-4">
+    //         <div className="relative">
+    //           <label
+    //             htmlFor="phone"
+    //             className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
+    //           >
+    //             Số điện thoại
+    //           </label>
+    //           <input
+    //             type="text"
+    //             placeholder={
+    //               window.innerWidth < 768
+    //                 ? "Số điện thoại người nhận"
+    //                 : "0123 456 789"
+    //             }
+    //             id="phone"
+    //             className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-0 focus:border-blue-500 focus:ring-blue-500"
+    //             onChange={(e) => {
+    //               setPhone(e.target.value);
+    //             }}
+    //           />
+    //           <div
+    //             className={`${
+    //               openSearch ? "flex " : "hidden "
+    //             } " absolute mt-1 rounded border border-gray-300 bg-gray-300 p-2`}
+    //           >
+    //             <button
+    //               onClick={(e) => {
+    //                 e.preventDefault();
+    //                 setName(customer.name);
+    //                 setAddress(customer.address);
+    //                 setCityFullName(customer.cityFullName);
+    //                 setDistrictFullName(customer.districtFullName);
+    //                 setWardFullName(customer.wardFullName);
+    //                 setCityName(customer.cityName);
+    //                 setDistrictName(customer.districtName);
+    //                 setWardName(customer.wardName);
+    //                 setCityCode(customer.cityCode);
+    //                 setDistrictCode(customer.districtCode);
+    //                 setWardCode(customer.wardCode);
+    //                 setOpenSearch(false);
+    //               }}
+    //               className="hover:text-red-500"
+    //             >
+    //               {customer.name ? (
+    //                 <div>
+    //                   <span className="underline">{customer.name}</span>
+    //                   <span> - </span>
+    //                   <span>{customer.phone} - </span>
+    //                   <span>{customer.address}</span>
+    //                 </div>
+    //               ) : (
+    //                 <span> Không có kết quả nào</span>
+    //               )}
+    //             </button>
+    //           </div>
+    //         </div>
+    //         <div>
+    //           <label
+    //             htmlFor="name"
+    //             className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
+    //           >
+    //             Họ tên
+    //           </label>
+    //           <input
+    //             value={name}
+    //             type="text"
+    //             placeholder={
+    //               window.innerWidth < 768 ? "Tên người nhận" : "Nguyễn Văn Tũn"
+    //             }
+    //             id="name"
+    //             className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+    //             onChange={(e) => setName(e.target.value)}
+    //           />
+    //         </div>
+    //       </div>
+    //       <div className="mt-4">
+    //         <label
+    //           htmlFor="address"
+    //           className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
+    //         >
+    //           Địa chỉ
+    //         </label>
+    //         <input
+    //           type="text"
+    //           value={address}
+    //           placeholder={
+    //             window.innerWidth < 768
+    //               ? "Địa chỉ người nhận"
+    //               : "Ở một vũ trụ nào đấy"
+    //           }
+    //           id="address"
+    //           className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+    //           onChange={(e) => setAddress(e.target.value)}
+    //         />
+    //         <div className="mt-2 grid grid-cols-3 gap-1">
+    //           <select
+    //             id="city"
+    //             class="mb-6 block w-full rounded border border-gray-300 bg-gray-50 p-1.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+    //             onChange={(e) => setCityCode(e.target.value)}
+    //           >
+    //             {cityCode ? (
+    //               <option selected disabled hidden value={cityCode}>
+    //                 {cityFullName}
+    //               </option>
+    //             ) : (
+    //               <option selected disabled hidden>
+    //                 Tỉnh/Thành
+    //               </option>
+    //             )}
+    //             {cities.map((i) => {
+    //               return (
+    //                 <option value={i.code} key={i.code}>
+    //                   {i.name_with_type}
+    //                 </option>
+    //               );
+    //             })}
+    //           </select>
+    //           <select
+    //             id="district"
+    //             class="mb-6 block w-full rounded border border-gray-300 bg-gray-50 p-1.5 text-xs text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+    //             onChange={(e) => setDistrictCode(e.target.value)}
+    //           >
+    //             {districtCode ? (
+    //               <option selected disabled hidden value={districtCode}>
+    //                 {districtFullName}
+    //               </option>
+    //             ) : (
+    //               <option selected disabled hidden>
+    //                 Quận/Huyện
+    //               </option>
+    //             )}
+    //             {districts.map((i) => {
+    //               return (
+    //                 <option value={i.code} key={i.code}>
+    //                   {i.name_with_type}
+    //                 </option>
+    //               );
+    //             })}
+    //           </select>
+    //           <select
+    //             id="ward"
+    //             class="mb-6 block w-full rounded border border-gray-300 bg-gray-50 p-1.5 text-xs text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+    //             onChange={(e) => {
+    //               setWardCode(e.target.value);
+    //             }}
+    //           >
+    //             {wardCode ? (
+    //               <option selected value={wardCode} disabled hidden>
+    //                 {wardFullName}
+    //               </option>
+    //             ) : (
+    //               <option selected disabled hidden>
+    //                 Phường/Xã
+    //               </option>
+    //             )}
+    //             {wards.map((i) => {
+    //               return (
+    //                 <option value={i.code} key={i.code}>
+    //                   {i.name_with_type}
+    //                 </option>
+    //               );
+    //             })}
+    //           </select>
+    //         </div>
+    //       </div>
+    //     </div>
+    //     <div className="py-3">
+    //       <h3 className="font-semibold uppercase">hàng hóa</h3>
+    //       <div className="mt-3 flex flex-col gap-4">
+    //         <div>
+    //           <label
+    //             htmlFor="itemname"
+    //             className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
+    //           >
+    //             Tên hàng
+    //           </label>
+    //           <input
+    //             type="text"
+    //             placeholder={
+    //               window.innerWidth < 768 ? "Tên hàng" : "Món quà dành cho bạn"
+    //             }
+    //             id="itemname"
+    //             onChange={(e) => setItemName(e.target.value)}
+    //             className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+    //           />
+    //         </div>
+    //         <div>
+    //           <label
+    //             htmlFor="quantity"
+    //             className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
+    //           >
+    //             Số lượng
+    //           </label>
+    //           <div className="flex">
+    //             <button
+    //               className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-200 px-3 text-sm text-gray-900"
+    //               onClick={() =>
+    //                 qty > 1 ? setQty((qty) => qty - 1) : setQty(1)
+    //               }
+    //             >
+    //               <svg
+    //                 xmlns="http://www.w3.org/2000/svg"
+    //                 fill="none"
+    //                 viewBox="0 0 24 24"
+    //                 strokeWidth={1.5}
+    //                 stroke="currentColor"
+    //                 className="h-6 w-6"
+    //               >
+    //                 <path
+    //                   strokeLinecap="round"
+    //                   strokeLinejoin="round"
+    //                   d="M18 12H6"
+    //                 />
+    //               </svg>
+    //             </button>
+    //             <input
+    //               type="text"
+    //               value={qty}
+    //               id="quantity"
+    //               className="block w-full border border-gray-300 bg-gray-50 p-2 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+    //               onChange={(e) => setQty(parseInt(e.target.value))}
+    //             />
+    //             <button
+    //               className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-200 px-3 text-sm text-gray-900"
+    //               onClick={() => setQty((qty) => qty + 1)}
+    //             >
+    //               <svg
+    //                 xmlns="http://www.w3.org/2000/svg"
+    //                 fill="none"
+    //                 viewBox="0 0 24 24"
+    //                 strokeWidth={1.5}
+    //                 stroke="currentColor"
+    //                 className="h-6 w-6"
+    //               >
+    //                 <path
+    //                   strokeLinecap="round"
+    //                   strokeLinejoin="round"
+    //                   d="M12 6v12m6-6H6"
+    //                 />
+    //               </svg>
+    //             </button>
+    //           </div>
+    //         </div>
+    //         <div>
+    //           <label
+    //             htmlFor="weight"
+    //             className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
+    //           >
+    //             Trọng lượng (gram)
+    //           </label>
+    //           <input
+    //             type="text"
+    //             placeholder={
+    //               window.innerWidth < 768 ? "Trọng lượng (gram)" : "100"
+    //             }
+    //             id="weight"
+    //             className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+    //             onChange={(e) => setWeight(e.target.value)}
+    //           />
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    //   <div>
+    //     <div>
+    //       <label
+    //         htmlFor="cost"
+    //         className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
+    //       >
+    //         Tiền thu hộ
+    //       </label>
+    //       <input
+    //         type="text"
+    //         placeholder={window.innerWidth < 768 ? "Tiền thu hộ" : "30.000"}
+    //         id="cost"
+    //         className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+    //       />
+    //     </div>
+    //     <div className="mt-3">
+    //       <label
+    //         htmlFor="note"
+    //         className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
+    //       >
+    //         Ghi chú
+    //       </label>
+    //       <input
+    //         type="text"
+    //         placeholder={
+    //           window.innerWidth < 768
+    //             ? "Ghi chú của người bán"
+    //             : "Hello hơ sờ ly ly "
+    //         }
+    //         onChange={(e) => setNote(e.target.value)}
+    //         id="note"
+    //         className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+    //       />
+    //     </div>
+    //   </div>
+    //   <div className="mt-3 flex flex-wrap justify-between gap-2 md:flex-nowrap">
+    //     <div className="flex w-full gap-2 md:w-1/2">
+    //       {/* <select
+    //         id="3rd"
+    //         class="w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+    //         value={partner}
+    //         onChange={(e) => setPartner(e.target.value)}
+    //       >
+    //         <option value="VNP" selected>
+    //           VNPost
+    //         </option>
+    //         <option value="SNP">Snapy</option>
+    //       </select> */}
+
+    //       <label className="relative inline-flex cursor-pointer items-center justify-center">
+    //         <input
+    //           type="checkbox"
+    //           value=""
+    //           class="peer sr-only"
+    //           onChange={(e) => {
+    //             setShopPay(!shopPay);
+    //           }}
+    //         />
+    //         <div className="peer h-6 w-11 rounded-full bg-gray-300 after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none md:after:top-[12px]"></div>
+    //         <span className="text-md ml-3 text-gray-900 dark:text-gray-300">
+    //           {shopPay ? "Người gửi trả cước" : "Người nhận trả cước"}
+    //         </span>
+    //       </label>
+    //     </div>
+    //     <div className="flex h-11 w-full justify-between md:w-1/2">
+    //       <button
+    //         onClick={handleClick}
+    //         className="flex flex-1 items-center justify-center rounded border-2 bg-primary-600 font-semibold text-white hover:border-primary-600 hover:bg-white hover:text-primary-600"
+    //       >
+    //         {loading ? (
+    //           <svg
+    //             class="h-5  w-5 animate-spin text-white"
+    //             xmlns="http://www.w3.org/2000/svg"
+    //             fill="none"
+    //             viewBox="0 0 24 24"
+    //           >
+    //             <circle
+    //               class="opacity-25"
+    //               cx="12"
+    //               cy="12"
+    //               r="10"
+    //               stroke="currentColor"
+    //               stroke-width="4"
+    //             ></circle>
+    //             <path
+    //               class="opacity-75"
+    //               fill="currentColor"
+    //               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+    //             ></path>
+    //           </svg>
+    //         ) : (
+    //           <div className="flex items-center justify-center font-bold">
+    //             <svg
+    //               xmlns="http://www.w3.org/2000/svg"
+    //               fill="red"
+    //               viewBox="0 0 24 24"
+    //               strokeWidth={1.5}
+    //               stroke="currentColor"
+    //               className="h-6 w-6"
+    //             >
+    //               <path
+    //                 strokeLinecap="round"
+    //                 strokeLinejoin="round"
+    //                 d="M12 6v12m6-6H6"
+    //               />
+    //             </svg>
+    //             Tạo đơn
+    //           </div>
+    //         )}
+    //       </button>
+    //     </div>
+    //     <ToastContainer />
+    //   </div>
+    // </div>
+    <div className="p-2 overflow-auto text-sm">
+      <div className="grid md:grid-cols-2 gap-2">
+        <div className="">
+          <div className="rounded border border-gray-300 bg-white p-2">
+            <h3 className="uppercase font-semibold">người gửi</h3>
+            <label className="mt-3 block">Số điện thoại: </label>
+            <Input placehoder={"người gửi"} />
+            <label className="mt-3 block">Họ tên: </label>
+            <Input placehoder={"người gửi"} />
+            <label className="mt-3 block">Địa chỉ: </label>
+            <Input placehoder={"người gửi"} />
+
+            <div className="flex gap-1">
+              <div className="pt-1 w-1/3 z-10">
+                <Selector
+                  placehoder={"Tỉnh/Thành"}
+                  data={cities}
+                  field={["name"]}
+                  toShow="name_with_type"
+                  size={"md"}
+                  output={setCityName}
+                />
+              </div>
+              <div className="pt-1 w-1/3 z-10">
+                <Selector
+                  placehoder={"Quận/Huyện"}
+                  data={districts}
+                  field={["name_with_type"]}
+                  toShow="name_with_type"
+                  size={"md"}
+                  output={setDistrictName}
+                />
+              </div>
+              <div className="pt-1 w-1/3 z-10">
+                <Selector
+                  placehoder={"Phường/Xã"}
+                  data={wards}
+                  field={["name_with_type"]}
+                  toShow="name_with_type"
+                  size={"md"}
+                  output={setWardName}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="">
+          <div className="rounded border border-gray-300 bg-white p-2">
+            <h3 className="uppercase font-semibold">người nhận</h3>
+            <label className="mt-3 block">Số điện thoại: </label>
+            <Input placehoder={"người gửi"} />
+            <label className="mt-3 block">Họ tên: </label>
+            <Input placehoder={"người gửi"} />
+            <label className="mt-3 block">Địa chỉ: </label>
+            <Input placehoder={"người gửi"} />
+            <div className="flex gap-1">
+              <div className="pt-1 w-1/3 z-10">
+                <Selector
+                  placehoder={"Tỉnh/Thành"}
+                  data={cities}
+                  field={["name"]}
+                  toShow="name_with_type"
+                  size={"md"}
+                  output={setCityName}
+                />
+              </div>
+              <div className="pt-1 w-1/3 z-10">
+                <Selector
+                  placehoder={"Quận/Huyện"}
+                  data={districts}
+                  field={["name_with_type"]}
+                  toShow="name_with_type"
+                  size={"md"}
+                  output={setDistrictName}
+                />
+              </div>
+              <div className="pt-1 w-1/3 z-10">
+                <Selector
+                  placehoder={"Phường/Xã"}
+                  data={wards}
+                  field={["name_with_type"]}
+                  toShow="name_with_type"
+                  size={"md"}
+                  output={setWardName}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="pt-2">
+        <div className="rounded border border-gray-300 bg-white p-2">
+          <h3 className="uppercase font-semibold">hàng hóa</h3>
+          <label className="mt-3 block">Nội dung hàng hóa: </label>
+          <Input placehoder={"nội dung hàng hóa"} />
+          <div className="grid md:grid-cols-3 grid-cols-2 gap-2">
+            <div>
+              <label className="mt-3 block">Trọng lượng: </label>
+              <Input placehoder={"Tính bằng gram"} type="number" />
+            </div>
+            <div>
+              <label className="mt-3 block">Số lượng: </label>
+              <div className="flex gap-1">
+                <Button type="primary" icon={minus}></Button>
+                <Input placehoder={0} type={"number"} />
+                <Button type="primary" icon={add}></Button>
+              </div>
+            </div>
+            <div className="col-span-2 md:col-span-1">
+              <label className="mt-3 block">Thu hộ: </label>
+              <Input placehoder={"Tính bằng gram"} type="number" />
+            </div>
+          </div>
+          <div>
+            <label className="mt-3 block">Ghi chú: </label>
+            <Input placehoder={"Tính bằng gram"} type="text" />
+          </div>
+        </div>
+      </div>
+      <div className="pt-2 flex justify-between gap-2">
+        <label className="relative inline-flex cursor-pointer items-center justify-center">
+          <input
+            type="checkbox"
+            value=""
+            class="peer sr-only"
+            onChange={(e) => {
+              setShopPay(!shopPay);
+            }}
+          />
+          <div className="peer h-6 w-11 rounded-full bg-gray-300 after:absolute after:top-[11px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none"></div>
+          <span className="text-md ml-3 text-gray-900 dark:text-gray-300">
+            {shopPay ? "Người gửi trả cước" : "Người nhận trả cước"}
           </span>
-        ) : (
-          <label className="relative inline-flex cursor-pointer items-center justify-center">
-            <input
-              type="checkbox"
-              value=""
-              class="peer sr-only"
-              onChange={(e) => {
-                setForShop(!forShop);
-              }}
-            />
-            <div className="peer h-6 w-11 rounded-full bg-gray-300 after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none"></div>
-            <span className="text-md ml-3 font-bold uppercase text-gray-900 dark:text-gray-300">
-              {forShop ? "tạo đơn cho shop" : "tạo mới đơn hàng"}
-            </span>
-          </label>
-        )}
-        <Link
-          to="/dashboard/bills"
-          className="flex items-center gap-1 rounded border border-primary-600 p-2 text-xs font-semibold text-primary-600 hover:bg-primary-600 hover:text-white md:text-base"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="h-6 w-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
-            />
-          </svg>
-
-          <span className="hidden md:block">Quay lại danh sách đơn hàng</span>
-        </Link>
-      </div>
-      <div className="flex flex-col gap-2 md:grid md:auto-cols-fr md:grid-flow-col">
-        {forShop && (
-          <div className="py-3">
-            <h3 className="font-semibold uppercase">người gửi</h3>
-            <div className="mt-3 flex flex-col gap-4">
-              <div className="relative">
-                <label
-                  htmlFor="phone"
-                  className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
-                >
-                  Số điện thoại
-                </label>
-                <input
-                  type="text"
-                  placeholder={
-                    window.innerWidth < 768
-                      ? "Số điện thoại người nhận"
-                      : "0123 456 789"
-                  }
-                  id="phone"
-                  className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-0 focus:border-blue-500 focus:ring-blue-500"
-                  onChange={(e) => {
-                    setPhone(e.target.value);
-                  }}
-                />
-                <div
-                  className={`${
-                    openSearch ? "flex " : "hidden "
-                  } " absolute mt-1 rounded border border-gray-300 bg-gray-300 p-2`}
-                >
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setName(customer.name);
-                      setAddress(customer.address);
-                      setCityFullName(customer.cityFullName);
-                      setDistrictFullName(customer.districtFullName);
-                      setWardFullName(customer.wardFullName);
-                      // setCityCode(customer.cityCode);
-                      // setDistrictCode(customer.districtCode);
-                      // setWardCode(customer.wardCode);
-                      setOpenSearch(false);
-                    }}
-                    className="hover:text-red-500"
-                  >
-                    {customer.name ? (
-                      <div>
-                        <span className="underline">{customer.name}</span>
-                        <span> - </span>
-                        <span>{customer.phone} - </span>
-                        <span>{customer.address}</span>
-                      </div>
-                    ) : (
-                      ""
-                    )}
-                  </button>
-                </div>
-              </div>
-              <div>
-                <label
-                  htmlFor="name"
-                  className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
-                >
-                  Họ tên
-                </label>
-                <input
-                  value={name}
-                  type="text"
-                  placeholder={
-                    window.innerWidth < 768
-                      ? "Tên người nhận"
-                      : "Nguyễn Văn Tũn"
-                  }
-                  id="name"
-                  className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="mt-4">
-              <label
-                htmlFor="address"
-                className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
-              >
-                Địa chỉ
-              </label>
-              <input
-                type="text"
-                value={address}
-                placeholder={
-                  window.innerWidth < 768
-                    ? "Địa chỉ người nhận"
-                    : "Ở một vũ trụ nào đấy"
-                }
-                id="address"
-                className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                onChange={(e) => setAddress(e.target.value)}
-              />
-              <div className="mt-2 grid grid-cols-3 gap-1">
-                <select
-                  id="city"
-                  class="mb-6 block w-full rounded border border-gray-300 bg-gray-50 p-1.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                  onChange={(e) => setCityCode(e.target.value)}
-                >
-                  <option selected disabled hidden>
-                    Tỉnh/Thành
-                  </option>
-                  {cities.map((i) => {
-                    return (
-                      <option value={i.code} key={i.code}>
-                        {i.name_with_type}
-                      </option>
-                    );
-                  })}
-                </select>
-                <select
-                  id="district"
-                  class="mb-6 block w-full rounded border border-gray-300 bg-gray-50 p-1.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                  onChange={(e) => setDistrictCode(e.target.value)}
-                >
-                  <option selected disabled hidden>
-                    Quận/Huyện
-                  </option>
-                  {districts.map((i) => {
-                    return (
-                      <option value={i.code} key={i.code}>
-                        {i.name_with_type}
-                      </option>
-                    );
-                  })}
-                </select>
-                <select
-                  id="ward"
-                  class="mb-6 block w-full rounded border border-gray-300 bg-gray-50 p-1.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                  onChange={(e) => {
-                    setWardCode(e.target.value);
-                  }}
-                >
-                  <option selected disabled hidden>
-                    Phường/Xã
-                  </option>
-                  {wards.map((i) => {
-                    return (
-                      <option value={i.code} key={i.code}>
-                        {i.name_with_type}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
-            </div>
-          </div>
-        )}
-        <div className="py-3">
-          <h3 className="font-semibold uppercase">người nhận</h3>
-          <div className="mt-3 flex flex-col gap-4">
-            <div className="relative">
-              <label
-                htmlFor="phone"
-                className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
-              >
-                Số điện thoại
-              </label>
-              <input
-                type="text"
-                placeholder={
-                  window.innerWidth < 768
-                    ? "Số điện thoại người nhận"
-                    : "0123 456 789"
-                }
-                id="phone"
-                className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-0 focus:border-blue-500 focus:ring-blue-500"
-                onChange={(e) => {
-                  setPhone(e.target.value);
-                }}
-              />
-              <div
-                className={`${
-                  openSearch ? "flex " : "hidden "
-                } " absolute mt-1 rounded border border-gray-300 bg-gray-300 p-2`}
-              >
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setName(customer.name);
-                    setAddress(customer.address);
-                    setCityFullName(customer.cityFullName);
-                    setDistrictFullName(customer.districtFullName);
-                    setWardFullName(customer.wardFullName);
-                    setCityName(customer.cityName);
-                    setDistrictName(customer.districtName);
-                    setWardName(customer.wardName);
-                    setCityCode(customer.cityCode);
-                    setDistrictCode(customer.districtCode);
-                    setWardCode(customer.wardCode);
-                    setOpenSearch(false);
-                  }}
-                  className="hover:text-red-500"
-                >
-                  {customer.name ? (
-                    <div>
-                      <span className="underline">{customer.name}</span>
-                      <span> - </span>
-                      <span>{customer.phone} - </span>
-                      <span>{customer.address}</span>
-                    </div>
-                  ) : (
-                    <span> Không có kết quả nào</span>
-                  )}
-                </button>
-              </div>
-            </div>
-            <div>
-              <label
-                htmlFor="name"
-                className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
-              >
-                Họ tên
-              </label>
-              <input
-                value={name}
-                type="text"
-                placeholder={
-                  window.innerWidth < 768 ? "Tên người nhận" : "Nguyễn Văn Tũn"
-                }
-                id="name"
-                className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="mt-4">
-            <label
-              htmlFor="address"
-              className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
-            >
-              Địa chỉ
-            </label>
-            <input
-              type="text"
-              value={address}
-              placeholder={
-                window.innerWidth < 768
-                  ? "Địa chỉ người nhận"
-                  : "Ở một vũ trụ nào đấy"
-              }
-              id="address"
-              className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-              onChange={(e) => setAddress(e.target.value)}
-            />
-            <div className="mt-2 grid grid-cols-3 gap-1">
-              <select
-                id="city"
-                class="mb-6 block w-full rounded border border-gray-300 bg-gray-50 p-1.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                onChange={(e) => setCityCode(e.target.value)}
-              >
-                {cityCode ? (
-                  <option selected disabled hidden value={cityCode}>
-                    {cityFullName}
-                  </option>
-                ) : (
-                  <option selected disabled hidden>
-                    Tỉnh/Thành
-                  </option>
-                )}
-                {cities.map((i) => {
-                  return (
-                    <option value={i.code} key={i.code}>
-                      {i.name_with_type}
-                    </option>
-                  );
-                })}
-              </select>
-              <select
-                id="district"
-                class="mb-6 block w-full rounded border border-gray-300 bg-gray-50 p-1.5 text-xs text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                onChange={(e) => setDistrictCode(e.target.value)}
-              >
-                {districtCode ? (
-                  <option selected disabled hidden value={districtCode}>
-                    {districtFullName}
-                  </option>
-                ) : (
-                  <option selected disabled hidden>
-                    Quận/Huyện
-                  </option>
-                )}
-                {districts.map((i) => {
-                  return (
-                    <option value={i.code} key={i.code}>
-                      {i.name_with_type}
-                    </option>
-                  );
-                })}
-              </select>
-              <select
-                id="ward"
-                class="mb-6 block w-full rounded border border-gray-300 bg-gray-50 p-1.5 text-xs text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                onChange={(e) => {
-                  setWardCode(e.target.value);
-                }}
-              >
-                {wardCode ? (
-                  <option selected value={wardCode} disabled hidden>
-                    {wardFullName}
-                  </option>
-                ) : (
-                  <option selected disabled hidden>
-                    Phường/Xã
-                  </option>
-                )}
-                {wards.map((i) => {
-                  return (
-                    <option value={i.code} key={i.code}>
-                      {i.name_with_type}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          </div>
+        </label>
+        <div className="flex justify-end gap-2 w-1/2">
+          <Button type="outline-danger" size="w-1/2 md:w-1/6">
+            HỦY BỎ
+          </Button>
+          <Button type="success" size="w-1/2 md:w-1/6">
+            TẠO MỚI
+          </Button>
         </div>
-        <div className="py-3">
-          <h3 className="font-semibold uppercase">hàng hóa</h3>
-          <div className="mt-3 flex flex-col gap-4">
-            <div>
-              <label
-                htmlFor="itemname"
-                className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
-              >
-                Tên hàng
-              </label>
-              <input
-                type="text"
-                placeholder={
-                  window.innerWidth < 768 ? "Tên hàng" : "Món quà dành cho bạn"
-                }
-                id="itemname"
-                onChange={(e) => setItemName(e.target.value)}
-                className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="quantity"
-                className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
-              >
-                Số lượng
-              </label>
-              <div className="flex">
-                <button
-                  className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-200 px-3 text-sm text-gray-900"
-                  onClick={() =>
-                    qty > 1 ? setQty((qty) => qty - 1) : setQty(1)
-                  }
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="h-6 w-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M18 12H6"
-                    />
-                  </svg>
-                </button>
-                <input
-                  type="text"
-                  value={qty}
-                  id="quantity"
-                  className="block w-full border border-gray-300 bg-gray-50 p-2 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                  onChange={(e) => setQty(parseInt(e.target.value))}
-                />
-                <button
-                  className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-200 px-3 text-sm text-gray-900"
-                  onClick={() => setQty((qty) => qty + 1)}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="h-6 w-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 6v12m6-6H6"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-            <div>
-              <label
-                htmlFor="weight"
-                className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
-              >
-                Trọng lượng (gram)
-              </label>
-              <input
-                type="text"
-                placeholder={
-                  window.innerWidth < 768 ? "Trọng lượng (gram)" : "100"
-                }
-                id="weight"
-                className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                onChange={(e) => setWeight(e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div>
-          <label
-            htmlFor="cost"
-            className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
-          >
-            Tiền thu hộ
-          </label>
-          <input
-            type="text"
-            placeholder={window.innerWidth < 768 ? "Tiền thu hộ" : "30.000"}
-            id="cost"
-            className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-          />
-        </div>
-        <div className="mt-3">
-          <label
-            htmlFor="note"
-            className="mb-2 hidden text-sm font-medium text-gray-900  md:block"
-          >
-            Ghi chú
-          </label>
-          <input
-            type="text"
-            placeholder={
-              window.innerWidth < 768
-                ? "Ghi chú của người bán"
-                : "Hello hơ sờ ly ly "
-            }
-            onChange={(e) => setNote(e.target.value)}
-            id="note"
-            className="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-          />
-        </div>
-      </div>
-      <div className="mt-3 flex flex-wrap justify-between gap-2 md:flex-nowrap">
-        <div className="flex w-full gap-2 md:w-1/2">
-          {/* <select
-            id="3rd"
-            class="w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-            value={partner}
-            onChange={(e) => setPartner(e.target.value)}
-          >
-            <option value="VNP" selected>
-              VNPost
-            </option>
-            <option value="SNP">Snapy</option>
-          </select> */}
-
-          <label className="relative inline-flex cursor-pointer items-center justify-center">
-            <input
-              type="checkbox"
-              value=""
-              class="peer sr-only"
-              onChange={(e) => {
-                setShopPay(!shopPay);
-              }}
-            />
-            <div className="peer h-6 w-11 rounded-full bg-gray-300 after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none md:after:top-[12px]"></div>
-            <span className="text-md ml-3 text-gray-900 dark:text-gray-300">
-              {shopPay ? "Người gửi trả cước" : "Người nhận trả cước"}
-            </span>
-          </label>
-        </div>
-        <div className="flex h-11 w-full justify-between md:w-1/2">
-          <button
-            onClick={handleClick}
-            className="flex flex-1 items-center justify-center rounded border-2 bg-primary-600 font-semibold text-white hover:border-primary-600 hover:bg-white hover:text-primary-600"
-          >
-            {loading ? (
-              <svg
-                class="h-5  w-5 animate-spin text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-            ) : (
-              <div className="flex items-center justify-center font-bold">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="red"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="h-6 w-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 6v12m6-6H6"
-                  />
-                </svg>
-                Tạo đơn
-              </div>
-            )}
-          </button>
-        </div>
-        <ToastContainer />
       </div>
     </div>
   );
