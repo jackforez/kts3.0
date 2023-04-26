@@ -45,6 +45,7 @@ const NewBill = () => {
 
   const [partner, setPartner] = useState("VNP");
   const [openSearchGetter, setOpenSearchGetter] = useState(false);
+  const [openSearchSender, setOpenSearchSender] = useState(false);
   const [getterSearchQuery, setGetterSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [shopPay, setShopPay] = useState(false);
@@ -127,7 +128,6 @@ const NewBill = () => {
     };
     getWard();
   }, [toWard]);
-
   const handleClick = async () => {
     setLoading(true);
     if (!getter.phone || getter.phone.length != 10) {
@@ -188,7 +188,17 @@ const NewBill = () => {
       toast.success(res.data);
       setLoading(false);
     } catch (err) {
-      toast.error(err.response ? err.response.data.message : "Network Error");
+      console.log(err);
+      toast.error(
+        err.response ? (
+          <div>
+            <p className="font-semibold">err.response.data</p>
+            <p>Vui lòng thông báo cho chúng tôi về lỗi này qua kênh CSKH!</p>
+          </div>
+        ) : (
+          "Network Error"
+        )
+      );
       setLoading(false);
     }
   };
@@ -205,11 +215,14 @@ const NewBill = () => {
   return (
     <div className="p-2 overflow-auto text-sm">
       <div className="grid md:grid-cols-2 gap-2">
-        <div className="">
+        <div className="relative">
           <div className="rounded border border-gray-300 bg-white p-2">
             <div className="flex justify-between">
               <h3 className="uppercase font-bold">người gửi</h3>
-              <span className="underline underline-offset-4 cursor-pointer">
+              <span
+                className="underline underline-offset-4 cursor-pointer hover:text-primary-600"
+                onClick={() => setOpenSearchSender(true)}
+              >
                 Thay đổi
               </span>
             </div>
@@ -278,6 +291,69 @@ const NewBill = () => {
               </div>
             </div>
           </div>
+          {openSearchSender && (
+            <div className="overflow-hidden absolute space-y-1 h-full w-full z-30 top-0 rounded border border-gray-300 bg-white p-2">
+              <div className="h-[15%]">
+                <Input
+                  placehoder={"Nhập số điện thoại khách hàng"}
+                  padding={"sm"}
+                  icon={search}
+                  onChange={(e) => setGetterSearchQuery(e.target.value)}
+                />
+              </div>
+              <div className="rounded border border-gray-300 h-[85%] overflow-auto divide-y divide-dashed divide-ktsPrimary">
+                {getters.length > 0 ? (
+                  getters.map((g, i) => {
+                    return (
+                      <div
+                        key={i}
+                        className="flex justify-between items-center p-2 hover:bg-slate-300"
+                      >
+                        <div className="flex gap-2">
+                          <div>
+                            <p className="font-semibold">{g.phone}</p>
+                            <p className="capitalize">{g.name}</p>
+                          </div>
+                          <span>
+                            {g.address +
+                              ", " +
+                              g.wardFullName +
+                              ", " +
+                              g.districtFullName +
+                              ", " +
+                              g.cityFullName}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => {
+                            setGetter(g);
+                            setToCity(g.cityName);
+                            setToDistrict(g.districtName);
+                            setToWard(g.wardName);
+                            setGetters([]);
+                            setOpenSearchGetter(false);
+                          }}
+                          className="px-2 py-1 rounded border border-primary-600 active:scale-90 duration-500 hover:bg-primary-600 hover:text-white"
+                        >
+                          chọn
+                        </button>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full gap-4">
+                    <span className="font-bold">Không có dữ liệu</span>
+                    <button
+                      className="underline underline-offset-4 hover:text-primary-600"
+                      onClick={() => setOpenSearchSender(false)}
+                    >
+                      Đóng
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
         <div className="relative">
           <div className="rounded border border-gray-300 bg-white p-2">
@@ -318,7 +394,7 @@ const NewBill = () => {
             <div className="grid md:grid-cols-3 gap-1 pt-1">
               <div className="w-full z-30">
                 <Selector
-                  placehoder={toCity || "Tỉnh/Thành"}
+                  placehoder={getter.cityFullName || "Tỉnh/Thành"}
                   data={cities}
                   field={["name"]}
                   toShow="name_with_type"
@@ -328,7 +404,7 @@ const NewBill = () => {
               </div>
               <div className="w-full z-20">
                 <Selector
-                  placehoder={toDistrict || "Quận/Huyện"}
+                  placehoder={getter.districtFullName || "Quận/Huyện"}
                   data={districts}
                   field={["name_with_type"]}
                   toShow="name_with_type"
@@ -338,7 +414,7 @@ const NewBill = () => {
               </div>
               <div className="w-full z-10">
                 <Selector
-                  placehoder={toWard || "Phường/Xã"}
+                  placehoder={getter.wardFullName || "Phường/Xã"}
                   data={wards}
                   field={["name_with_type"]}
                   toShow="name_with_type"
@@ -359,51 +435,55 @@ const NewBill = () => {
                 />
               </div>
               <div className="rounded border border-gray-300 h-[85%] overflow-auto divide-y divide-dashed divide-ktsPrimary">
-                {getters.length > 0
-                  ? getters.map((g, i) => {
-                      return (
-                        <div
-                          key={i}
-                          className="flex justify-between items-center p-2 hover:bg-slate-300"
-                        >
-                          <div className="flex gap-2">
-                            <div>
-                              <p className="font-semibold">{g.phone}</p>
-                              <p className="capitalize">{g.name}</p>
-                            </div>
-                            <span>
-                              {g.address +
-                                ", " +
-                                g.wardFullName +
-                                ", " +
-                                g.districtFullName +
-                                ", " +
-                                g.cityFullName}
-                            </span>
+                {getters.length > 0 ? (
+                  getters.map((g, i) => {
+                    return (
+                      <div
+                        key={i}
+                        className="flex justify-between items-center p-2 hover:bg-gray-200"
+                      >
+                        <div className="flex gap-2">
+                          <div>
+                            <p className="font-semibold">{g.phone}</p>
+                            <p className="capitalize">{g.name}</p>
                           </div>
-                          <button
-                            onClick={() => {
-                              setGetter({
-                                name: g.name,
-                                phone: g.phone,
-                                address: g.address,
-                              });
-                              setToCity(g.cityName);
-                              setToDistrict(g.districtName);
-                              setToWard(g.wardName);
-                              console.log(toCity);
-                              console.log(toDistrict);
-                              console.log(toWard);
-                              setOpenSearchGetter(false);
-                            }}
-                            className="px-2 py-1 rounded border border-primary-600 active:scale-90 duration-500 hover:bg-primary-600 hover:text-white"
-                          >
-                            chọn
-                          </button>
+                          <span>
+                            {g.address +
+                              ", " +
+                              g.wardFullName +
+                              ", " +
+                              g.districtFullName +
+                              ", " +
+                              g.cityFullName}
+                          </span>
                         </div>
-                      );
-                    })
-                  : "Không có dữ liệu"}
+                        <button
+                          onClick={() => {
+                            setGetter(g);
+                            setToCity(g.cityName);
+                            setToDistrict(g.districtName);
+                            setToWard(g.wardName);
+                            setGetters([]);
+                            setOpenSearchGetter(false);
+                          }}
+                          className="px-2 py-1 rounded border border-primary-600 active:scale-90 duration-500 hover:bg-primary-600 hover:text-white"
+                        >
+                          chọn
+                        </button>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full gap-4">
+                    <span className="font-bold">Không có dữ liệu</span>
+                    <button
+                      className="underline underline-offset-4 hover:text-primary-600"
+                      onClick={() => setOpenSearchGetter(false)}
+                    >
+                      Nhập thủ công
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           )}

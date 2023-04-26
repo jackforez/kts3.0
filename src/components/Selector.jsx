@@ -1,6 +1,6 @@
 import Input from "./Input";
 import { search } from "../ultis/functions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 const Selector = ({
   placehoder,
   size,
@@ -16,6 +16,9 @@ const Selector = ({
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const sz =
     size === "xs" ? "py-0.5 text-xs" : size === "sm" ? "py-1 text-sm" : "py-2";
+  useEffect(() => {
+    setSelected(placehoder);
+  }, [placehoder]);
   return (
     <div
       className={`w-full border bg-white ${
