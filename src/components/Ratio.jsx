@@ -1,13 +1,9 @@
-import { useState } from "react";
-
-const Ratio = ({ id, size, disabledBy = false, output = () => {} }) => {
-  const [checked, setChecked] = useState(false);
-  output(checked);
+const Ratio = ({ id, size, checked, disabledBy = false, output }) => {
   return (
     <button
       disabled={disabledBy}
       onClick={() => {
-        setChecked(!checked);
+        output(!checked);
       }}
       className={`${
         checked ? "bg-green-500" : "bg-slate-500"

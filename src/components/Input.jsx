@@ -1,5 +1,6 @@
 import React from "react";
 const Input = ({
+  name,
   type,
   size,
   placehoder,
@@ -17,6 +18,7 @@ const Input = ({
       }`}
     >
       <input
+        name={name}
         value={value}
         placeholder={placehoder}
         type={type}
@@ -27,7 +29,7 @@ const Input = ({
         } ${
           !disabledBy
             ? "focus:border-primary-500 focus:ring-primary-500"
-            : " bg-gray-400"
+            : " bg-slate-200"
         }
         border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900 outline-0 `}
       />

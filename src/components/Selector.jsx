@@ -8,6 +8,7 @@ const Selector = ({
   field,
   toShow = "ktscorp.vn",
   output,
+  disabled = false,
 }) => {
   const [query, setQuery] = useState("");
   const [openDataTable, setOpenDataTable] = useState(false);
@@ -15,12 +16,13 @@ const Selector = ({
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const sz =
     size === "xs" ? "py-0.5 text-xs" : size === "sm" ? "py-1 text-sm" : "py-2";
-
   return (
     <div
       className={`w-full border bg-white ${
         openDataTable && "border-primary-500"
-      } rounded px-2 relative`}
+      } rounded px-2 relative ${
+        disabled && "pointer-events-none bg-slate-200"
+      }`}
     >
       <div
         className={`${sz} flex justify-between cursor-pointer`}
