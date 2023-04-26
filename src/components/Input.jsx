@@ -1,4 +1,3 @@
-import React from "react";
 const Input = ({
   name,
   type,
@@ -8,6 +7,7 @@ const Input = ({
   icon,
   onChange,
   group,
+  padding,
   disabledBy,
   textCenter = false,
 }) => {
@@ -31,7 +31,9 @@ const Input = ({
             ? "focus:border-primary-500 focus:ring-primary-500"
             : " bg-slate-200"
         }
-        border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900 outline-0 `}
+        border border-gray-300 bg-gray-50 ${
+          padding === "xs" ? "p-1" : padding === "sm" ? "p-2" : "p-3"
+        } text-sm text-gray-900 outline-0 `}
       />
       {icon && (
         <svg

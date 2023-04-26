@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { ktsRequest } from "../ultis/connections";
 import { Input, Button, Selector, Ratio } from "../components";
-import { add, minus } from "../ultis/svgs";
+import { add, minus, search } from "../ultis/svgs";
 const NewBill = () => {
   //lấy thông tin user đang đăng nhập
   const { currentUser } = useSelector((state) => state.user);
@@ -41,11 +41,14 @@ const NewBill = () => {
   const [sender, setSender] = useState(currentUser || {});
   //reciver info
   const [getter, setGetter] = useState({});
+  const [getters, setGetters] = useState([]);
 
   const [partner, setPartner] = useState("VNP");
-  const [openSearch, setOpenSearch] = useState(false);
+  const [openSearchGetter, setOpenSearchGetter] = useState(false);
+  const [getterSearchQuery, setGetterSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [shopPay, setShopPay] = useState(false);
+  const [saveGetterInfo, setSaveGetterInfo] = useState(false);
 
   const [fromWard, setFromWard] = useState(sender.wardName || "");
   const [fromDistrict, setFromDistrict] = useState(sender.districtName || "");
@@ -53,27 +56,26 @@ const NewBill = () => {
   const [toWard, setToWard] = useState("");
   const [toDistrict, setToDistrict] = useState("");
   const [toCity, setToCity] = useState("");
-  // useEffect(() => {
-  //   const fetchCustomers = async () => {
-  //     const res = await ktsRequest.get(`/customers/find?phone=${phone}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${currentUser.token}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //     setGetter(res.data.data);
-  //     if (res.data.success) {
-  //       setOpenSearch(true);
-  //     } else {
-  //       setOpenSearch(false);
-  //     }
-  //   };
-  //   if (getter.phone && getter.phone.length > 4 && getter.phone.length <= 10) {
-  //     fetchCustomers();
-  //   } else {
-  //     setOpenSearch(false);
-  //   }
-  // }, [getter.phone?.length]);
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const { token } = currentUser;
+        const res = await ktsRequest.post(
+          `/v2/customers/find/${getterSearchQuery}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setGetters(res.data);
+      } catch (error) {
+        toast.error(error);
+      }
+    };
+    getterSearchQuery.length > 3 && fetchCustomers();
+  }, [getterSearchQuery.length]);
   useEffect(() => {
     const getCities = async () => {
       try {
@@ -168,7 +170,7 @@ const NewBill = () => {
         fromCity,
         fromDistrict,
         fromWard,
-        toName: getter.displayName,
+        toName: getter.name,
         toPhone: getter.phone,
         toAddress: getter.address,
         toCity,
@@ -205,31 +207,39 @@ const NewBill = () => {
       <div className="grid md:grid-cols-2 gap-2">
         <div className="">
           <div className="rounded border border-gray-300 bg-white p-2">
-            <h3 className="uppercase font-bold">người gửi</h3>
-            <label className="mt-3 block">Số điện thoại: </label>
+            <div className="flex justify-between">
+              <h3 className="uppercase font-bold">người gửi</h3>
+              <span className="underline underline-offset-4 cursor-pointer">
+                Thay đổi
+              </span>
+            </div>
+            <label className="mt-2 block">Số điện thoại: </label>
             <Input
               name="phone"
               value={sender.phone}
               placehoder={"Số điện thoại người gửi"}
               type="number"
               disabledBy={true}
+              padding={"sm"}
               onChange={handelChangeSender}
             />
-            <label className="mt-3 block">Họ tên: </label>
+            <label className="mt-2 block">Họ tên: </label>
             <Input
               name="name"
               value={sender.displayName}
               disabledBy={true}
               placehoder={"Họ tên người gửi người gửi"}
               onChange={handelChangeSender}
+              padding={"sm"}
             />
-            <label className="mt-3 block">Địa chỉ: </label>
+            <label className="mt-2 block">Địa chỉ: </label>
             <Input
               name="address"
               value={sender.address}
               placehoder={"Số nhà,tên đường người gửi"}
               onChange={handelChangeSender}
               disabledBy={true}
+              padding={"sm"}
             />
 
             <div className="grid md:grid-cols-3 gap-1 pt-1">
@@ -269,35 +279,46 @@ const NewBill = () => {
             </div>
           </div>
         </div>
-        <div className="">
+        <div className="relative">
           <div className="rounded border border-gray-300 bg-white p-2">
-            <h3 className="uppercase font-bold">người nhận</h3>
-            <label className="mt-3 block">Số điện thoại: </label>
+            <div className="flex justify-between">
+              <h3 className="uppercase font-bold">người nhận</h3>
+              <span
+                className="underline underline-offset-4 cursor-pointer hover:text-primary-600"
+                onClick={() => setOpenSearchGetter(true)}
+              >
+                Danh sách người nhận
+              </span>
+            </div>
+            <label className="mt-2 block">Số điện thoại: </label>
             <Input
               placehoder={"Số điện thoại người nhận"}
               type="number"
               name="phone"
-              value={getter.phone}
+              value={getter.phone || ""}
               onChange={handelChangeGetter}
+              padding={"sm"}
             />
-            <label className="mt-3 block">Họ tên: </label>
+            <label className="mt-2 block">Họ tên: </label>
             <Input
               placehoder={"Họ tên người gửi người nhận"}
-              value={getter.name}
+              value={getter.name || ""}
               name="name"
               onChange={handelChangeGetter}
+              padding={"sm"}
             />
-            <label className="mt-3 block">Địa chỉ: </label>
+            <label className="mt-2 block">Địa chỉ: </label>
             <Input
               placehoder={"Số nhà,tên đường người nhận"}
-              value={getter.address}
+              value={getter.address || ""}
               name="address"
               onChange={handelChangeGetter}
+              padding={"sm"}
             />
             <div className="grid md:grid-cols-3 gap-1 pt-1">
               <div className="w-full z-30">
                 <Selector
-                  placehoder={"Tỉnh/Thành"}
+                  placehoder={toCity || "Tỉnh/Thành"}
                   data={cities}
                   field={["name"]}
                   toShow="name_with_type"
@@ -307,7 +328,7 @@ const NewBill = () => {
               </div>
               <div className="w-full z-20">
                 <Selector
-                  placehoder={"Quận/Huyện"}
+                  placehoder={toDistrict || "Quận/Huyện"}
                   data={districts}
                   field={["name_with_type"]}
                   toShow="name_with_type"
@@ -317,7 +338,7 @@ const NewBill = () => {
               </div>
               <div className="w-full z-10">
                 <Selector
-                  placehoder={"Phường/Xã"}
+                  placehoder={toWard || "Phường/Xã"}
                   data={wards}
                   field={["name_with_type"]}
                   toShow="name_with_type"
@@ -327,28 +348,89 @@ const NewBill = () => {
               </div>
             </div>
           </div>
+          {openSearchGetter && (
+            <div className="overflow-hidden absolute space-y-1 h-full w-full z-30 top-0 rounded border border-gray-300 bg-white p-2">
+              <div className="h-[15%]">
+                <Input
+                  placehoder={"Nhập số điện thoại khách hàng"}
+                  padding={"sm"}
+                  icon={search}
+                  onChange={(e) => setGetterSearchQuery(e.target.value)}
+                />
+              </div>
+              <div className="rounded border border-gray-300 h-[85%] overflow-auto divide-y divide-dashed divide-ktsPrimary">
+                {getters.length > 0
+                  ? getters.map((g, i) => {
+                      return (
+                        <div
+                          key={i}
+                          className="flex justify-between items-center p-2 hover:bg-slate-300"
+                        >
+                          <div className="flex gap-2">
+                            <div>
+                              <p className="font-semibold">{g.phone}</p>
+                              <p className="capitalize">{g.name}</p>
+                            </div>
+                            <span>
+                              {g.address +
+                                ", " +
+                                g.wardFullName +
+                                ", " +
+                                g.districtFullName +
+                                ", " +
+                                g.cityFullName}
+                            </span>
+                          </div>
+                          <button
+                            onClick={() => {
+                              setGetter({
+                                name: g.name,
+                                phone: g.phone,
+                                address: g.address,
+                              });
+                              setToCity(g.cityName);
+                              setToDistrict(g.districtName);
+                              setToWard(g.wardName);
+                              console.log(toCity);
+                              console.log(toDistrict);
+                              console.log(toWard);
+                              setOpenSearchGetter(false);
+                            }}
+                            className="px-2 py-1 rounded border border-primary-600 active:scale-90 duration-500 hover:bg-primary-600 hover:text-white"
+                          >
+                            chọn
+                          </button>
+                        </div>
+                      );
+                    })
+                  : "Không có dữ liệu"}
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <div className="pt-2">
         <div className="rounded border border-gray-300 bg-white p-2">
           <h3 className="uppercase font-bold">hàng hóa</h3>
-          <label className="mt-3 block">Nội dung hàng hóa: </label>
-          <Input placehoder={"nội dung hàng hóa"} />
+          <label className="mt-2 block">Nội dung hàng hóa: </label>
+          <Input placehoder={"nội dung hàng hóa"} padding={"sm"} />
           <div className="grid md:grid-cols-3 grid-cols-2 gap-2">
             <div>
-              <label className="mt-3 block">Trọng lượng: </label>
+              <label className="mt-2 block">Trọng lượng: </label>
               <Input
                 placehoder="(gram) "
                 type="number"
+                padding={"sm"}
                 onChange={(e) => setWeight(e.target.value)}
               />
             </div>
             <div>
-              <label className="mt-3 block">Số lượng: </label>
+              <label className="mt-2 block">Số lượng: </label>
               <div className="flex gap-1">
                 <Button
                   type="primary"
                   icon={minus}
+                  padding={"sm"}
                   callback={() =>
                     qty > 1 ? setQty((qty) => qty - 1) : setQty(1)
                   }
@@ -358,45 +440,58 @@ const NewBill = () => {
                   type={"number"}
                   textCenter={true}
                   value={qty}
+                  padding={"sm"}
                   onChange={(e) => setQty(parseInt(e.target.value))}
                 />
                 <Button
                   type="primary"
                   icon={add}
                   callback={() => setQty((qty) => qty + 1)}
+                  padding={"sm"}
                 ></Button>
               </div>
             </div>
             <div className="col-span-2 md:col-span-1">
-              <label className="mt-3 block">Thu hộ: </label>
+              <label className="mt-2 block">Thu hộ: </label>
               <Input
                 placehoder={"0"}
                 type="number"
+                padding={"sm"}
                 onChange={(e) => setCod(e.target.value)}
               />
             </div>
           </div>
           <div>
-            <label className="mt-3 block">Ghi chú: </label>
+            <label className="mt-2 block">Ghi chú: </label>
             <Input
               placehoder={"Ghi chú của người bán"}
               type="text"
               onChange={(e) => setNote(e.target.value)}
+              padding={"sm"}
             />
           </div>
         </div>
       </div>
-      <div className="pt-2 flex justify-between gap-2 w-full">
-        <div className="flex items-center">
+      <div className="pt-2 flex justify-between flex-wrap w-full">
+        <div className="flex items-center w-1/2 md:w-1/3 py-2">
           <Ratio output={setShopPay} checked={shopPay} />
-          <span className="text-md ml-3 text-gray-900 dark:text-gray-300">
+          <span className="text-xs ml-3 text-gray-900 dark:text-gray-300">
             {shopPay ? "Người gửi trả cước" : "Người nhận trả cước"}
           </span>
         </div>
-        <div className="flex justify-end gap-2 w-1/2">
+        <div className="flex items-center w-1/2 md:w-1/3 py-2">
+          <Ratio output={setSaveGetterInfo} checked={saveGetterInfo} />
+          <span className="text-xs ml-3 text-gray-900 dark:text-gray-300">
+            {saveGetterInfo
+              ? "Lưu thông tin người nhận"
+              : "Không lưu thông tin người nhận"}
+          </span>
+        </div>
+        <div className="flex justify-end gap-2 md:w-1/3 w-full">
           <Button
             type="outline-danger"
             size="w-1/2"
+            padding={"sm"}
             callback={() => navigate("/dashboard/bills")}
           >
             HỦY BỎ
@@ -408,6 +503,7 @@ const NewBill = () => {
             loading={loading}
             disabledBy={loading}
             animation={true}
+            padding={"sm"}
           >
             TẠO MỚI
           </Button>

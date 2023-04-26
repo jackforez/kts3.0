@@ -35,7 +35,7 @@ const Header = () => {
         </div>
       </div>
       {openMenu && (
-        <div className="absolute top-12 z-10 rounded border border-primary-600 bg-white p-2">
+        <div className="absolute top-12 right-10 z-10 rounded border border-primary-600 bg-white p-2">
           <button
             onClick={(e) => {
               navigate("/login");
