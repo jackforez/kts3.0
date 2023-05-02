@@ -271,6 +271,7 @@ const Partners = () => {
                         icon={"M6 18L18 6M6 6l12 12"}
                         iconSize={`4 ${addCost !== k && "rotate-45"}`}
                         title={"Thêm mức giá"}
+                        padding="sm"
                         callback={() => {
                           addCost === k ? setAddCost(-1) : setAddCost(k);
                         }}
@@ -280,6 +281,7 @@ const Partners = () => {
                         icon={pencil}
                         iconSize={"4"}
                         title={"Sửa thông tin khách hàng"}
+                        padding="sm"
                         callback={(e) => {}}
                       ></Button>
 
@@ -288,6 +290,7 @@ const Partners = () => {
                         icon={trash}
                         iconSize={"4"}
                         title={"Xóa khách hàng"}
+                        padding="sm"
                       ></Button>
                     </div>
                   </div>
