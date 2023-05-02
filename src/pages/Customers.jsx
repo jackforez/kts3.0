@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { ktsRequest } from "../ultis/connections";
 import { Button, GridData, Input } from "../components";
 import { search as myFilter, toVND } from "../ultis/functions";
-import { pencil, trash } from "../ultis/svgs";
+import { pencil, search, trash } from "../ultis/svgs";
 import logo from "../assets/logo.svg";
 import { logout } from "../redux/userSlice";
 
@@ -144,13 +144,15 @@ const Customers = () => {
     <div className="h-full overflow-auto bg-slate-200 p-3">
       <div className="flex items-center justify-between py-3">
         <Input
-          placehoder={"Nhập tên/số điện thoại khách hàng...."}
+          placehoder={"Tìm theo tên/số điện thoại ..."}
           size={"w-1/3"}
           onChange={(e) => setQuery(e.target.value)}
+          icon={search}
+          padding="sm"
         />
         <Link
           to="/dashboard/customers/new"
-          className="flex items-center gap-1 rounded border border-primary-600 p-2 text-xs font-semibold text-primary-600 hover:bg-primary-600 hover:text-white md:text-base"
+          className="flex items-center gap-1 rounded border border-primary-600 px-2 py-1.5 text-xs text-primary-600 hover:bg-primary-600 hover:text-white md:text-base"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -173,7 +175,7 @@ const Customers = () => {
       {/* component thông tin khách hàng */}
       <div className="border border-ktsPrimary rounded-md">
         <GridData headers={headers}>
-          <div className="divide-y divide-dashed divide-ktsPrimary bg-white shadow-lg">
+          <div className="divide-y divide-dashed divide-ktsPrimary bg-white shadow-lg rounded-md">
             {myFilter(customers, query, ["name", "phone"]).length > 0 ? (
               myFilter(customers, query, ["name", "phone"]).map((c, i) => {
                 return (
@@ -198,6 +200,7 @@ const Customers = () => {
                         icon={pencil}
                         iconSize={"4"}
                         title={"Sửa thông tin khách hàng"}
+                        padding="sm"
                         callback={(e) => {
                           setShowPrint(true);
                           setDataPrint(JSON.stringify(b));
@@ -208,6 +211,7 @@ const Customers = () => {
                         icon={trash}
                         iconSize={"4"}
                         title={"Xóa khách hàng"}
+                        padding="sm"
                       ></Button>
                     </div>
                   </div>

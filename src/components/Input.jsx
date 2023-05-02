@@ -42,7 +42,9 @@ const Input = ({
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="w-4 h-4 text-gray-600 absolute top-3.5 right-3"
+          className={`w-4 h-4 text-gray-600 absolute ${
+            padding === "xs" ? "top-2" : padding === "sm" ? "top-3" : "top-4"
+          } right-3`}
         >
           <path strokeLinecap="round" strokeLinejoin="round" d={icon} />
         </svg>

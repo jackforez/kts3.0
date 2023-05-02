@@ -2,9 +2,9 @@ import React from "react";
 
 const Services = () => {
   return (
-    <div className="mx-auto max-w-screen-xl px-4 pb-16 lg:py-16 mt-[8vh] h-[92vh] flex items-center">
-      <div className="gap-8 md:grid md:grid-cols-3 ">
-        <div className="flex flex-col items-center gap-3 px-2 py-4 hover:rounded hover:border hover:border-[#ff5f13] duration-500">
+    <div className="mx-auto max-w-screen-xl px-4 md:mt-[8vh] mt-[16vh] h-[92vh] flex items-center overflow-auto">
+      <div className="md:grid md:grid-rows-3 h-full w-full py-3">
+        <div className="flex items-center gap-3 px-2 py-4">
           <svg
             version="1.0"
             xmlns="http://www.w3.org/2000/svg"
@@ -12,6 +12,8 @@ const Services = () => {
             height="48.000000pt"
             viewBox="0 0 512.000000 512.000000"
             preserveAspectRatio="xMidYMid meet"
+            className="w-1/2 h-full"
+            // className="w-1/2 h-full hover:rounded hover:border hover:border-[#ff5f13] duration-500"
           >
             <g
               transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
@@ -71,15 +73,15 @@ m-3435 -435 c87 -14 188 -94 234 -183 45 -87 45 -216 0 -303 -132 -261 -493
               />
             </g>
           </svg>
-          <div className="flex w-4/5 flex-col">
-            <h5 className="mb-4 text-center text-2xl font-bold">Vận chuyển</h5>
+          <div className="flex w-1/2 flex-col">
+            <h5 className="mb-4  text-2xl font-bold">Vận chuyển</h5>
             <p className="text-justify text-gray-800">
               Chúng tôi cung cấp dịch vụ vận chuyển nội địa, quốc tế thông qua
               hệ thống Sàn thương mại điện tử Sale168.vn
             </p>
           </div>
         </div>
-        <div className="flex flex-col items-center gap-3 px-2 py-4 hover:rounded hover:border hover:border-[#ff5f13] duration-500">
+        <div className="flex flex-row-reverse items-center">
           <svg
             version="1.0"
             xmlns="http://www.w3.org/2000/svg"
@@ -87,6 +89,7 @@ m-3435 -435 c87 -14 188 -94 234 -183 45 -87 45 -216 0 -303 -132 -261 -493
             height="48.000000pt"
             viewBox="0 0 128.000000 128.000000"
             preserveAspectRatio="xMidYMid meet"
+            className="h-full w-1/2"
           >
             <g
               transform="translate(0.000000,128.000000) scale(0.100000,-0.100000)"
@@ -167,17 +170,15 @@ l0 -45 -105 0 -105 0 0 45 0 45 105 0 105 0 0 -45z m258 28 c3 -10 -13 -13
               />
             </g>
           </svg>
-          <div className="flex w-4/5 flex-col">
-            <h5 className="mb-4 text-center text-2xl font-bold">
-              Thương mại điện tử
-            </h5>
+          <div className="flex w-1/2 flex-col">
+            <h5 className="mb-4  text-2xl font-bold">Thương mại điện tử</h5>
             <p className="text-justify text-gray-800">
               Sàn thương mại điện tử kết hợp cùng hệ thống vận chuyển kiểu mới
               giúp cho việc bán và mua hàng được đảm bảo an toàn và nhanh gọn
             </p>
           </div>
         </div>
-        <div className="flex flex-col items-center gap-3 px-2 py-4 hover:rounded hover:border hover:border-[#ff5f13] duration-500">
+        <div className="flex items-center gap-3 px-2 py-4">
           <svg
             version="1.0"
             xmlns="http://www.w3.org/2000/svg"
@@ -185,6 +186,7 @@ l0 -45 -105 0 -105 0 0 45 0 45 105 0 105 0 0 -45z m258 28 c3 -10 -13 -13
             height="48.000000pt"
             viewBox="0 0 128.000000 128.000000"
             preserveAspectRatio="xMidYMid meet"
+            className="h-full w-1/2"
           >
             <g
               transform="translate(0.000000,128.000000) scale(0.100000,-0.100000)"
@@ -231,8 +233,8 @@ c-14 -28 -27 -52 -28 -54 -6 -7 -165 112 -165 123 0 18 23 36 40 32 8 -2 52
               />
             </g>
           </svg>
-          <div className="flex w-4/5 flex-col">
-            <h5 className="mb-4 text-center text-2xl font-bold">Kết nối</h5>
+          <div className="flex w-1/2 flex-col">
+            <h5 className="mb-4  text-2xl font-bold">Kết nối</h5>
             <p className="text-justify text-gray-800">
               Kết nối nhu cầu mua và bán của doanh nghiệp tại Việt Nam. Hỗ trợ,
               tư vấn và cung cấp giải pháp cho doanh nghiệp nước ngoài

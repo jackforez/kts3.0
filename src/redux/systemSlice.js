@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   loading: false,
   refresh: false,
+  currentPage: "",
 };
 
 export const systemSlice = createSlice({
@@ -10,7 +11,7 @@ export const systemSlice = createSlice({
   initialState,
   reducers: {
     onRefreh: (state) => {
-      !state.loading;
+      !state.refresh;
     },
     onLoading: (state) => {
       state.loading = true;
@@ -18,9 +19,13 @@ export const systemSlice = createSlice({
     loaded: (state) => {
       state.loading = false;
     },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
   },
 });
 
-export const { onRefreh, onLoading, loaded } = systemSlice.actions;
+export const { onRefreh, onLoading, loaded, setCurrentPage } =
+  systemSlice.actions;
 
 export default systemSlice.reducer;

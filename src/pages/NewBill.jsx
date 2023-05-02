@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { ktsRequest } from "../ultis/connections";
 import { Input, Button, Selector, Ratio } from "../components";
 import { add, minus, search } from "../ultis/svgs";
+import { loaded, onLoading, setCurrentPage } from "../redux/systemSlice";
 const NewBill = () => {
   //lấy thông tin user đang đăng nhập
   const { currentUser } = useSelector((state) => state.user);
+  const { loading } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   //đọc thông số độ rộng màn hình
   const getWindowDimensions = () => {
@@ -47,7 +50,7 @@ const NewBill = () => {
   const [openSearchGetter, setOpenSearchGetter] = useState(false);
   const [openSearchSender, setOpenSearchSender] = useState(false);
   const [getterSearchQuery, setGetterSearchQuery] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [shopPay, setShopPay] = useState(false);
   const [saveGetterInfo, setSaveGetterInfo] = useState(false);
 
@@ -57,6 +60,9 @@ const NewBill = () => {
   const [toWard, setToWard] = useState("");
   const [toDistrict, setToDistrict] = useState("");
   const [toCity, setToCity] = useState("");
+  useEffect(() => {
+    dispatch(setCurrentPage("tạo mới đơn hàng"));
+  }, []);
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
@@ -129,36 +135,36 @@ const NewBill = () => {
     getWard();
   }, [toWard]);
   const handleClick = async () => {
-    setLoading(true);
+    dispatch(onLoading());
     if (!getter.phone || getter.phone.length != 10) {
       toast.warn("Số điện thoại người nhận hàng không hợp lệ");
-      setLoading(false);
+      dispatch(loaded());
       return;
     }
     if (!getter.name) {
       toast.warn("Chưa nhập tên người nhận hàng");
-      setLoading(false);
+      dispatch(loaded());
       return;
     }
 
     if (!getter.address) {
       toast.warn("Chưa nhập địa chỉ người nhận hàng");
-      setLoading(false);
+      dispatch(loaded());
       return;
     }
     if (!weight || weight <= 0) {
       toast.warn("Khối lượng không hợp lệ");
-      setLoading(false);
+      dispatch(loaded());
       return;
     }
     if (!itemName) {
       toast.warn("Cần nhập nội dung hàng hóa");
-      setLoading(false);
+      dispatch(loaded());
       return;
     }
     if (qty < 1) {
       toast.warn("Số lượng không hợp lệ!");
-      setLoading(false);
+      dispatch(loaded());
       return;
     }
     try {
@@ -186,20 +192,20 @@ const NewBill = () => {
       });
       console.log(res.data);
       toast.success(res.data);
-      setLoading(false);
+      dispatch(loaded());
     } catch (err) {
       console.log(err);
       toast.error(
         err.response ? (
           <div>
-            <p className="font-semibold">err.response.data</p>
+            <p className="font-semibold">{err.response.data.message}</p>
             <p>Vui lòng thông báo cho chúng tôi về lỗi này qua kênh CSKH!</p>
           </div>
         ) : (
           "Network Error"
         )
       );
-      setLoading(false);
+      dispatch(loaded());
     }
   };
   const handelChangeSender = (e) => {
@@ -552,7 +558,7 @@ const NewBill = () => {
           </div>
         </div>
       </div>
-      <div className="pt-2 flex justify-between flex-wrap w-full">
+      <div className="pt-2 flex justify-between flex-wrap w-full rounded border border-gray-300 bg-white p-2 mt-1">
         <div className="flex items-center w-1/2 md:w-1/3 py-2">
           <Ratio output={setShopPay} checked={shopPay} />
           <span className="text-xs ml-3 text-gray-900 dark:text-gray-300">

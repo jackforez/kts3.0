@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { dashboardConfig } from "../ultis/config";
 const Header = () => {
   const { currentUser } = useSelector((state) => state.user);
+  const { currentPage } = useSelector((state) => state.system);
   const [openMenu, setOpenMenu] = useState(false);
   const [header, setHeader] = useState("");
   const dispatch = useDispatch();
@@ -17,7 +18,7 @@ const Header = () => {
       ? [...dashboardConfig.userLinks, ...dashboardConfig.adminLinks]
       : [...dashboardConfig.userLinks];
   useEffect(() => {
-    setHeader(Menus.find((i) => i.path === pathname)?.title);
+    setHeader(Menus.find((i) => i.path === pathname)?.title || currentPage);
   }, [window.location.pathname]);
   return (
     <div className="flex h-[8vh] w-full items-center justify-between bg-white px-3 md:px-9 border-b border-ktsPrimary">
