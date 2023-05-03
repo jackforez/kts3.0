@@ -40,9 +40,11 @@ const NewBill = () => {
   const [itemName, setItemName] = useState("bưu phẩm");
   const [qty, setQty] = useState(1);
   const [weight, setWeight] = useState(0);
+  const [isBroken, setIsBroken] = useState(false);
 
   //sender info
   const [sender, setSender] = useState(currentUser || {});
+  const [senders, setSenders] = useState([]);
   //reciver info
   const [getter, setGetter] = useState({});
   const [getters, setGetters] = useState([]);
@@ -51,6 +53,7 @@ const NewBill = () => {
   const [openSearchGetter, setOpenSearchGetter] = useState(false);
   const [openSearchSender, setOpenSearchSender] = useState(false);
   const [getterSearchQuery, setGetterSearchQuery] = useState("");
+  const [senderSearchQuery, setSenderSearchQuery] = useState("");
   // const [loading, setLoading] = useState(false);
   const [shopPay, setShopPay] = useState(false);
   const [saveGetterInfo, setSaveGetterInfo] = useState(false);
@@ -83,6 +86,25 @@ const NewBill = () => {
     };
     getterSearchQuery.length > 3 && fetchCustomers();
   }, [getterSearchQuery.length]);
+  useEffect(() => {
+    const fetchShop = async () => {
+      try {
+        const res = await ktsRequest.post(
+          `/v2/users/find/${senderSearchQuery}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setSenders(res.data);
+      } catch (error) {
+        toast.error(error);
+      }
+    };
+    senderSearchQuery.length > 3 && fetchShop();
+  }, [senderSearchQuery.length]);
   useEffect(() => {
     const getCities = async () => {
       try {
@@ -192,6 +214,7 @@ const NewBill = () => {
           note,
           partner,
           shopPay,
+          isBroken,
         },
         {
           headers: {
@@ -310,15 +333,15 @@ const NewBill = () => {
             <div className="overflow-hidden absolute space-y-1 h-full w-full z-30 top-0 rounded border border-gray-300 bg-white p-2">
               <div className="h-[15%]">
                 <Input
-                  placehoder={"Nhập số điện thoại khách hàng"}
+                  placehoder={"Nhập số điện thoại của shop cần gửi hàng"}
                   padding={"sm"}
                   icon={search}
-                  onChange={(e) => setGetterSearchQuery(e.target.value)}
+                  onChange={(e) => setSenderSearchQuery(e.target.value)}
                 />
               </div>
               <div className="rounded border border-gray-300 h-[85%] overflow-auto divide-y divide-dashed divide-ktsPrimary">
-                {getters.length > 0 ? (
-                  getters.map((g, i) => {
+                {senders.length > 0 ? (
+                  senders.map((s, i) => {
                     return (
                       <div
                         key={i}
@@ -326,27 +349,27 @@ const NewBill = () => {
                       >
                         <div className="flex gap-2">
                           <div>
-                            <p className="font-semibold">{g.phone}</p>
-                            <p className="capitalize">{g.name}</p>
+                            <p className="font-semibold">{s.phone}</p>
+                            <p className="capitalize">{s.displayName}</p>
                           </div>
                           <span>
-                            {g.address +
+                            {s.address +
                               ", " +
-                              g.wardFullName +
+                              s.wardFullName +
                               ", " +
-                              g.districtFullName +
+                              s.districtFullName +
                               ", " +
-                              g.cityFullName}
+                              s.cityFullName}
                           </span>
                         </div>
                         <button
                           onClick={() => {
-                            setGetter(g);
-                            setToCity(g.cityName);
-                            setToDistrict(g.districtName);
-                            setToWard(g.wardName);
+                            setSender(s);
+                            setFromCity(s.cityName);
+                            setFromDistrict(s.districtName);
+                            setToWard(s.wardName);
                             setGetters([]);
-                            setOpenSearchGetter(false);
+                            setOpenSearchSender(false);
                           }}
                           className="px-2 py-1 rounded border border-primary-600 active:scale-90 duration-500 hover:bg-primary-600 hover:text-white"
                         >
@@ -568,13 +591,13 @@ const NewBill = () => {
         </div>
       </div>
       <div className="pt-2 flex justify-between flex-wrap w-full rounded border border-gray-300 bg-white p-2 mt-1">
-        <div className="flex items-center w-1/2 md:w-1/3 py-2">
+        <div className="flex items-center w-1/3 md:w-1/4 py-2">
           <Ratio output={setShopPay} checked={shopPay} />
           <span className="text-xs ml-3 text-gray-900 dark:text-gray-300">
             {shopPay ? "Người gửi trả cước" : "Người nhận trả cước"}
           </span>
         </div>
-        <div className="flex items-center w-1/2 md:w-1/3 py-2">
+        <div className="flex items-center w-1/3 md:w-1/4 py-2">
           <Ratio output={setSaveGetterInfo} checked={saveGetterInfo} />
           <span className="text-xs ml-3 text-gray-900 dark:text-gray-300">
             {saveGetterInfo
@@ -582,7 +605,13 @@ const NewBill = () => {
               : "Không lưu thông tin người nhận"}
           </span>
         </div>
-        <div className="flex justify-end gap-2 md:w-1/3 w-full">
+        <div className="flex items-center w-1/3 md:w-1/4 py-2">
+          <Ratio output={setIsBroken} checked={isBroken} />
+          <span className="text-xs ml-3 text-gray-900 dark:text-gray-300">
+            {isBroken ? "Hàng dễ vỡ" : "Hàng thường"}
+          </span>
+        </div>
+        <div className="flex justify-end gap-2 md:w-1/4 w-full">
           <Button
             type="outline-danger"
             size="w-1/2"
