@@ -77,7 +77,11 @@ const Bills = () => {
     { title: "tổng thu", size: "w-1/12 text-end" },
     { title: "Thao tác", size: "w-1/12 text-end" },
   ];
-  console.log(query);
+  const searchByStatus = (q) => {
+    return bills.filter((el) =>
+      el.status.normalize("NFC").toLowerCase().includes(q)
+    ).length;
+  };
   return (
     <div className="p-3">
       {showPrint && <ToPrint data={dataPrint} setClose={setShowPrint} />}
@@ -96,13 +100,13 @@ const Bills = () => {
               setQuery("");
             }}
           >
-            Tất cả ({bills.length})
+            Tất cả ({searchByStatus("")})
           </span>
           <span
             className="inline-block bg-white px-2 pt-0.5 pb-1 rounded-md border border-red-500 cursor-pointer hover:bg-red-500 text-red-500 hover:text-white"
             onClick={() => setQuery("hủy")}
           >
-            hủy (1)
+            hủy ({searchByStatus("hủy")})
           </span>
           <span
             className="inline-block bg-white px-2 pt-0.5 pb-1 rounded-md border border-green-500 cursor-pointer hover:bg-green-500 text-green-500 hover:text-white"
@@ -110,7 +114,7 @@ const Bills = () => {
               setQuery("thành công");
             }}
           >
-            thành công(10)
+            thành công({searchByStatus("thành công")})
           </span>
           <span
             className="inline-block bg-white px-2 pt-0.5 pb-1 rounded-md border border-blue-500 cursor-pointer hover:bg-blue-500 text-blue-500 hover:text-white"
@@ -118,7 +122,7 @@ const Bills = () => {
               setQuery("đang giao");
             }}
           >
-            đang giao(2)
+            đang giao({searchByStatus("đang giao")})
           </span>
         </div>
         {/* <div className="order-3 flex gap-3 lg:order-2">

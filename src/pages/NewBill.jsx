@@ -257,12 +257,22 @@ const NewBill = () => {
           <div className="rounded border border-gray-300 bg-white p-2">
             <div className="flex justify-between">
               <h3 className="uppercase font-bold">người gửi</h3>
-              <span
-                className="underline underline-offset-4 cursor-pointer hover:text-primary-600"
-                onClick={() => setOpenSearchSender(true)}
-              >
-                Thay đổi
-              </span>
+              <div className="space-x-3">
+                <span
+                  className="underline underline-offset-4 cursor-pointer hover:text-primary-600"
+                  onClick={() => {
+                    setSender(currentUser);
+                  }}
+                >
+                  Xóa
+                </span>
+                <span
+                  className="underline underline-offset-4 cursor-pointer hover:text-primary-600"
+                  onClick={() => setOpenSearchSender(true)}
+                >
+                  Thay đổi
+                </span>
+              </div>
             </div>
             <label className="mt-2 block">Số điện thoại: </label>
             <Input
@@ -362,7 +372,22 @@ const NewBill = () => {
                               s.cityFullName}
                           </span>
                         </div>
-                        <button
+                        <Button
+                          type={"outline-primary"}
+                          padding={"xs"}
+                          size={"px-2"}
+                          callback={() => {
+                            setSender(s);
+                            setFromCity(s.cityName);
+                            setFromDistrict(s.districtName);
+                            setToWard(s.wardName);
+                            setSenders([]);
+                            setOpenSearchSender(false);
+                          }}
+                        >
+                          chọn
+                        </Button>
+                        {/* <button
                           onClick={() => {
                             setSender(s);
                             setFromCity(s.cityName);
@@ -374,7 +399,7 @@ const NewBill = () => {
                           className="px-2 py-1 rounded border border-primary-600 active:scale-90 duration-500 hover:bg-primary-600 hover:text-white"
                         >
                           chọn
-                        </button>
+                        </button> */}
                       </div>
                     );
                   })
@@ -590,7 +615,7 @@ const NewBill = () => {
           </div>
         </div>
       </div>
-      <div className="pt-2 flex justify-between flex-wrap w-full rounded border border-gray-300 bg-white p-2 mt-1">
+      <div className="pt-2 flex justify-between flex-wrap w-full rounded border border-gray-300 bg-white p-2 mt-2">
         <div className="flex items-center w-1/3 md:w-1/4 py-2">
           <Ratio output={setShopPay} checked={shopPay} />
           <span className="text-xs ml-3 text-gray-900 dark:text-gray-300">
