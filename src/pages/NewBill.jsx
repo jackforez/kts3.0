@@ -169,7 +169,8 @@ const NewBill = () => {
     }
     try {
       const res = await ktsRequest.post("/v2/bills", {
-        shopID: currentUser._id,
+        userID: currentUser._id,
+        shopID: sender._id,
         fromName: sender.displayName,
         fromPhone: sender.phone,
         fromAddress: sender.address,
