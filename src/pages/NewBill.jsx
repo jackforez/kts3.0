@@ -10,6 +10,7 @@ import { loaded, onLoading, setCurrentPage } from "../redux/systemSlice";
 const NewBill = () => {
   //lấy thông tin user đang đăng nhập
   const { currentUser } = useSelector((state) => state.user);
+  const { token } = currentUser;
   const { loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -66,7 +67,6 @@ const NewBill = () => {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const { token } = currentUser;
         const res = await ktsRequest.post(
           `/v2/customers/find/${getterSearchQuery}`,
           {},
@@ -168,29 +168,37 @@ const NewBill = () => {
       return;
     }
     try {
-      const res = await ktsRequest.post("/v2/bills", {
-        userID: currentUser._id,
-        shopID: sender._id,
-        fromName: sender.displayName,
-        fromPhone: sender.phone,
-        fromAddress: sender.address,
-        fromCity,
-        fromDistrict,
-        fromWard,
-        toName: getter.name,
-        toPhone: getter.phone,
-        toAddress: getter.address,
-        toCity,
-        toDistrict,
-        toWard,
-        itemName,
-        itemQauntity: qty,
-        weight,
-        cod,
-        note,
-        partner,
-        shopPay,
-      });
+      const res = await ktsRequest.post(
+        "/v2/bills",
+        {
+          userID: currentUser._id,
+          shopID: sender._id,
+          fromName: sender.displayName,
+          fromPhone: sender.phone,
+          fromAddress: sender.address,
+          fromCity,
+          fromDistrict,
+          fromWard,
+          toName: getter.name,
+          toPhone: getter.phone,
+          toAddress: getter.address,
+          toCity,
+          toDistrict,
+          toWard,
+          itemName,
+          itemQauntity: qty,
+          weight,
+          cod: cod || 0,
+          note,
+          partner,
+          shopPay,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log(res.data);
       toast.success(res.data);
       dispatch(loaded());
