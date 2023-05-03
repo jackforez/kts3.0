@@ -205,7 +205,7 @@ const Login = () => {
           </Swiper>
         </div>
       </div> */}
-      <div className="lg:w-1/4 md:w-1/3 w-full h-full py-4 md:p-0 justify-between bg-black-900 flex text-white backdrop-blur rounded overflow-hidden drop-shadow bg-opacity-10 items-center">
+      <div className="lg:w-1/4 md:w-1/3 w-full h-full py-4 md:p-0 justify-between flex text-white backdrop-blur rounded overflow-hidden drop-shadow bg-opacity-10 items-center">
         <div className="w-full px-6 md:space-y-8">
           <Link
             title="Trang chủ"
