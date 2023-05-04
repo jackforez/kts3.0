@@ -7,7 +7,7 @@ const initialState = {
 };
 
 export const systemSlice = createSlice({
-  name: "user",
+  name: "system",
   initialState,
   reducers: {
     onRefreh: (state) => {

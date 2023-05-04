@@ -11,7 +11,7 @@ const NewBill = () => {
   //lấy thông tin user đang đăng nhập
   const { currentUser } = useSelector((state) => state.user);
   const { token } = currentUser;
-  const { loading } = useSelector((state) => state.user);
+  const { loading } = useSelector((state) => state.system);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   //đọc thông số độ rộng màn hình
@@ -160,34 +160,27 @@ const NewBill = () => {
     dispatch(onLoading());
     if (!getter.phone || getter.phone.length != 10) {
       toast.warn("Số điện thoại người nhận hàng không hợp lệ");
-      dispatch(loaded());
       return;
     }
     if (!getter.name) {
       toast.warn("Chưa nhập tên người nhận hàng");
-      dispatch(loaded());
       return;
     }
 
     if (!getter.address) {
       toast.warn("Chưa nhập địa chỉ người nhận hàng");
-      dispatch(loaded());
       return;
     }
     if (!weight || weight <= 0) {
       toast.warn("Khối lượng không hợp lệ");
-      dispatch(loaded());
       return;
     }
     if (!itemName) {
       toast.warn("Cần nhập nội dung hàng hóa");
-      dispatch(loaded());
       return;
     }
     if (qty < 1) {
       toast.warn("Số lượng không hợp lệ!");
-      dispatch(loaded());
-      return;
     }
     try {
       const res = await ktsRequest.post(
@@ -226,7 +219,6 @@ const NewBill = () => {
       toast.success(res.data);
       dispatch(loaded());
     } catch (err) {
-      console.log(err);
       toast.error(
         err.response ? (
           <div>
@@ -523,6 +515,7 @@ const NewBill = () => {
                         <button
                           onClick={() => {
                             setGetter(g);
+                            console.log(g);
                             setToCity(g.cityName);
                             setToDistrict(g.districtName);
                             setToWard(g.wardName);
@@ -663,3 +656,8 @@ const NewBill = () => {
 };
 
 export default NewBill;
+
+// CCBM0a0WqkVPAvIDw3ph+6ljzpcAfUhyeDfGjA+KIj+z4UzD0j72uj3ye2K9cJ1rYrshNjZ4fCWDIrC8Ee2QnFoTQnUVim7iQjUOpm30QIQilUKqHNa5bhFrs6ayPHPaJdY3jlQNFmz33SOsFcL5jA==
+// CCBM0a0WqkVPAvIDw3ph+6ljzpcAfUhyeDfGjA+KIj+z4UzD0j72uj3ye2K9cJ1rYrshNjZ4fCWDIrC8Ee2QnFoTQnUVim7iQjUOpm30QIQilUKqHNa5bhFrs6ayPHPaJdY3jlQNFmz33SOsFcL5jA==
+// CCBM0a0WqkVPAvIDw3ph+6ljzpcAfUhyeDfGjA+KIj+z4UzD0j72uj3ye2K9cJ1rYrshNjZ4fCWDIrC8Ee2QnFoTQnUVim7iQjUOpm30QIQilUKqHNa5bhFrs6ayPHPaJdY3jlQNFmz33SOsFcL5jA==
+// CCBM0a0WqkVPAvIDw3ph+6ljzpcAfUhyeDfGjA+KIj+z4UzD0j72uj3ye2K9cJ1rYrshNjZ4fCWDIrC8Ee2QnFoTQnUVim7iQjUOpm30QIQilUKqHNa5bhFrs6ayPHPaJdY3jlQNFmz33SOsFcL5jA==

@@ -21,7 +21,7 @@ const Home = () => {
     setLoading(true);
     const config = {
       method: "get",
-      url: `tracking/${orderID}}`,
+      url: `tracking/${orderID}`,
       params: {
         id: orderID,
       },
