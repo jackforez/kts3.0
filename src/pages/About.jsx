@@ -82,7 +82,7 @@ const About = () => {
             position="CODER"
           />
           <Card
-            img="https://s120-ava-talk.zadn.vn/e/b/5/6/4/120/1d68734824ec5ef470324e3e818ed3a7.jpg"
+            img="https://s75-ava-talk.zadn.vn/4/9/8/7/72/75/135e8cb6fc02660a4bb8642704b3b2e5.jpg"
             name="minh"
             position="TECHNICAN"
           />

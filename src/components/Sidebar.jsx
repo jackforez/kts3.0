@@ -34,6 +34,7 @@ const Sidebar = () => {
           <svg
             fill="white"
             viewBox="0 0 145 55"
+            onClick={() => navigate("/")}
             className={`h-12 cursor-pointer text-white duration-500 ${
               open && "rotate-[360deg]"
             }`}

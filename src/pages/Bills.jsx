@@ -178,7 +178,7 @@ const Bills = () => {
                         <span className="bg-primary-200 px-1 inline-block py-0.5 rounded text-primary-700 font-semibold text-xs">
                           {b.status}
                         </span>
-                        <span>{b.orderNumber}</span>
+                        <span> {b.orderNumber}</span>
 
                         {/* <div>Mã tra cứu: {b.partnerTrackingId}</div> */}
                       </div>
