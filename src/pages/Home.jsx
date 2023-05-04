@@ -35,6 +35,7 @@ const Home = () => {
       })
       .catch(function (error) {
         setLoading(false);
+        console.log(error);
         toast.error("Network Error!");
       });
   };
