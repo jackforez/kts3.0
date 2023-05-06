@@ -203,11 +203,11 @@ const Bills = () => {
                         <span>{toVND(b.cod)}</span>
                       </div>
                       <div className="w-1/12 text-end">
-                        <span>{toVND(b.ktsAmount - b.cod)}</span>
+                        <span>{toVND(b.shopAmount - b.cod)}</span>
                       </div>
                       <div className="w-1/12 text-end">
                         <span className="font-semibold">
-                          {toVND(b.ktsAmount)}
+                          {toVND(b.shopAmount)}
                         </span>
                       </div>
                       {/* </div> */}
