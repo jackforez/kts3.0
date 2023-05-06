@@ -87,6 +87,22 @@ const NewBill = () => {
     getterSearchQuery.length > 3 && fetchCustomers();
   }, [getterSearchQuery.length]);
   useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const res = await ktsRequest.get(`/v2/customers/my`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setGetters(res.data);
+        console.log(getters);
+      } catch (error) {
+        toast.error(error);
+      }
+    };
+    openSearchGetter && fetchCustomers();
+  }, [openSearchGetter]);
+  useEffect(() => {
     const fetchShop = async () => {
       try {
         const res = await ktsRequest.post(

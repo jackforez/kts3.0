@@ -305,7 +305,6 @@ const NewCustomer = () => {
       >
         Tạo mới
       </button>
-      <ToastContainer />
     </div>
   );
 };

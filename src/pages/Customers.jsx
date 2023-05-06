@@ -200,7 +200,7 @@ const Customers = () => {
                         icon={pencil}
                         iconSize={"4"}
                         title={"Sửa thông tin khách hàng"}
-                        padding="sm"
+                        padding="xs"
                         callback={(e) => {
                           setShowPrint(true);
                           setDataPrint(JSON.stringify(b));
@@ -211,7 +211,7 @@ const Customers = () => {
                         icon={trash}
                         iconSize={"4"}
                         title={"Xóa khách hàng"}
-                        padding="sm"
+                        padding="xs"
                       ></Button>
                     </div>
                   </div>

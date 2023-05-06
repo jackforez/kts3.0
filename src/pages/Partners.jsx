@@ -131,10 +131,11 @@ const Partners = () => {
       });
   };
   const headers = [
-    { title: "Đối tác", size: "w-1/6" },
-    { title: "Địa chỉ", size: "w-1/3" },
-    { title: "Mức giá áp dụng", size: "w-1/3" },
-    { title: "Thao tác", size: "w-1/6" },
+    { title: "Đối tác", size: "w-2/12" },
+    { title: "điện thoại", size: "w-2/12" },
+    { title: "Địa chỉ", size: "w-3/12" },
+    { title: "Mức giá áp dụng", size: "w-3/12" },
+    { title: "Thao tác", size: "w-2/12 text-center" },
   ];
   return (
     <div className="h-full overflow-auto bg-slate-200 p-3">
@@ -178,11 +179,9 @@ const Partners = () => {
                     className="px-2 py-1.5 flex items-center text-sm "
                     key={k}
                   >
-                    <div className="w-1/6">
-                      <div>{c.name}</div>
-                      <div>{c.phone}</div>
-                    </div>
-                    <div className="w-1/3">
+                    <div className="w-1/6">{c.displayName}</div>
+                    <div className="w-1/6">{c.phone}</div>
+                    <div className="w-1/4">
                       {c.address +
                         ", " +
                         c.wardFullName +
@@ -191,7 +190,7 @@ const Partners = () => {
                         ", " +
                         c.cityFullName}
                     </div>
-                    <div className="w-1/3 relative">
+                    <div className="w-1/4 relative">
                       {c.cost.map((j, i) => {
                         return (
                           <span
@@ -239,7 +238,7 @@ const Partners = () => {
                             output={setCostName}
                           />
                           <button
-                            className="rounded border border-green-600 py-0.5 px-2 font-bold text-green-700 hover:bg-green-600 hover:text-white"
+                            className="rounded border border-green-600 py-0.5 px-1.5 font-bold text-green-700 hover:bg-green-600 hover:text-white"
                             onClick={(e) => {
                               handleAddCost(c, costName);
                             }}
@@ -271,7 +270,7 @@ const Partners = () => {
                         icon={"M6 18L18 6M6 6l12 12"}
                         iconSize={`4 ${addCost !== k && "rotate-45"}`}
                         title={"Thêm mức giá"}
-                        padding="sm"
+                        padding="xs"
                         callback={() => {
                           addCost === k ? setAddCost(-1) : setAddCost(k);
                         }}
@@ -281,7 +280,7 @@ const Partners = () => {
                         icon={pencil}
                         iconSize={"4"}
                         title={"Sửa thông tin khách hàng"}
-                        padding="sm"
+                        padding="xs"
                         callback={(e) => {}}
                       ></Button>
 
@@ -290,7 +289,7 @@ const Partners = () => {
                         icon={trash}
                         iconSize={"4"}
                         title={"Xóa khách hàng"}
-                        padding="sm"
+                        padding="xs"
                       ></Button>
                     </div>
                   </div>

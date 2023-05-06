@@ -66,7 +66,7 @@ const Cost = () => {
     { title: "Max (gram)", size: "w-1/6" },
     { title: "Giá trị", size: "w-1/6" },
     { title: "Tạo bởi", size: "w-1/6" },
-    { title: "Thao tác", size: "w-1/6" },
+    { title: "Thao tác", size: "w-1/6 text-center" },
   ];
   return (
     <div className="flex-1 p-3">
@@ -116,11 +116,13 @@ const Cost = () => {
                         type="outline-warning"
                         icon={pencil}
                         iconSize={"4"}
+                        padding="xs"
                       ></Button>
                       <Button
                         type="outline-danger"
                         icon={trash}
                         iconSize={"4"}
+                        padding="xs"
                       ></Button>
                     </div>
                   </div>

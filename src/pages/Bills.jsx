@@ -47,34 +47,29 @@ const Bills = () => {
     };
     fetch();
   }, [refresh]);
+  console.log(refresh);
   const handleDelete = async (bill) => {
-    if (
-      confirm(
-        `Bạn chắc chắn muốn xóa đơn hàng: ${bill.orderNumber}?\nSau khi thực hiện sẽ không thể hoàn tác!\nThông tin đơn hàng sẽ thể truy xuất!`
-      )
-    ) {
-      try {
-        const res = await ktsRequest.delete(`/bills/${bill._id}`, {
-          headers: {
-            Authorization: `Beare ${currentUser.currentUser.token}`,
-          },
-        });
-        toast.success(res.data);
-        dispatch(onRefreh());
-      } catch (error) {
-        error.response
-          ? toast.error(error.response.data.message)
-          : toast.error("Network Error!");
-      }
+    try {
+      const res = await ktsRequest.delete(`v2/bills/${bill._id}`, {
+        headers: {
+          Authorization: `Beare ${currentUser.currentUser.token}`,
+        },
+      });
+      toast.success(res.data);
+      dispatch(onRefreh());
+    } catch (error) {
+      error.response
+        ? toast.error(error.response.data.message)
+        : toast.error("Network Error!");
     }
   };
   const headers = [
-    { title: "Đơn hàng ", size: "w-2/12" },
-    { title: "người nhận", size: "w-3/12" },
-    { title: "người gửi", size: "w-3/12" },
+    { title: "Đơn hàng ", size: "w-3/12" },
+    { title: "người gửi/nhận", size: "w-4/12" },
+    { title: "chịu cước", size: "w-1/12 text-end" },
     { title: "COD", size: "w-1/12 text-end" },
-    { title: "cước", size: "w-1/12 text-end" },
-    { title: "tổng thu", size: "w-1/12 text-end" },
+    { title: "cước shop", size: "w-1/12 text-end" },
+    { title: "cước KTS", size: "w-1/12 text-end" },
     { title: "Thao tác", size: "w-1/12 text-end" },
   ];
   const searchByStatus = (q) => {
@@ -118,6 +113,14 @@ const Bills = () => {
           </span>
           <span
             className="inline-block bg-white px-2 pt-0.5 pb-1 rounded-md border border-blue-500 cursor-pointer hover:bg-blue-500 text-blue-500 hover:text-white"
+            onClick={() => {
+              setQuery("đơn mới");
+            }}
+          >
+            Đơn mới({searchByStatus("đơn mới")})
+          </span>
+          <span
+            className="inline-block bg-white px-2 pt-0.5 pb-1 rounded-md border border-orange-500 cursor-pointer hover:bg-orange-500 text-orange-500 hover:text-white"
             onClick={() => {
               setQuery("đang giao");
             }}
@@ -174,7 +177,7 @@ const Bills = () => {
                 (b, i) => {
                   return (
                     <div className="px-2 py-1.5 flex items-center" key={i}>
-                      <div className="w-2/12">
+                      <div className="w-3/12">
                         <span className="bg-primary-200 px-1 inline-block py-0.5 rounded text-primary-700 font-semibold text-xs">
                           {b.status}
                         </span>
@@ -183,32 +186,27 @@ const Bills = () => {
                         {/* <div>Mã tra cứu: {b.partnerTrackingId}</div> */}
                       </div>
                       {/* <div className="w-/12 md:grid md:auto-cols-fr md:grid-flow-col"> */}
-                      <div className="w-3/12">
-                        <span>{b.toName + " - " + b.toPhone}</span>
-                        {/* <div>
-                          Địa chỉ:{" "}
-                          {b.toAddress +
-                            ", " +
-                            b.toWard +
-                            ", " +
-                            b.toDistrict +
-                            ", " +
-                            b.toCity}
-                        </div> */}
+                      <div className="w-4/12">
+                        <div>
+                          <span className="font-semibold">Từ: </span>{" "}
+                          <span>{b.fromName + " - " + b.fromPhone}</span>
+                        </div>
+                        <div>
+                          <span className="font-semibold">Tới: </span>{" "}
+                          <span>{b.toName + " - " + b.toPhone}</span>
+                        </div>
                       </div>
-                      <div className="w-3/12">
-                        <span>{b.fromName + " - " + b.fromPhone}</span>
+                      <div className="w-1/12 text-end">
+                        <span>{toVND(b.shopPay ? b.costP : 0)}</span>
                       </div>
                       <div className="w-1/12 text-end">
                         <span>{toVND(b.cod)}</span>
                       </div>
                       <div className="w-1/12 text-end">
-                        <span>{toVND(b.shopAmount)}</span>
+                        <span>{toVND(b.costP)}</span>
                       </div>
                       <div className="w-1/12 text-end">
-                        <span className="font-semibold">
-                          {toVND(b.shopAmount)}
-                        </span>
+                        <span className="font-semibold">{toVND(b.costK)}</span>
                       </div>
                       {/* </div> */}
                       <div className="w-1/12 flex justify-between md:justify-end md:gap-2">
@@ -229,6 +227,7 @@ const Bills = () => {
                           iconSize={"4"}
                           title={"Hủy vận đơn"}
                           padding={"xs"}
+                          callback={() => handleDelete(b)}
                         ></Button>
                       </div>
                     </div>

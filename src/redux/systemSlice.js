@@ -11,7 +11,7 @@ export const systemSlice = createSlice({
   initialState,
   reducers: {
     onRefreh: (state) => {
-      !state.refresh;
+      state.refresh = !state.refresh;
     },
     onLoading: (state) => {
       state.loading = true;
