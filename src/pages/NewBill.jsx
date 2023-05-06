@@ -35,7 +35,7 @@ const NewBill = () => {
   const [districtName, setDistrictName] = useState("");
   const [wardName, setWardName] = useState("");
   // item info
-  const [cod, setCod] = useState(30000);
+  const [cod, setCod] = useState(0);
   const [note, setNote] = useState("");
   const [itemName, setItemName] = useState("bưu phẩm");
   const [qty, setQty] = useState(1);
@@ -160,27 +160,33 @@ const NewBill = () => {
     dispatch(onLoading());
     if (!getter.phone || getter.phone.length != 10) {
       toast.warn("Số điện thoại người nhận hàng không hợp lệ");
+      dispatch(loaded());
       return;
     }
     if (!getter.name) {
       toast.warn("Chưa nhập tên người nhận hàng");
+      dispatch(loaded());
       return;
     }
 
     if (!getter.address) {
       toast.warn("Chưa nhập địa chỉ người nhận hàng");
+      dispatch(loaded());
       return;
     }
     if (!weight || weight <= 0) {
       toast.warn("Khối lượng không hợp lệ");
+      dispatch(loaded());
       return;
     }
     if (!itemName) {
       toast.warn("Cần nhập nội dung hàng hóa");
+      dispatch(loaded());
       return;
     }
     if (qty < 1) {
       toast.warn("Số lượng không hợp lệ!");
+      dispatch(loaded());
     }
     try {
       const res = await ktsRequest.post(
@@ -515,7 +521,6 @@ const NewBill = () => {
                         <button
                           onClick={() => {
                             setGetter(g);
-                            console.log(g);
                             setToCity(g.cityName);
                             setToDistrict(g.districtName);
                             setToWard(g.wardName);

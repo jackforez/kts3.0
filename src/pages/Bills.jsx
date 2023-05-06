@@ -27,7 +27,7 @@ const Bills = () => {
     dispatch(onLoading());
     const fetch = async () => {
       try {
-        const res = await ktsRequest.get("/bills", {
+        const res = await ktsRequest.get("v2/bills", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -203,7 +203,7 @@ const Bills = () => {
                         <span>{toVND(b.cod)}</span>
                       </div>
                       <div className="w-1/12 text-end">
-                        <span>{toVND(b.shopAmount - b.cod)}</span>
+                        <span>{toVND(b.shopAmount)}</span>
                       </div>
                       <div className="w-1/12 text-end">
                         <span className="font-semibold">

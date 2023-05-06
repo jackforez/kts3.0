@@ -6,6 +6,7 @@ import { toVND } from "../ultis/functions";
 
 const ToPrint = (props) => {
   const printData = JSON.parse(props.data);
+  console.log(printData);
   let componentRef = useRef();
   return (
     <div className="absolute top-0 left-0 z-50 flex h-screen w-full items-center justify-center bg-white/30 backdrop-blur-sm">
@@ -67,7 +68,7 @@ const ToPrint = (props) => {
             <div>
               <span>Thu hộ: </span>
               <span className="text-xl font-semibold">
-                {toVND(printData.ktsAmount + printData.cod)}
+                {toVND(printData.shopAmount)}
               </span>
             </div>
             <div>
