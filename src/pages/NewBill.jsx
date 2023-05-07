@@ -39,7 +39,7 @@ const NewBill = () => {
   const [note, setNote] = useState("");
   const [itemName, setItemName] = useState("bưu phẩm");
   const [qty, setQty] = useState(1);
-  const [weight, setWeight] = useState(0);
+  const [weight, setWeight] = useState(1);
   const [isBroken, setIsBroken] = useState(false);
 
   //sender info
@@ -303,7 +303,7 @@ const NewBill = () => {
               name="name"
               value={sender.displayName}
               disabledBy={true}
-              placehoder={"Họ tên người gửi người gửi"}
+              placehoder={"Họ tên người gửi"}
               onChange={handelChangeSender}
               padding={"sm"}
             />
@@ -570,12 +570,16 @@ const NewBill = () => {
         <div className="rounded border border-gray-300 bg-white p-2">
           <h3 className="uppercase font-bold">hàng hóa</h3>
           <label className="mt-2 block">Nội dung hàng hóa: </label>
-          <Input placehoder={"nội dung hàng hóa"} padding={"sm"} />
+          <Input
+            placehoder={"nội dung hàng hóa"}
+            padding={"sm"}
+            onChange={(e) => setItemName(e.target.value)}
+          />
           <div className="grid md:grid-cols-3 grid-cols-2 gap-2">
             <div>
-              <label className="mt-2 block">Trọng lượng: </label>
+              <label className="mt-2 block">Trọng lượng (gram): </label>
               <Input
-                placehoder="(gram) "
+                placehoder={weight}
                 type="number"
                 padding={"sm"}
                 onChange={(e) => setWeight(e.target.value)}
