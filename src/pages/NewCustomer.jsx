@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { ktsRequest } from "../ultis/connections";
+import { Input, Selector } from "../components";
+import { setCurrentPage } from "../redux/systemSlice";
 
 const NewCustomer = () => {
   const navigate = useNavigate();
@@ -25,8 +27,11 @@ const NewCustomer = () => {
   const [wardFullName, setWardFullName] = useState("");
   const [cost, setCost] = useState([]);
   const [costName, setCostName] = useState("");
-
+  const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user);
+  useEffect(() => {
+    dispatch(setCurrentPage("tạo mới đơn hàng"));
+  }, []);
   useEffect(() => {
     const fetchCost = async () => {
       try {
@@ -153,158 +158,75 @@ const NewCustomer = () => {
         toast.error(err.response ? err.response.data.message : "Network Error");
       });
   };
+  const handelChangeSender = () => {
+    console.log("change");
+  };
   return (
-    <div className="p-3">
-      <div className="flex items-center justify-between border-b-2 pb-3">
-        <h3 className="text-xl font-semibold">Tạo mới khách hàng </h3>
-        <Link
-          to="/dashboard/customers"
-          className="flex items-center gap-1 rounded border border-primary-600 p-2 text-xs font-semibold text-primary-600 hover:bg-primary-600 hover:text-white md:text-base"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="h-6 w-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
-            />
-          </svg>
-
-          <span className="hidden md:block">Quay lại</span>
-        </Link>
+    <div className="rounded border border-gray-300 bg-white p-2 flex flex-wrap">
+      <div className="w-1/3 px-0.5">
+        <label className="mt-2 block">Số điện thoại: </label>
+        <Input
+          name="phone"
+          placehoder={"Số điện thoại người gửi"}
+          type="number"
+          disabledBy={true}
+          padding={"sm"}
+          onChange={handelChangeSender}
+        />
       </div>
-      <div className="flex flex-col gap-2 md:grid md:grid-cols-2">
-        <div className="mt-9 flex flex-col justify-between gap-3">
-          <label htmlFor="name" className="font-semibold">
-            Họ và tên <span className="text-red-600">*</span>
-          </label>
-          <input
-            type="text"
-            placeholder="Nguyễn Văn A"
-            id="name"
-            name="name"
-            className="block w-full rounded border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-            onChange={(e) => setName(e.target.value)}
-          />
-          <label htmlFor="phone" className="font-semibold">
-            Số điện thoại<span className="text-red-600">*</span>
-          </label>
-
-          <input
-            type="text"
-            placeholder="(+84) xxxxxxxxx"
-            id="phone"
-            name="phone"
-            className="block w-full rounded border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-            onChange={(e) => setPhone(e.target.value)}
-          />
-          <label htmlFor="address" className="font-semibold">
-            Địa chỉ <span className="text-red-600">*</span>
-          </label>
-          <input
-            type="text"
-            placeholder="766 Nguyễn Văn Linh"
-            id="address"
-            name="address"
-            className="block w-full rounded border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-            onChange={(e) => setAddress(e.target.value)}
-          />
-        </div>
-        <div className="mt-9 flex flex-col justify-between gap-3">
-          <label htmlFor="cities" className="font-semibold">
-            Tỉnh/Thành <span className="text-red-600">*</span>
-          </label>
-          <select
-            id="cities"
-            class="block w-full rounded border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-            onChange={(e) => setCityCode(e.target.value)}
-          >
-            <option selected disabled hidden>
-              Chọn Tỉnh/Thành
-            </option>
-            {cities.map((i) => {
-              return (
-                <option value={i.code} key={i.code}>
-                  {i.name_with_type}
-                </option>
-              );
-            })}
-          </select>
-          <label htmlFor="districts" className="font-semibold">
-            Quận/Huyện <span className="text-red-600">*</span>
-          </label>
-          <select
-            id="districts"
-            class="block w-full rounded border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-            onChange={(e) => setDistrictCode(e.target.value)}
-          >
-            <option selected disabled hidden>
-              Chọn Quận/Huyện
-            </option>
-            {districts.map((i) => {
-              return (
-                <option value={i.code} key={i.code}>
-                  {i.name_with_type}
-                </option>
-              );
-            })}
-          </select>
-
-          <label htmlFor="wards" className="font-semibold">
-            Phường/Xã <span className="text-red-600">*</span>
-          </label>
-          <select
-            id="wards"
-            class="block w-full rounded border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-            onChange={(e) => setWardCode(e.target.value)}
-          >
-            <option selected disabled hidden>
-              Chọn Phường/Xã
-            </option>
-            {wards.map((i) => {
-              return (
-                <option value={i.code} key={i.code}>
-                  {i.name_with_type}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <label htmlFor="cost" className="font-semibold">
-          Chọn mức giá sẽ áp dụng <span className="text-red-600">*</span>
-        </label>
-        <select
-          id="cost"
-          class="block w-full rounded border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-          onChange={(e) => {
-            setCostName(e.target.value);
-          }}
-        >
-          <option value="" selected disabled hidden>
-            Chọn mức giá áp dụng
-          </option>
-          {cost.map((i, index) => {
-            return (
-              <option value={i.costName} key={index}>
-                {i.costName}
-              </option>
-            );
-          })}
-        </select>
+      <div className="w-1/3 px-0.5">
+        <label className="mt-2 block">Họ tên: </label>
+        <Input
+          name="name"
+          disabledBy={true}
+          placehoder={"Họ tên người gửi"}
+          onChange={handelChangeSender}
+          padding={"sm"}
+        />
+      </div>
+      <div className="w-1/3 px-0.5">
+        <label className="mt-2 block">Địa chỉ: </label>
+        <Input
+          name="address"
+          placehoder={"Số nhà,tên đường người gửi"}
+          onChange={handelChangeSender}
+          disabledBy={true}
+          padding={"sm"}
+        />
       </div>
 
-      <button
-        className="mt-9 w-full rounded border-2 border-primary-600 p-3 font-semibold text-primary-600 hover:bg-primary-600 hover:text-white md:w-1/3"
-        onClick={handleClick}
-      >
-        Tạo mới
-      </button>
+      <div className="grid md:grid-cols-3 gap-1 pt-1 w-full">
+        <div className="w-full z-30">
+          <Selector
+            placehoder={"Tỉnh/Thành"}
+            data={cities}
+            field={["name"]}
+            toShow="name_with_type"
+            size={"sm"}
+            disabled={true}
+          />
+        </div>
+        <div className="w-full z-20">
+          <Selector
+            placehoder={"Quận/Huyện"}
+            data={districts}
+            field={["name_with_type"]}
+            toShow="name_with_type"
+            size={"sm"}
+            disabled={true}
+          />
+        </div>
+        <div className="w-full z-10">
+          <Selector
+            placehoder={"Phường/Xã"}
+            data={wards}
+            field={["name_with_type"]}
+            toShow="name_with_type"
+            size={"sm"}
+            disabled={true}
+          />
+        </div>
+      </div>
     </div>
   );
 };

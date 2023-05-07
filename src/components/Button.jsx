@@ -18,13 +18,13 @@ const Button = ({
 }) => {
   const bg =
     type === "success"
-      ? "bg-green-500 text-white hover:bg-green-700"
+      ? "bg-green-500 text-white hover:bg-green-600"
       : type === "warning"
-      ? "bg-yellow-500 text-white hover:bg-yellow-700"
+      ? "bg-yellow-500 text-white hover:bg-yellow-600"
       : type === "danger"
-      ? "bg-red-500 text-white hover:bg-red-700"
+      ? "bg-red-500 text-white hover:bg-red-600"
       : type === "primary"
-      ? "bg-primary-600 text-white hover:bg-primary-700"
+      ? "bg-primary-600 text-white hover:bg-primary-600"
       : type === "outline-primary"
       ? "bg-white border border-primary-500 text-primary-500 hover:text-white hover:bg-primary-500"
       : type === "outline-success"

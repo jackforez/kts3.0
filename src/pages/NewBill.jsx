@@ -324,7 +324,7 @@ const NewBill = () => {
                   data={cities}
                   field={["name"]}
                   toShow="name_with_type"
-                  size={"md"}
+                  size={"sm"}
                   disabled={true}
                   output={setFromCity}
                 />
@@ -335,7 +335,7 @@ const NewBill = () => {
                   data={districts}
                   field={["name_with_type"]}
                   toShow="name_with_type"
-                  size={"md"}
+                  size={"sm"}
                   disabled={true}
                   output={setFromDistrict}
                 />
@@ -346,7 +346,7 @@ const NewBill = () => {
                   data={wards}
                   field={["name_with_type"]}
                   toShow="name_with_type"
-                  size={"md"}
+                  size={"sm"}
                   disabled={true}
                   output={setFromWard}
                 />
@@ -475,7 +475,7 @@ const NewBill = () => {
                   data={cities}
                   field={["name"]}
                   toShow="name_with_type"
-                  size={"md"}
+                  size={"sm"}
                   output={setToCity}
                 />
               </div>
@@ -485,7 +485,7 @@ const NewBill = () => {
                   data={districts}
                   field={["name_with_type"]}
                   toShow="name_with_type"
-                  size={"md"}
+                  size={"sm"}
                   output={setToDistrict}
                 />
               </div>
@@ -495,7 +495,7 @@ const NewBill = () => {
                   data={wards}
                   field={["name_with_type"]}
                   toShow="name_with_type"
-                  size={"md"}
+                  size={"sm"}
                   output={setToWard}
                 />
               </div>
