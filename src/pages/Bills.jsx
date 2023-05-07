@@ -11,6 +11,7 @@ import { excel, printer, search, trash } from "../ultis/svgs";
 import { search as myFilter, toVND } from "../ultis/functions";
 import logo from "../assets/logo.svg";
 import { loaded, onLoading, onRefreh } from "../redux/systemSlice";
+import axios from "axios";
 const Bills = () => {
   const currentUser = useSelector((state) => state.user);
   const token = currentUser.currentUser.token;
@@ -22,6 +23,7 @@ const Bills = () => {
   const [query, setQuery] = useState("");
   const [showPrint, setShowPrint] = useState(false);
   const [dataPrint, setDataPrint] = useState({});
+  const [pID, setPID] = useState("");
   let componentRef = useRef();
   useEffect(() => {
     dispatch(onLoading());
@@ -47,7 +49,26 @@ const Bills = () => {
     };
     fetch();
   }, [refresh]);
-  console.log(refresh);
+  // const deleteP = async () => {
+  //   try {
+  //     const res = await axios.get(
+  //       `https://connect-my.vnpost.vn/customer-partner/deleteOrderByDraft?type=2&code=1683441836`,
+  //       {
+  //         headers: {
+  //           token:
+  //             "CCBM0a0WqkVPAvIDw3ph+6ljzpcAfUhyeDfGjA+KIj+z4UzD0j72uj3ye2K9cJ1rYrshNjZ4fCWDIrC8Ee2QnFoTQnUVim7iQjUOpm30QIQilUKqHNa5bhFrs6ayPHPaJdY3jlQNFmz33SOsFcL5jA==",
+  //         },
+  //       }
+  //     );
+  //     // {
+  //     //   OriginalId: pID,
+  //     // },
+
+  //     toast.success(res.data);
+  //   } catch (error) {
+  //     toast.error(error.response.data.message);
+  //   }
+  // };
   const handleDelete = async (bill) => {
     try {
       const res = await ktsRequest.delete(`v2/bills/${bill._id}`, {
@@ -146,6 +167,20 @@ const Bills = () => {
             <path d={excel}></path>
           </svg>
         </Button>
+        {/* <div className="flex gap-2 text-xs">
+          <Input
+            placehoder={"Nhập số ID"}
+            padding={"sm"}
+            onChange={(e) => setPID(e.target.value)}
+          />
+          <Button
+            type={"outline-danger"}
+            padding={"xs"}
+            icon={trash}
+            iconSize={"4"}
+            callback={deleteP}
+          ></Button>
+        </div> */}
         <Link
           to="/dashboard/bills/new"
           className="order-2 flex items-center bg-white gap-1 rounded border border-primary-600 p-1.5 text-xs text-primary-600 hover:bg-primary-600 hover:text-white md:text-base lg:order-3"
