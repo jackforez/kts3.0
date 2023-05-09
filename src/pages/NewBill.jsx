@@ -56,7 +56,7 @@ const NewBill = () => {
   const [senderSearchQuery, setSenderSearchQuery] = useState("");
   // const [loading, setLoading] = useState(false);
   const [shopPay, setShopPay] = useState(false);
-  const [saveGetterInfo, setSaveGetterInfo] = useState(false);
+  // const [saveGetterInfo, setSaveGetterInfo] = useState(false);
 
   const [fromWard, setFromWard] = useState(sender.wardName || "");
   const [fromDistrict, setFromDistrict] = useState(sender.districtName || "");
@@ -85,7 +85,7 @@ const NewBill = () => {
         toast.error(error);
       }
     };
-    getterSearchQuery.length > 3 && fetchCustomers();
+    getterSearchQuery.length < 11 && fetchCustomers();
   }, [getterSearchQuery.length]);
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -142,6 +142,14 @@ const NewBill = () => {
         const data = Object.values(resd.data);
         setDistricts(data);
         setCityName(cName.name_with_type);
+        setGetter((prev) => {
+          return {
+            ...prev,
+            cityCode: cName.code,
+            cityName: cName.name,
+            cityFullName: cName.name_with_type,
+          };
+        });
       } catch (error) {
         toast.error(error);
       }
@@ -156,6 +164,14 @@ const NewBill = () => {
         const data = Object.values(resw.data);
         setWards(data);
         setDistrictName(dName.name_with_type);
+        setGetter((prev) => {
+          return {
+            ...prev,
+            districtCode: dName.code,
+            districtName: dName.name,
+            districtFullName: dName.name_with_type,
+          };
+        });
       } catch (error) {
         toast.error(error);
       }
@@ -167,6 +183,14 @@ const NewBill = () => {
       try {
         const wName = wards.find((w) => w.name_with_type === toWard);
         setWardName(wName.name);
+        setGetter((prev) => {
+          return {
+            ...prev,
+            wardCode: wName.code,
+            wardName: wName.name,
+            wardFullName: wName.name_with_type,
+          };
+        });
       } catch (error) {
         toast.error(error);
       }
@@ -220,9 +244,15 @@ const NewBill = () => {
           toName: getter.name,
           toPhone: getter.phone,
           toAddress: getter.address,
-          toCity,
-          toDistrict,
-          toWard,
+          toCity: getter.cityName || toCity,
+          toCityCode: getter.cityCode || "",
+          toCityFullName: getter.cityFullName || "",
+          toDistrict: getter.districtName || toDistrict,
+          toDistrictCode: getter.districtCode || "",
+          toDistrictFullName: getter.districtFullName || "",
+          toWard: getter.wardName || toWard,
+          toWardCode: getter.wardCode || "",
+          toWardFullName: getter.wardFullName || "",
           itemName,
           itemQauntity: qty,
           weight,
@@ -520,12 +550,12 @@ const NewBill = () => {
                         key={i}
                         className="flex justify-between items-center p-2 hover:bg-gray-200"
                       >
-                        <div className="flex gap-2">
-                          <div>
+                        <div className="flex gap-2 w-full">
+                          <div className="w-1/4">
                             <p className="font-semibold">{g.phone}</p>
-                            <p className="capitalize">{g.name}</p>
+                            <p className="capitalize text-sm">{g.name}</p>
                           </div>
-                          <span>
+                          <span className="w-3/4 text-start">
                             {g.address +
                               ", " +
                               g.wardFullName +
@@ -639,14 +669,6 @@ const NewBill = () => {
           <Ratio output={setShopPay} checked={shopPay} />
           <span className="text-xs ml-3 text-gray-900 dark:text-gray-300">
             {shopPay ? "Người gửi trả cước" : "Người nhận trả cước"}
-          </span>
-        </div>
-        <div className="flex items-center w-1/3 md:w-1/4 py-2">
-          <Ratio output={setSaveGetterInfo} checked={saveGetterInfo} />
-          <span className="text-xs ml-3 text-gray-900 dark:text-gray-300">
-            {saveGetterInfo
-              ? "Lưu thông tin người nhận"
-              : "Không lưu thông tin người nhận"}
           </span>
         </div>
         <div className="flex items-center w-1/3 md:w-1/4 py-2">

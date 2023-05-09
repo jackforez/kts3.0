@@ -7,7 +7,7 @@ import ReactToPrint, { useReactToPrint } from "react-to-print";
 import { ktsRequest } from "../ultis/connections";
 import { logout } from "../redux/userSlice";
 import { Button, GridData, Input } from "../components";
-import { excel, printer, search, trash } from "../ultis/svgs";
+import { excel, mapPin, printer, search, trash } from "../ultis/svgs";
 import { search as myFilter, toVND } from "../ultis/functions";
 import logo from "../assets/logo.svg";
 import { loaded, onLoading, onRefreh } from "../redux/systemSlice";
@@ -222,8 +222,21 @@ const Bills = () => {
                         <span className="bg-primary-200 px-1 inline-block py-0.5 rounded text-primary-700 font-semibold text-xs">
                           {b.status}
                         </span>
-                        <span> {b.orderNumber}</span>
-
+                        <span> {b.orderNumber}</span>{" "}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="h-4 w-4 inline-block text-primary-700 pb-0.5 cursor-pointer"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d={mapPin}
+                          />
+                        </svg>
                         <div>Mã tra cứu: {b.partnerTrackingId}</div>
                       </div>
                       {/* <div className="w-/12 md:grid md:auto-cols-fr md:grid-flow-col"> */}
