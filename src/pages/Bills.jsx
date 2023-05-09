@@ -218,7 +218,7 @@ const Bills = () => {
                         </span>
                         <span> {b.orderNumber}</span>
 
-                        {/* <div>Mã tra cứu: {b.partnerTrackingId}</div> */}
+                        <div>Mã tra cứu: {b.partnerTrackingId}</div>
                       </div>
                       {/* <div className="w-/12 md:grid md:auto-cols-fr md:grid-flow-col"> */}
                       <div className="w-4/12">
