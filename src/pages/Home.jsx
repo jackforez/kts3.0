@@ -8,9 +8,11 @@ import { toast } from "react-toastify";
 const Home = () => {
   const [openResult, setOpenResult] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
+  const [title, setTitle] = useState("Trang chủ");
   const [loading, setLoading] = useState(false);
   const [orderDetails, setOrderDetails] = useState({});
   const [orderID, setOrderID] = useState("");
+  document.title = title + " - KTSCORP.VN";
   const handleClick = () => {
     if (!orderID) {
       toast.warn("Vui lòng nhập mã vận đơn!", {
@@ -41,7 +43,7 @@ const Home = () => {
   };
   return (
     <div>
-      <Navbar setPage={setCurrentPage} page={currentPage} />
+      <Navbar setPage={setCurrentPage} page={currentPage} title={setTitle} />
       <div className="w-screen overflow-hidden">
         <div
           className="flex flex-nowrap scroll scroll-smooth scrollbar-hide duration-500"

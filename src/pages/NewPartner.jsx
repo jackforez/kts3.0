@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { ktsRequest } from "../ultis/connections";
+import { setCurrentPage } from "../redux/systemSlice";
 
 const NewPartner = () => {
   const [name, setName] = useState("");
@@ -27,8 +28,15 @@ const NewPartner = () => {
   const [address, setAddress] = useState("");
   const [cost, setCost] = useState([]);
   const [costName, setCostName] = useState("");
-
+  const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user);
+  useEffect(() => {
+    const setTitle = () => {
+      dispatch(setCurrentPage("tạo mới đối tác"));
+      document.title = "Tạo mới đối tác - KTSCORP.VN";
+    };
+    setTitle();
+  });
   useEffect(() => {
     const getCities = async () => {
       try {
@@ -180,30 +188,6 @@ const NewPartner = () => {
 
   return (
     <div className="h-full bg-slate-200 p-3">
-      <div className="flex items-center justify-between pb-3">
-        <h3 className="text-xl font-semibold">Tạo mới đối tác </h3>
-        <Link
-          to="/dashboard/partners"
-          className="flex items-center gap-1 rounded border border-primary-600 p-2 text-xs font-semibold text-primary-600 hover:bg-primary-600 hover:text-white md:text-base"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="h-6 w-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
-            />
-          </svg>
-
-          <span className="hidden md:block">Quay lại</span>
-        </Link>
-      </div>
       <div className="mx-auto w-full lg:w-2/3">
         <div className=" flex flex-col gap-2">
           <span className="flex pl-2 after:ml-1 after:text-red-500 after:content-['*']">

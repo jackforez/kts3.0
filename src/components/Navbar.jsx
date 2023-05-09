@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-const Navbar = ({ page, setPage }) => {
-  const navLinks = ["trang chủ", "giới thiệu", "dịch vụ", "liên hệ"];
+const Navbar = ({ page, setPage, title }) => {
+  const navLinks = ["Trang chủ", "Giới thiệu", "Dịch vụ", "Liên hệ"];
   return (
     <nav
       className={`fixed z-30 w-full ${
@@ -26,7 +26,10 @@ const Navbar = ({ page, setPage }) => {
           {navLinks.map((l, i) => {
             return (
               <button
-                onClick={() => setPage(i)}
+                onClick={() => {
+                  setPage(i);
+                  title(l);
+                }}
                 key={i}
                 className={`uppercase font-semibold text-sm ${
                   page === i

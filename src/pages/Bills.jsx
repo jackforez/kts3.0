@@ -26,6 +26,12 @@ const Bills = () => {
   const [pID, setPID] = useState("");
   let componentRef = useRef();
   useEffect(() => {
+    const setTitle = () => {
+      document.title = "Đơn hàng - KTSCORP.VN";
+    };
+    setTitle();
+  });
+  useEffect(() => {
     dispatch(onLoading());
     const fetch = async () => {
       try {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { ktsRequest } from "../ultis/connections";
 const Tracking = () => {
@@ -7,6 +7,12 @@ const Tracking = () => {
   const [loading, setLoading] = useState(false);
   const [edit, setEdit] = useState(true);
   const [orderDetails, setOrderDetails] = useState({});
+  useEffect(() => {
+    const setTitle = () => {
+      document.title = "Tra cứu hành trình đơn hàng - KTSCORP.VN";
+    };
+    setTitle();
+  });
   return (
     <div className="flex w-full flex-1 flex-col gap-3 p-4">
       <div className="relative w-full lg:w-1/2 ">

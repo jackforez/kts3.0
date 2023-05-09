@@ -15,6 +15,7 @@ import { ktsRequest } from "../ultis/connections";
 import { loginFailure, loginSuccess } from "../redux/userSlice";
 import { loaded, onLoading } from "../redux/systemSlice";
 SwiperCore.use([Autoplay]);
+
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -23,6 +24,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
+    document.title = "Đăng nhập hệ thống - KTSCORP.VN";
     if (currentUser) {
       toast.success(`Xin chào ${currentUser?.displayName || "ktsCorp.vn"}`);
       return navigate("/dashboard");
@@ -257,7 +259,7 @@ const Login = () => {
             </Button>
             <div className="flex justify-end">
               <Link
-                to="/"
+                to="/register"
                 className="underline underline-offset-4 text-gray-400 hover:text-white"
               >
                 Đăng ký

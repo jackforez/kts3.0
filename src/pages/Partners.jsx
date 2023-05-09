@@ -21,6 +21,12 @@ const Partners = () => {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   useEffect(() => {
+    const setTitle = () => {
+      document.title = "Đối tác - KTSCORP.VN";
+    };
+    setTitle();
+  });
+  useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
       try {

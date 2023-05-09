@@ -66,6 +66,7 @@ const NewBill = () => {
   const [toCity, setToCity] = useState("");
   useEffect(() => {
     dispatch(setCurrentPage("tạo mới đơn hàng"));
+    document.title = "Tạo mới đơn hàng - KTSCORP.VN";
   }, []);
   useEffect(() => {
     const fetchCustomers = async () => {

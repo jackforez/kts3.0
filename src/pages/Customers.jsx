@@ -27,7 +27,12 @@ const Customers = () => {
   const [cityCode, setCityCode] = useState("");
   const [districtCode, setDistrictCode] = useState("");
   const [wardCode, setWardCode] = useState("");
-
+  useEffect(() => {
+    const setTitle = () => {
+      document.title = "Danh bạ người nhận - KTSCORP.VN";
+    };
+    setTitle();
+  });
   useEffect(() => {
     dispatch(onLoading());
     const fetchData = async () => {

@@ -15,7 +15,7 @@ const Selector = ({
   const [selected, setSelected] = useState(placehoder);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const sz =
-    size === "xs" ? "py-1 text-xs" : size === "sm" ? "py-2 text-sm" : "py-3";
+    size === "xs" ? "py-1 text-xs" : size === "sm" ? "py-2 text-sm" : "py-2.5";
   useEffect(() => {
     setSelected(placehoder);
   }, [placehoder]);

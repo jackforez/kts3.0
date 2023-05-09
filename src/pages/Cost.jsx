@@ -19,6 +19,12 @@ const Cost = () => {
   const [query, setQuery] = useState("");
   const dispatch = useDispatch();
   useEffect(() => {
+    const setTitle = () => {
+      document.title = "Đơn giá vận chuyển - KTSCORP.VN";
+    };
+    setTitle();
+  });
+  useEffect(() => {
     const fetchData = async () => {
       dispatch(onLoading());
       try {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -19,12 +19,18 @@ const Account = (props) => {
   const [checkChangePwd, setCheckChangePwd] = useState(false);
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
   const [cityCode, setCityCode] = useState(currentUser?.cityCode);
   const [districtCode, setDistrictCode] = useState(currentUser?.districtCode);
   const [wardCode, setWardCode] = useState(currentUser?.wardCode);
-  const [wards, setWards] = useState([]);
   const [file, setFile] = useState(null);
   const [url, setUrl] = useState(currentUser?.img);
+  useEffect(() => {
+    const setTitle = () => {
+      document.title = "Thông tin tài khoản - KTSCORP.VN";
+    };
+    setTitle();
+  });
   const handleCancle = (e) => {
     e.preventDefault();
     navigate("/dashboard");

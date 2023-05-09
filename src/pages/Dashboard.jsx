@@ -15,13 +15,12 @@ const Dashboard = () => {
   const [cost, setCost] = useState(0);
   const [sum, setSum] = useState(0);
   const [loading, setLoading] = useState(true);
-  const khachhang = [
-    { th: "Anh Văn", tongdon: 104, tongtien: 5000000000 },
-    { th: "Anh Sang", tongdon: 766, tongtien: 500000000 },
-    { th: "Anh Tiến", tongdon: 213, tongtien: 50000000 },
-    { th: "Anh Khánh", tongdon: 123, tongtien: 5000000 },
-    { th: "Anh Minh", tongdon: 32, tongtien: 500000 },
-  ];
+  useEffect(() => {
+    const setTitle = () => {
+      document.title = "Tổng quan tài khoản - KTSCORP.VN";
+    };
+    setTitle();
+  });
   useEffect(() => {
     const fetchBills = async () => {
       try {
