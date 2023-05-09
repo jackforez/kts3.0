@@ -12,13 +12,10 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { ktsRequest } from "../ultis/connections";
-import { loginFailure, loginSuccess } from "../redux/userSlice";
 import { loaded, onLoading } from "../redux/systemSlice";
 SwiperCore.use([Autoplay]);
 
 const Register = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const { currentUser } = useSelector((state) => state.user);
   const { loading } = useSelector((state) => state.system);
   const [inputs, setInputs] = useState({});
@@ -37,31 +34,6 @@ const Register = () => {
       return navigate("/dashboard");
     }
   }, []);
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    if (!username) {
-      toast.warn("Tên đăng nhập không được để trống");
-      return;
-    }
-    if (!password) {
-      toast.warn("Mật khẩu không được để trống");
-      return;
-    }
-    dispatch(onLoading());
-    try {
-      const res = await ktsRequest.post("/auth/signin", {
-        name: username,
-        password,
-      });
-      dispatch(loginSuccess(res.data));
-      navigate("/dashboard");
-      dispatch(loaded());
-    } catch (err) {
-      dispatch(loginFailure());
-      toast.error(err.response ? err.response.data.message : "Network Error!");
-      dispatch(loaded());
-    }
-  };
   const handelChange = (e) => {
     setInputs((prev) => {
       return { ...prev, [e.target.name]: e.target.value };
@@ -137,18 +109,23 @@ const Register = () => {
         toast.error(error);
       }
     };
-    getWard();
+    wardCode && getWard();
   }, [wardCode]);
-  console.log(inputs);
-  const handleCreate = async () => {
+  const handleCreate = async (e) => {
+    e.preventDefault();
     dispatch(onLoading());
     if (!inputs.name) {
-      toast.warn("Tên khách không hợp lệ!");
+      toast.warn("Tên đăng nhập không được để trống!");
       dispatch(loaded());
       return;
     }
     if (!inputs.phone || inputs.phone.length !== 10) {
       toast.warn("Số điện thoại không hợp lệ");
+      dispatch(loaded());
+      return;
+    }
+    if (!inputs.displayName) {
+      toast.warn("Tên shop không được để trống!");
       dispatch(loaded());
       return;
     }
@@ -173,23 +150,18 @@ const Register = () => {
       return;
     }
     try {
-      const res = await ktsRequest.post("/customers", inputs, {
-        headers: {
-          Authorization: `Bearer ${currentUser.currentUser.token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await ktsRequest.post("/auth/signup", inputs);
       toast.success(res.data);
       dispatch(loaded());
-      dispatch(onRefreh());
     } catch (er) {
+      console.log(er);
       dispatch(loaded());
       toast.error(er.response ? er.response.data : "Network Error");
     }
   };
   return (
     <div className="bg-[url('./assets/imgs/img1.jpg')] md:bg-[url('./assets/imgs/hero.jpg')] h-screen bg-cover bg-fixed bg-center bg-no-repeat overflow-hidden flex justify-center items-center px-4">
-      <div className="md:w-1/2 w-full p-4 justify-between flex bg-indigo-900 text-white backdrop-blur rounded-lg overflow-hidden drop-shadow bg-opacity-10 items-center">
+      <div className="md:w-3/4 lg:w-1/2 w-full p-4 justify-between flex bg-indigo-900 text-white backdrop-blur rounded-lg overflow-hidden drop-shadow bg-opacity-10 items-center">
         <div className="w-full px-6">
           <Link
             title="Trang chủ"
@@ -212,10 +184,10 @@ const Register = () => {
             </svg>
           </Link>
           <form className="w-full space-y-3" action="">
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
               <div className="space-y-2">
                 <Input
-                  padding="md"
+                  padding="sm"
                   placehoder="Tên đăng nhập . . ."
                   type="text"
                   icon={userName}
@@ -230,26 +202,8 @@ const Register = () => {
                   }
                 />
                 <Input
-                  name="displayName"
-                  padding="md"
-                  placehoder="Tên shop . . ."
-                  type="text"
-                  icon={userName}
-                  value={inputs?.displayName}
-                  onChange={handelChange}
-                />
-                <Input
-                  name="phone"
-                  padding="md"
-                  placehoder="Số điện thoại . . ."
-                  type="number"
-                  icon={phone}
-                  value={inputs?.phone}
-                  onChange={handelChange}
-                />
-                <Input
                   name="password"
-                  padding="md"
+                  padding="sm"
                   placehoder="Mật khẩu . . . "
                   type="password"
                   icon={key}
@@ -258,11 +212,29 @@ const Register = () => {
                 />
                 <Input
                   name="repassword"
-                  padding="md"
+                  padding="sm"
                   placehoder="Xác nhận mật khẩu . . . "
                   type="password"
                   icon={key}
                   value={inputs?.repassword}
+                  onChange={handelChange}
+                />
+                <Input
+                  name="displayName"
+                  padding="sm"
+                  placehoder="Tên shop . . ."
+                  type="text"
+                  icon={userName}
+                  value={inputs?.displayName}
+                  onChange={handelChange}
+                />
+                <Input
+                  name="phone"
+                  padding="sm"
+                  placehoder="Số điện thoại . . ."
+                  type="number"
+                  icon={phone}
+                  value={inputs?.phone}
                   onChange={handelChange}
                 />
               </div>
@@ -270,7 +242,7 @@ const Register = () => {
                 {" "}
                 <Input
                   name="email"
-                  padding="md"
+                  padding="sm"
                   placehoder="Email . . ."
                   type="email"
                   icon={mail}
@@ -278,7 +250,8 @@ const Register = () => {
                   onChange={handelChange}
                 />
                 <Input
-                  padding="md"
+                  name="address"
+                  padding="sm"
                   placehoder="Số nhà tên đường . . ."
                   type="text"
                   icon={mapPin}
@@ -292,7 +265,7 @@ const Register = () => {
                       data={cities}
                       field={["name"]}
                       toShow="name_with_type"
-                      size={"md"}
+                      size={"sm"}
                       output={setCityCode}
                     />
                   </div>
@@ -302,7 +275,7 @@ const Register = () => {
                       data={districts}
                       field={["name_with_type"]}
                       toShow="name_with_type"
-                      size={"md"}
+                      size={"sm"}
                       output={setDistrictCode}
                     />
                   </div>
@@ -312,7 +285,7 @@ const Register = () => {
                       data={wards}
                       field={["name_with_type"]}
                       toShow="name_with_type"
-                      size={"md"}
+                      size={"sm"}
                       output={setWardCode}
                     />
                   </div>
@@ -322,13 +295,14 @@ const Register = () => {
 
             <Button
               type="primary"
-              size="w-full"
+              size="w-full p-2"
               style="uppercase font-semibold"
-              callback={(e) => handleLogin(e)}
+              callback={(e) => handleCreate(e)}
               loading={loading}
               disabledBy={loading}
               animation={true}
               clickType="submit"
+              padding={"sm"}
             >
               Đăng ký thành viên
             </Button>
