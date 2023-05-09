@@ -162,13 +162,13 @@ const Dashboard = () => {
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
-                        stroke-width="1.5"
+                        strokeWidth="1.5"
                         stroke="currentColor"
-                        class="h-6 w-6"
+                        className="h-6 w-6"
                       >
                         <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                           d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
                       </svg>
@@ -204,44 +204,6 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          {/* <div class="relative w-full overflow-x-auto rounded border border-indigo-300 shadow-md lg:w-[49%]">
-            <table class="w-full text-left text-sm text-gray-500">
-              <thead className="bg-indigo-600 text-xs uppercase text-white ">
-                <tr>
-                  <th scope="col" class="py-3 px-4">
-                    Khách hàng
-                  </th>
-                  <th scope="col" class="py-3 px-4">
-                    Tổng đơn
-                  </th>
-                  <th scope="col" class="py-3 px-4">
-                    tổng tiền
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {khachhang.map((i, k) => {
-                  return (
-                    <tr class="border-b border-gray-200 ">
-                      <th
-                        scope="row"
-                        class="whitespace-nowrap bg-gray-50 py-2 px-4 font-medium text-gray-900"
-                      >
-                        {i.th}
-                      </th>
-                      <td class="py-2 px-4">{i.tongdon}</td>
-                      <td class="bg-gray-50 py-2 px-4 font-bold ">
-                        {new Intl.NumberFormat("de-DE", {
-                          style: "currency",
-                          currency: "toVND",
-                        }).format(i.tongtien)}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div> */}
           <div className="mt-4">
             <div className="flex justify-between p-3">
               <h3 className="font-bold uppercase ">Đơn hàng gần nhất</h3>
@@ -386,13 +348,13 @@ const Dashboard = () => {
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
-                          stroke-width="1.5"
+                          strokeWidth="1.5"
                           stroke="currentColor"
                           class="h-6 w-6"
                         >
                           <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                             d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                           />
                         </svg>
