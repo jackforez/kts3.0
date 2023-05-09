@@ -3,22 +3,29 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ktsRequest } from "../ultis/connections";
-import { Button, GridData, Input, Selector } from "../components";
-import { search as myFilter, toVND } from "../ultis/functions";
+import { Button, GridData, Input, Selector, Modal } from "../components";
+import { search as myFilter } from "../ultis/functions";
 import { add, pencil, search, trash } from "../ultis/svgs";
 import logo from "../assets/logo.svg";
 import { logout } from "../redux/userSlice";
-import { loaded, onLoading, onRefreh } from "../redux/systemSlice";
+import {
+  loaded,
+  onCloseModal,
+  onLoading,
+  onOpenModal,
+  onRefreh,
+} from "../redux/systemSlice";
 
 const Customers = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user);
-  const { loading } = useSelector((state) => state.system);
-  const { refresh } = useSelector((state) => state.system);
+  const { loading, refresh, openModal } = useSelector((state) => state.system);
+
   const isAdmin = currentUser.currentUser.role === "admin";
   const [customers, setCustomers] = useState([]);
   const [query, setQuery] = useState("");
   const [openAddCustomer, setOpenAddCustomer] = useState(false);
+  const [openEditCustomer, setOpenEditCustomer] = useState(false);
 
   const [inputs, setInputs] = useState({});
   const [cities, setCities] = useState([]);
@@ -130,25 +137,22 @@ const Customers = () => {
     };
     getWard();
   }, [wardCode]);
-  const handleDelete = async (customer) => {
-    if (
-      confirm(
-        `Bạn chắc chắn muốn xóa khách hàng ${customer.name}?\n Sau khi thực hiện sẽ không thể hoàn tác!\n Các thông tin đơn hàng cũ cũng (có thể) không thể truy xuất!`
-      )
-    ) {
-      try {
-        const res = await ktsRequest.delete(`/customers/${customer._id}`, {
-          headers: {
-            Authorization: `Bearer ${currentUser.currentUser.token}`,
-          },
-        });
-        toast.success(res.data);
-        dispatch(onRefreh());
-      } catch (error) {
-        error.response
-          ? toast.error(error.response.data.message)
-          : toast.error("Network Error!");
-      }
+  const handleDelete = async () => {
+    dispatch(onLoading());
+    try {
+      const res = await ktsRequest.delete(`/customers/${inputs?._id}`, {
+        headers: {
+          Authorization: `Bearer ${currentUser.currentUser.token}`,
+        },
+      });
+      toast.success(res.data);
+      dispatch(onRefreh());
+      dispatch(loaded());
+    } catch (error) {
+      dispatch(loaded());
+      toast.error(
+        error.response ? error.response.data.message : "Network Error!"
+      );
     }
   };
   const handleCreate = async () => {
@@ -184,12 +188,19 @@ const Customers = () => {
       return;
     }
     try {
-      const res = await ktsRequest.post("/customers", inputs, {
-        headers: {
-          Authorization: `Bearer ${currentUser.currentUser.token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const res = openAddCustomer
+        ? await ktsRequest.post("/customers", inputs, {
+            headers: {
+              Authorization: `Bearer ${currentUser.currentUser.token}`,
+              "Content-Type": "application/json",
+            },
+          })
+        : await ktsRequest.put(`/customers/${inputs?._id}`, inputs, {
+            headers: {
+              Authorization: `Bearer ${currentUser.currentUser.token}`,
+              "Content-Type": "application/json",
+            },
+          });
       toast.success(res.data);
       dispatch(loaded());
       dispatch(onRefreh());
@@ -211,7 +222,41 @@ const Customers = () => {
   ];
   return (
     <div className="h-full overflow-auto bg-slate-200 p-3">
-      <div className="flex items-center justify-between py-3">
+      {openModal && (
+        <Modal>
+          <div className="p-2">
+            Sau khi thực hiện sẽ không thể hoàn tác. Các thông tin đơn hàng cũ
+            cũng không thể truy xuất! <br />
+            Bạn chắc chắn muốn xóa khách hàng
+            <span className="font-semibold italic bg-gray-300 mx-1 px-1 pb-0.5 rounded-md">
+              {" " + inputs?.name + " "}
+            </span>
+            ?
+          </div>
+          <div className="flex justify-end gap-2 p-2">
+            <Button
+              type="outline-primary"
+              size="w-1/4"
+              padding={"xs"}
+              callback={() => dispatch(onCloseModal())}
+            >
+              Hủy bỏ
+            </Button>
+            <Button
+              type="danger"
+              size="w-1/4"
+              callback={handleDelete}
+              loading={loading}
+              disabledBy={loading}
+              animation={true}
+              padding={"xs"}
+            >
+              Xác nhận xóa
+            </Button>
+          </div>
+        </Modal>
+      )}
+      <div className="flex items-center justify-between pb-3">
         <Input
           placehoder={"Tìm theo tên/số điện thoại ..."}
           size={"w-1/3"}
@@ -219,14 +264,18 @@ const Customers = () => {
           icon={search}
           padding="sm"
         />
-        {openAddCustomer ? (
+        {openAddCustomer || openEditCustomer ? (
           <div className="w-1/4 flex gap-2">
             <Button
               Button
               type="outline-danger"
               padding={"xs"}
               size="w-1/2"
-              callback={() => setOpenAddCustomer(false)}
+              callback={() => {
+                setOpenAddCustomer(false);
+                setOpenEditCustomer(false);
+                setInputs({});
+              }}
             >
               Hủy bỏ
             </Button>
@@ -248,19 +297,24 @@ const Customers = () => {
             type="primary"
             padding={"xs"}
             size="w-1/6"
-            callback={() => setOpenAddCustomer(true)}
+            callback={() => {
+              setOpenAddCustomer(true);
+              setOpenEditCustomer(false);
+              setInputs({});
+            }}
           >
             Tạo mới
           </Button>
         )}
       </div>
-      {openAddCustomer && (
+      {openAddCustomer || openEditCustomer ? (
         <div className="rounded border border-gray-300 bg-white p-2 flex flex-wrap mb-2">
           <div className="grid md:grid-cols-3 gap-1 pt-1 w-full">
             <div className="w-full">
               <label className="block">Số điện thoại: </label>
               <Input
                 name="phone"
+                value={inputs?.phone || null}
                 placehoder={"Số điện thoại người nhận"}
                 type="number"
                 padding={"sm"}
@@ -271,6 +325,7 @@ const Customers = () => {
               <label className="block">Họ tên: </label>
               <Input
                 name="name"
+                value={inputs?.name || null}
                 placehoder={"Họ tên người nhận"}
                 onChange={handelChange}
                 padding={"sm"}
@@ -280,6 +335,7 @@ const Customers = () => {
               <label className="block">Địa chỉ: </label>
               <Input
                 name="address"
+                value={inputs?.address || null}
                 placehoder={"Số nhà,tên đường người nhận"}
                 onChange={handelChange}
                 padding={"sm"}
@@ -290,7 +346,7 @@ const Customers = () => {
           <div className="grid md:grid-cols-3 gap-1 pt-1 w-full">
             <div className="w-full z-30">
               <Selector
-                placehoder={"Tỉnh/Thành"}
+                placehoder={inputs?.cityFullName || "Tỉnh/Thành"}
                 data={cities}
                 field={["name"]}
                 toShow="name_with_type"
@@ -300,7 +356,7 @@ const Customers = () => {
             </div>
             <div className="w-full z-20">
               <Selector
-                placehoder={"Quận/Huyện"}
+                placehoder={inputs?.districtFullName || "Quận/Huyện"}
                 data={districts}
                 field={["name_with_type"]}
                 toShow="name_with_type"
@@ -310,7 +366,7 @@ const Customers = () => {
             </div>
             <div className="w-full z-10">
               <Selector
-                placehoder={"Phường/Xã"}
+                placehoder={inputs?.wardFullName || "Phường/Xã"}
                 data={wards}
                 field={["name_with_type"]}
                 toShow="name_with_type"
@@ -320,6 +376,8 @@ const Customers = () => {
             </div>
           </div>
         </div>
+      ) : (
+        ""
       )}
       {/* component thông tin khách hàng */}
       <div className="border border-ktsPrimary rounded-md">
@@ -350,6 +408,11 @@ const Customers = () => {
                         iconSize={"4"}
                         title={"Sửa thông tin khách hàng"}
                         padding="xs"
+                        callback={() => {
+                          setOpenAddCustomer(false);
+                          setOpenEditCustomer(true);
+                          setInputs(c);
+                        }}
                       ></Button>
                       <Button
                         type="outline-danger"
@@ -357,7 +420,10 @@ const Customers = () => {
                         iconSize={"4"}
                         title={"Xóa khách hàng"}
                         padding="xs"
-                        callback={() => handleDelete(c)}
+                        callback={() => {
+                          setInputs(c);
+                          dispatch(onOpenModal());
+                        }}
                       ></Button>
                     </div>
                   </div>

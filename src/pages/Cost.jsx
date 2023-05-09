@@ -5,18 +5,27 @@ import { toast } from "react-toastify";
 import { ktsRequest } from "../ultis/connections";
 import { Button, GridData, Input } from "../components";
 import { pencil, search, trash } from "../ultis/svgs";
-import { loaded, onLoading, onRefreh } from "../redux/systemSlice";
+import {
+  loaded,
+  onCloseModal,
+  onLoading,
+  onOpenModal,
+  onRefreh,
+} from "../redux/systemSlice";
 import { search as myFilter, toVND } from "../ultis/functions";
+import Modal from "../components/Modal";
 const Cost = () => {
   const [costs, setCosts] = useState([]);
   const { currentUser } = useSelector((state) => state.user);
-  const { loading } = useSelector((state) => state.system);
-  const { refresh } = useSelector((state) => state.system);
+  const { loading, refresh, openModal } = useSelector((state) => state.system);
+
   const token = currentUser.token;
   const isAmin = currentUser.role === "admin";
   const [openAddCost, setOpenAddCost] = useState(false);
+  const [openEditCost, setOpenEditCost] = useState(false);
   const [inputs, setInputs] = useState({});
   const [query, setQuery] = useState("");
+  const [costToDelete, setCostToDelete] = useState({});
   const dispatch = useDispatch();
   useEffect(() => {
     const setTitle = () => {
@@ -43,25 +52,18 @@ const Cost = () => {
     };
     fetchData();
   }, [refresh]);
-  const handleDelete = async (cost) => {
-    if (
-      confirm(
-        `Bạn chắc chắn muốn xóa mức giá ${cost.costName}?\n Sau khi thực hiện sẽ không thể hoàn tác!\n Các thông tin đơn hàng cũ cũng không thể truy xuất!`
-      )
-    ) {
-      try {
-        const res = await ktsRequest.delete(`/cost/${cost._id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        toast.success(res.data.message);
-        dispatch(onRefreh());
-      } catch (err) {
-        err.response
-          ? toast.error(err.response.data.message)
-          : toast.error("Network Error!");
-      }
+  const handleDelete = async () => {
+    try {
+      const res = await ktsRequest.delete(`/cost/${costToDelete._id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success(res.data.message);
+      dispatch(onRefreh());
+      dispatch(onCloseModal());
+    } catch (err) {
+      toast.error(err.response ? err.response.data.message : "Network Error!");
     }
   };
   const handleCreate = async () => {
@@ -81,7 +83,8 @@ const Cost = () => {
       dispatch(loaded());
       return;
     }
-    if (inputs.minWeight >= inputs.maxWeight) {
+    if (parseInt(inputs.minWeight) >= parseInt(inputs.maxWeight)) {
+      console.log(inputs);
       toast.warn("Giá trị không hợp lệ");
       dispatch(loaded());
       return;
@@ -92,26 +95,46 @@ const Cost = () => {
       return;
     }
     try {
-      const res = await ktsRequest.post(
-        "/cost",
-        {
-          ...inputs,
-          createdBy: currentUser._id,
-          shopName: currentUser.displayName,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      toast.success(res.data.message);
+      const res = openAddCost
+        ? await ktsRequest.post(
+            "/cost",
+            {
+              ...inputs,
+              createdBy: currentUser._id,
+              shopName: currentUser.displayName,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          )
+        : await ktsRequest.put(
+            `/cost/${inputs?._id}`,
+            {
+              ...inputs,
+              updateddBy: currentUser._id,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+      toast.success(openAddCost ? res.data.message : res.data);
       dispatch(loaded());
       dispatch(onRefreh());
     } catch (err) {
       dispatch(loaded());
-      toast.error(err.response ? err.response.data.message : "Network Error");
+      toast.error(
+        err.response
+          ? openAddCost
+            ? err.response.data.message
+            : err.response.data
+          : "Network Error"
+      );
     }
   };
   const handleChange = (e) => {
@@ -129,6 +152,40 @@ const Cost = () => {
   ];
   return (
     <div className="flex-1 p-3">
+      {openModal && (
+        <Modal>
+          <div className="p-2">
+            Sau khi thực hiện sẽ không thể hoàn tác. Các thông tin đơn hàng cũ
+            cũng không thể truy xuất! <br />
+            Bạn chắc chắn muốn xóa mức giá
+            <span className="font-semibold italic bg-gray-300 mx-1 px-1 pb-0.5 rounded-md">
+              {" " + costToDelete?.costName + " "}
+            </span>
+            ?
+          </div>
+          <div className="flex justify-end gap-2 p-2">
+            <Button
+              type="outline-primary"
+              size="w-1/4"
+              padding={"xs"}
+              callback={() => dispatch(onCloseModal())}
+            >
+              Hủy bỏ
+            </Button>
+            <Button
+              type="danger"
+              size="w-1/4"
+              callback={handleDelete}
+              loading={loading}
+              disabledBy={loading}
+              animation={true}
+              padding={"xs"}
+            >
+              Xác nhận xóa
+            </Button>
+          </div>
+        </Modal>
+      )}
       <div className="flex items-center justify-between py-3">
         <Input
           placehoder={"Tìm theo tên ..."}
@@ -137,14 +194,18 @@ const Cost = () => {
           icon={search}
           padding="sm"
         />
-        {openAddCost ? (
+        {openAddCost || openEditCost ? (
           <div className="md:w-1/4 w-1/2 flex gap-2">
             <Button
               Button
               type="outline-danger"
               padding={"xs"}
               size="w-1/2"
-              callback={() => setOpenAddCost(false)}
+              callback={() => {
+                setOpenAddCost(false);
+                setOpenEditCost(false);
+                setInputs({});
+              }}
             >
               Hủy bỏ
             </Button>
@@ -164,15 +225,19 @@ const Cost = () => {
         ) : (
           <Button
             type="primary"
-            padding={"xs"}
+            padding={"sm"}
             size="md:w-1/6 w-1/3 p-1.5"
-            callback={() => setOpenAddCost(true)}
+            callback={() => {
+              setInputs({});
+              setOpenAddCost(true);
+              setOpenEditCost(false);
+            }}
           >
             Tạo mới
           </Button>
         )}
       </div>
-      {openAddCost && (
+      {openAddCost || openEditCost ? (
         <div className="rounded border border-gray-300 bg-white p-2 flex flex-wrap mb-2">
           <div className="grid md:grid-cols-4 gap-1 pt-1 w-full">
             <div className="w-full">
@@ -180,6 +245,7 @@ const Cost = () => {
               <Input
                 name="costName"
                 placehoder={"tên mức giá"}
+                value={inputs?.costName || ""}
                 padding={"sm"}
                 onChange={handleChange}
               />
@@ -189,6 +255,7 @@ const Cost = () => {
               <Input
                 name="minWeight"
                 type="number"
+                value={inputs?.minWeight || ""}
                 placehoder={"gram"}
                 onChange={handleChange}
                 padding={"sm"}
@@ -199,6 +266,7 @@ const Cost = () => {
               <Input
                 name="maxWeight"
                 type="number"
+                value={inputs?.maxWeight || ""}
                 placehoder={"gram"}
                 onChange={handleChange}
                 padding={"sm"}
@@ -209,6 +277,7 @@ const Cost = () => {
               <Input
                 name="value"
                 type="number"
+                value={inputs?.value || ""}
                 placehoder={"VND"}
                 onChange={handleChange}
                 padding={"sm"}
@@ -216,6 +285,8 @@ const Cost = () => {
             </div>
           </div>
         </div>
+      ) : (
+        ""
       )}
       <div className="border border-ktsPrimary rounded-md overflow-hidden">
         <GridData headers={headers}>
@@ -238,12 +309,21 @@ const Cost = () => {
                         icon={pencil}
                         iconSize={"4"}
                         padding="xs"
+                        callback={() => {
+                          setInputs(c);
+                          setOpenEditCost(true);
+                          setOpenAddCost(false);
+                        }}
                       ></Button>
                       <Button
                         type="outline-danger"
                         icon={trash}
                         iconSize={"4"}
                         padding="xs"
+                        callback={() => {
+                          setCostToDelete(c);
+                          dispatch(onOpenModal());
+                        }}
                       ></Button>
                     </div>
                   </div>

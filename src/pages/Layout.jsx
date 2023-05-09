@@ -52,7 +52,7 @@ const Layout = () => {
                 </ProtectedRoute>
               }
             />
-            <Route path="databases" element={<Databases />} />
+            {/* <Route path="databases" element={<Databases />} /> */}
             <Route
               path="partners"
               element={

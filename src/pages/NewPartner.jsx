@@ -36,7 +36,7 @@ const NewPartner = () => {
       document.title = "Tạo mới đối tác - KTSCORP.VN";
     };
     setTitle();
-  });
+  }, []);
   useEffect(() => {
     const getCities = async () => {
       try {
