@@ -72,6 +72,7 @@ const Home = () => {
                         size={"w-5/6"}
                         placehoder={"Nhập mã vận đơn của bạn..."}
                         onChange={(e) => setOrderID(e.target.value)}
+                        padding={"md"}
                       />
                       <Button
                         type="primary"
@@ -82,12 +83,13 @@ const Home = () => {
                         disabledBy={loading}
                         loading={loading}
                         icon={search}
+                        padding={"md"}
                       ></Button>
                     </div>
                   </div>
                   <div
                     className={`w-full duration-300 h-full rounded overflow-hidden ${
-                      !openResult ? `-translate-x-[100vw]` : "translate-x-0"
+                      !openResult ? `-translate-x-[200vw]` : "translate-x-0"
                     } bg-black/10 backdrop-blur drop-shadow-lg bg-opacity-20`}
                   >
                     <div className="w-full flex justify-between items-center">

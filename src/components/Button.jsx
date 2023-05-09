@@ -24,7 +24,7 @@ const Button = ({
       : type === "danger"
       ? "bg-red-500 text-white hover:bg-red-600"
       : type === "primary"
-      ? "bg-primary-600 text-white hover:bg-primary-600"
+      ? "bg-primary-600 text-white hover:bg-primary-700"
       : type === "outline-primary"
       ? "bg-white border border-primary-500 text-primary-500 hover:text-white hover:bg-primary-500"
       : type === "outline-success"

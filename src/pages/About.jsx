@@ -1,3 +1,4 @@
+import { useState } from "react";
 const Card = ({ img = "", name = "anhvan", position = "thợ code" }) => {
   return (
     <div className="w-full border border-primary-300 rounded overflow-hidden object-cover">
@@ -6,20 +7,26 @@ const Card = ({ img = "", name = "anhvan", position = "thợ code" }) => {
       </div>
       <div className="px-3 pb-2">
         <h3 className="uppercase font-semibold">{name}</h3>
-        <h3 className="text-gray-500">{position}</h3>
-        <div className="">handsom man</div>
+        <h3 className="text-gray-500 text-xs">{position}</h3>
+        <div className="text-sm">handsome man</div>
       </div>
     </div>
   );
 };
 const About = () => {
+  const [collapse, setCollapse] = useState(false);
   return (
-    <div className="mx-auto max-w-screen-xl px-4 pb-16 lg:py-16 mt-[15vh] md:mt-[8vh] h-[92vh] overflow-y-auto">
-      <div className="p-3 overflow-auto">
+    <div className="mx-auto max-w-screen-xl px-4 pb-16 lg:py-4 mt-[15vh] md:mt-[8vh] h-[92vh] overflow-y-auto">
+      <div className="p-3 overflow-auto text">
         <h3 className="text-center uppercase text-3xl font-extrabold">
           Về chúng tôi
         </h3>
-        <p>
+        <p
+          id="content"
+          className={`${
+            collapse ? "line-clamp-999" : "line-clamp-6"
+          } text-justify leading-6`}
+        >
           Hôm nay ta thức dậy cũng như thường nhật Thấy thanh xuân ngày nào bỗng
           dưng trở lại Em soi gương cười duyên chẳng còn thấy đâu những vết đồi
           mồi Mặc một chiếc váy xinh ngồi chờ anh qua Anh sẽ đưa em quay trở về
@@ -50,6 +57,12 @@ const About = () => {
           gương cười duyên chẳng còn thấy đâu những vết đồi mồi Mặc một chiếc
           váy xinh ngồi chờ anh về
         </p>
+        <span
+          className={`block text-end cursor-pointer hover:text-primary hover:italic text-gray-600 hover:text-gray-900`}
+          onClick={() => setCollapse(!collapse)}
+        >
+          {collapse ? "Thu gọn" : "Xem thêm"}
+        </span>
       </div>
       <div className="mt-[2.5vh] overflow-auto">
         <h3 className="text-center uppercase text-3xl font-extrabold">
