@@ -33,6 +33,10 @@ const Account = (props) => {
   const [file, setFile] = useState(null);
   const [url, setUrl] = useState(currentUser?.img || "");
   //
+  const [pwd, setPwd] = useState("");
+  const [newpwd, setNewPwd] = useState("");
+  const [rePwd, setRePwd] = useState("");
+  //
   const navigate = useNavigate();
   useEffect(() => {
     const setTitle = () => {
@@ -141,17 +145,20 @@ const Account = (props) => {
     }
   };
   const handleChangePwd = async () => {
+    dispatch(onLoading());
     if (!newpwd) {
       toast.error("Mật khẩu mới không được để trống");
+      dispatch(loaded());
       return;
     }
     if (newpwd !== rePwd) {
       toast.error("Mật khẩu mới / xác nhận mật khẩu mới không trùng khớp");
+      dispatch(loaded());
       return;
     }
     try {
-      const res = await ktsRequest.put(
-        `users/changepwd/${inputs?._id}`,
+      const res = await ktsRequest.post(
+        `v2/users/changepwd/${inputs?._id}`,
         { password: pwd, newpwd: newpwd },
         {
           headers: {
@@ -160,12 +167,14 @@ const Account = (props) => {
           },
         }
       );
-      toast.success(res.data);
+      toast.success("Thay đổi mật khẩu thành công");
+      dispatch(loginSuccess({ ...res.data, token }));
+      dispatch(loaded());
     } catch (error) {
       toast.error(error.response ? error.response.data : "Network Error!");
+      dispatch(loaded());
     }
   };
-
   return (
     <div className="w-full h-full p-2 overflow-hidden">
       <div className="w-full bg-white rounded flex flex-col md:flex-row h-full overflow-auto">
@@ -178,7 +187,7 @@ const Account = (props) => {
                 className="w-full h-full object-cover object-center rounded-full"
               />
             ) : (
-              textAvatar(inputs.displayName)
+              textAvatar(inputs?.displayName)
             )}
             <button
               className="rounded-full bg-orange-500 text-white p-2 absolute bottom-1 right-1 z-10 border border-white hover:border-orange-500 hover:text-orange-500 hover:bg-white"
@@ -208,9 +217,9 @@ const Account = (props) => {
             </button>
           </div>
 
-          <div className="font-semibold">#{inputs.name}</div>
+          <div className="font-semibold">#{inputs?.name}</div>
           <div className="px-2 py-0.5 bg-orange-300 text-orange-700 rounded-md">
-            {inputs.role}
+            {inputs?.role}
           </div>
           <input
             type="file"
@@ -452,18 +461,17 @@ const Account = (props) => {
                   </div>
                 </div>
                 <div className="w-full">
-                  <button
-                    type="submit"
-                    className={`md:w-3/4 w-full rounded ${
-                      checkChangePwd
-                        ? "bg-ktsPrimary hover:bg-primary-700 active:scale-95 transition-transform"
-                        : "bg-slate-400"
-                    } px-5 py-3 text-center text-sm font-medium text-white mt-5`}
-                    onClick={handleChangePwd}
-                    disabled={!checkChangePwd}
+                  <Button
+                    type="primary"
+                    size="md:w-3/4 w-full"
+                    callback={handleChangePwd}
+                    loading={loading}
+                    disabledBy={!checkChangePwd}
+                    animation={true}
+                    padding={"sm"}
                   >
                     Thay đổi mật khẩu
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}
