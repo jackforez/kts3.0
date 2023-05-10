@@ -143,12 +143,12 @@ const Cost = () => {
     });
   };
   const headers = [
-    { title: "Tên mức giá", size: "w-1/6" },
-    { title: "Min (gram)", size: "w-1/6" },
-    { title: "Max (gram)", size: "w-1/6" },
-    { title: "Giá trị", size: "w-1/6" },
-    { title: "Tạo bởi", size: "w-1/6" },
-    { title: "Thao tác", size: "w-1/6 text-center" },
+    { title: "Tên mức giá", size: "w-1/4" },
+    { title: "Min (gram)", size: "w-1/6 text-center" },
+    { title: "Max (gram)", size: "w-1/6 text-center" },
+    { title: "Giá trị", size: "w-1/6 text-center" },
+    { title: "Ngày tạo", size: "w-1/6 text-center" },
+    { title: "Thao tác", size: "w-1/12 text-center" },
   ];
   return (
     <div className="flex-1 p-3">
@@ -290,7 +290,7 @@ const Cost = () => {
       )}
       <div className="border border-ktsPrimary rounded-md overflow-hidden">
         <GridData headers={headers}>
-          <div className="divide-y divide-dashed divide-ktsPrimary">
+          <div className="divide-y divide-dashed divide-ktsPrimary text-sm">
             {myFilter(costs, query, ["costName"]).length > 0 ? (
               myFilter(costs, query, ["costName"]).map((c, i) => {
                 return (
@@ -298,12 +298,23 @@ const Cost = () => {
                     className="px-2 py-1.5 flex items-center bg-white"
                     key={i}
                   >
-                    <div className="w-1/6 font-semibold">{c.costName}</div>
-                    <div className="w-1/6">{c.minWeight}</div>
-                    <div className="w-1/6">{c.maxWeight}</div>
-                    <div className="w-1/6">{toVND(c.value)}</div>
-                    <div className="w-1/6">{c.shopName}</div>
-                    <div className="w-1/6 flex justify-between md:justify-center md:gap-2">
+                    <div className="w-1/4">
+                      <div className="font-semibold">{c.costName}</div>
+                      {import.meta.env.VITE_KTS_LV1.includes(
+                        currentUser?.role
+                      ) && (
+                        <div className="italic text-red-500">
+                          shop: {c.shopName}
+                        </div>
+                      )}
+                    </div>
+                    <div className="w-1/6 text-center">{c.minWeight}</div>
+                    <div className="w-1/6 text-center">{c.maxWeight}</div>
+                    <div className="w-1/6 text-center">{toVND(c.value)}</div>
+                    <div className="w-1/6 text-center">
+                      {new Date(c.createdAt).toLocaleDateString()}
+                    </div>
+                    <div className="w-1/12 flex justify-between md:justify-center md:gap-2">
                       <Button
                         type="outline-warning"
                         icon={pencil}
