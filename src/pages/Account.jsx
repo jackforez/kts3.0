@@ -2,49 +2,124 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { Button, Input } from "../components";
+import { Button, Input, Selector } from "../components";
 import { pencil } from "../ultis/svgs";
 import { textAvatar } from "../ultis/functions";
 import { toast } from "react-toastify";
+import { ktsRequest } from "../ultis/connections";
+import { loaded, onLoading } from "../redux/systemSlice";
+import { loginSuccess } from "../redux/userSlice";
 const Account = (props) => {
+  // redux
   const { currentUser } = useSelector((state) => state.user);
-  const navigate = useNavigate();
-  const [displayName, setDisplayName] = useState(currentUser.displayName);
+  const { token } = currentUser;
+  const { loading, refresh } = useSelector((state) => state.system);
+  const dispatch = useDispatch();
+  //
   const [editDisplayName, setEditDisplayName] = useState(false);
   const [editPhone, setEditPhone] = useState(false);
   const [editEmail, setEditEmail] = useState(false);
   const [editAddress, setEditAddress] = useState(false);
   const [editPassword, setEditPassword] = useState(false);
-  const [check, setCheck] = useState(false);
   const [checkChangePwd, setCheckChangePwd] = useState(false);
+  //
+  const [inputs, setInputs] = useState(currentUser || {});
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
-  const [cityCode, setCityCode] = useState(currentUser?.cityCode);
-  const [districtCode, setDistrictCode] = useState(currentUser?.districtCode);
-  const [wardCode, setWardCode] = useState(currentUser?.wardCode);
+  const [cityCode, setCityCode] = useState("");
+  const [districtCode, setDistrictCode] = useState("");
+  const [wardCode, setWardCode] = useState("");
   const [file, setFile] = useState(null);
-  const [url, setUrl] = useState(currentUser?.img);
+  const [url, setUrl] = useState(currentUser?.img || "");
+  //
+  const navigate = useNavigate();
   useEffect(() => {
     const setTitle = () => {
       document.title = "Thông tin tài khoản - KTSCORP.VN";
     };
     setTitle();
   });
-  const handleCancle = (e) => {
-    e.preventDefault();
-    navigate("/dashboard");
-  };
-  const handleSave = () => {
-    console.log("SAVE");
-  };
+  useEffect(() => {
+    const getCities = async () => {
+      try {
+        const res = await ktsRequest.get("/cities");
+        const data = Object.values(res.data);
+        setCities(data);
+      } catch (error) {
+        toast.error(error);
+      }
+    };
+    getCities();
+  }, []);
+  useEffect(() => {
+    const getDistricts = async () => {
+      try {
+        const cName = cities.find((city) => city.name_with_type == cityCode);
+        const resd = await ktsRequest.get(`/cities/districts/${cName.code}`);
+        const data = Object.values(resd.data);
+        setDistricts(data);
+        setInputs((prev) => {
+          return {
+            ...prev,
+            cityCode: cName.code,
+            cityName: cName.name,
+            cityFullName: cName.name_with_type,
+          };
+        });
+      } catch (error) {
+        toast.error(error);
+      }
+    };
+    getDistricts();
+  }, [cityCode]);
+  useEffect(() => {
+    const getWards = async () => {
+      try {
+        const dName = districts.find((d) => d.name_with_type == districtCode);
+        const resw = await ktsRequest.get(`cities/wards/${dName.code}`);
+        const data = Object.values(resw.data);
+        setWards(data);
+        setInputs((prev) => {
+          return {
+            ...prev,
+            districtCode: dName.code,
+            districtName: dName.name,
+            districtFullName: dName.name_with_type,
+          };
+        });
+      } catch (error) {
+        toast.error(error);
+      }
+    };
+    getWards();
+  }, [districtCode]);
+  useEffect(() => {
+    const getWard = () => {
+      try {
+        const wName = wards.find((w) => w.name_with_type === wardCode);
+        wardCode &&
+          setInputs((prev) => {
+            return {
+              ...prev,
+              wardCode: wName?.code || currentUser.wardCode,
+              wardName: wName?.name || currentUser.wardName,
+              wardFullName: wName?.name_with_type || currentUser.wardFullName,
+            };
+          });
+      } catch (error) {
+        toast.error(error);
+      }
+    };
+    getWard();
+  }, [wardCode]);
   const handleChange = (e) => {
-    setCheck(true);
     setInputs((prev) => {
       return { ...prev, [e.target.name]: e.target.value };
     });
   };
   const handleChangeInfo = async () => {
+    dispatch(onLoading());
     try {
       const res = await ktsRequest.put(
         `users/${currentUser._id}`,
@@ -56,11 +131,14 @@ const Account = (props) => {
           },
         }
       );
-      toast.success(res.data);
+      toast.success("Cập nhật thông tin thành công");
+      dispatch(loginSuccess({ ...res.data, token }));
+      dispatch(loaded());
     } catch (error) {
+      console.log(error);
       toast.error(error.response ? error.response.data : "Network Error!");
+      dispatch(loaded());
     }
-    // setRefresh(true);
   };
   const handleChangePwd = async () => {
     if (!newpwd) {
@@ -71,10 +149,9 @@ const Account = (props) => {
       toast.error("Mật khẩu mới / xác nhận mật khẩu mới không trùng khớp");
       return;
     }
-    console.log("change PWD");
     try {
       const res = await ktsRequest.put(
-        `users/changepwd/${currentUser._id}`,
+        `users/changepwd/${inputs?._id}`,
         { password: pwd, newpwd: newpwd },
         {
           headers: {
@@ -87,21 +164,21 @@ const Account = (props) => {
     } catch (error) {
       toast.error(error.response ? error.response.data : "Network Error!");
     }
-    // setRefresh(true);
   };
+
   return (
     <div className="w-full h-full p-2 overflow-hidden">
       <div className="w-full bg-white rounded flex flex-col md:flex-row h-full overflow-auto">
         <div className="md:w-1/4 w-full md:py-12 py-3 px-2 flex flex-col items-center">
           <div className="w-32 h-32 aspect-square rounded-full relative flex justify-center items-center bg-orange-500 text-white">
-            {currentUser.img || file ? (
+            {inputs.img || file ? (
               <img
-                src={file ? URL.createObjectURL(file) : currentUser?.img}
+                src={file ? URL.createObjectURL(file) : inputs?.img}
                 alt=""
                 className="w-full h-full object-cover object-center rounded-full"
               />
             ) : (
-              textAvatar(currentUser.displayName)
+              textAvatar(inputs.displayName)
             )}
             <button
               className="rounded-full bg-orange-500 text-white p-2 absolute bottom-1 right-1 z-10 border border-white hover:border-orange-500 hover:text-orange-500 hover:bg-white"
@@ -131,9 +208,9 @@ const Account = (props) => {
             </button>
           </div>
 
-          <div className="font-semibold">#{currentUser.name}</div>
+          <div className="font-semibold">#{inputs.name}</div>
           <div className="px-2 py-0.5 bg-orange-300 text-orange-700 rounded-md">
-            {currentUser.role}
+            {inputs.role}
           </div>
           <input
             type="file"
@@ -152,10 +229,12 @@ const Account = (props) => {
               </label>
               <div className="flex gap-2">
                 <Input
-                  placehoder={currentUser.displayName}
+                  name="displayName"
+                  placehoder={inputs?.displayName || "Tên hiển thị"}
                   size={"md:w-3/4 w-full"}
                   padding={"sm"}
                   disabledBy={!editDisplayName}
+                  onChange={handleChange}
                 />
                 <Button
                   type={editDisplayName ? "warning" : "outline-warning"}
@@ -171,10 +250,12 @@ const Account = (props) => {
               </label>
               <div className="flex gap-2">
                 <Input
+                  name="phone"
                   placehoder={currentUser.phone}
                   size={"md:w-3/4 w-full"}
                   padding={"sm"}
                   disabledBy={!editPhone}
+                  onChange={handleChange}
                 />
                 <Button
                   type={editPhone ? "warning" : "outline-warning"}
@@ -190,10 +271,12 @@ const Account = (props) => {
               </label>
               <div className="flex gap-2">
                 <Input
+                  name="email"
                   placehoder={currentUser.email || "user@ktscorp.vn"}
                   size={"md:w-3/4 w-full"}
                   padding={"sm"}
                   disabledBy={!editEmail}
+                  onChange={handleChange}
                 />
                 <Button
                   type={editEmail ? "warning" : "outline-warning"}
@@ -209,10 +292,12 @@ const Account = (props) => {
               </label>
               <div className="flex gap-2">
                 <Input
+                  name="address"
                   placehoder={currentUser.address}
                   size={"md:w-3/4 w-full"}
                   padding={"sm"}
                   disabledBy={!editAddress}
+                  onChange={handleChange}
                 />
                 <Button
                   type={editAddress ? "warning" : "outline-warning"}
@@ -223,88 +308,51 @@ const Account = (props) => {
               </div>
             </div>
             {editAddress && (
-              <div className="w-full justify-start flex">
-                <div className="md:w-1/4 w-1/3 flex flex-col pr-1">
-                  <label htmlFor="" className="hidden md:block">
-                    Tỉnh/Thành
-                  </label>
-                  <select
-                    id="cities"
-                    class="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-ktsPrimary focus:ring-ktsPrimary"
-                    onChange={(e) => setCityCode(e.target.value)}
-                  >
-                    {cities.map((i) => {
-                      return (
-                        <option
-                          value={i.code}
-                          key={i.code}
-                          selected={i.code === currentUser.cityCode}
-                        >
-                          {i.name_with_type}
-                        </option>
-                      );
-                    })}
-                  </select>
+              <div className="grid md:grid-cols-3 gap-1 pt-1 w-full md:w-3/4">
+                <div className="w-full z-30">
+                  <Selector
+                    placehoder={inputs?.cityFullName || "Tỉnh/Thành"}
+                    data={cities}
+                    field={["name"]}
+                    toShow="name_with_type"
+                    size={"sm"}
+                    output={setCityCode}
+                  />
                 </div>
-                <div className="md:w-1/4 w-1/3 flex flex-col pr-1">
-                  <label htmlFor="" className="hidden md:block">
-                    Quận/Huyện
-                  </label>
-                  <select
-                    id="districts"
-                    class="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-ktsPrimary focus:ring-ktsPrimary"
-                    onChange={(e) => setDistrictCode(e.target.value)}
-                  >
-                    {districts.map((i) => {
-                      return (
-                        <option
-                          value={i.code}
-                          key={i.code}
-                          selected={i.code === currentUser.districtCode}
-                        >
-                          {i.name_with_type}
-                        </option>
-                      );
-                    })}
-                  </select>
+                <div className="w-full z-20">
+                  <Selector
+                    placehoder={inputs?.districtFullName || "Quận/Huyện"}
+                    data={districts}
+                    field={["name_with_type"]}
+                    toShow="name_with_type"
+                    size={"sm"}
+                    output={setDistrictCode}
+                  />
                 </div>
-                <div className="md:w-1/4 w-1/3 flex flex-col">
-                  <label htmlFor="" className="hidden md:block">
-                    Phường/Xã
-                  </label>
-                  <select
-                    id="wards"
-                    class="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-ktsPrimary focus:ring-ktsPrimary"
-                    onChange={(e) => setWardCode(e.target.value)}
-                  >
-                    {wards.map((i) => {
-                      return (
-                        <option
-                          value={i.code}
-                          key={i.code}
-                          selected={i.code === currentUser.wardCode}
-                        >
-                          {i.name_with_type}
-                        </option>
-                      );
-                    })}
-                  </select>
+                <div className="w-full z-10">
+                  <Selector
+                    placehoder={inputs?.wardFullName || "Phường/Xã"}
+                    data={wards}
+                    field={["name_with_type"]}
+                    toShow="name_with_type"
+                    size={"sm"}
+                    output={setWardCode}
+                  />
                 </div>
               </div>
             )}
             <div className="w-full">
-              <button
-                type="submit"
-                className={`md:w-3/4 w-full rounded ${
-                  check
-                    ? "bg-ktsPrimary hover:bg-primary-700 active:scale-95 transition-transform"
-                    : "bg-slate-400"
-                } px-5 py-3 text-center text-sm font-medium text-white md:mt-12 mt-3`}
-                onClick={handleChangeInfo}
-                disabled={!check}
+              <Button
+                type="primary"
+                size="md:w-3/4 w-full"
+                callback={handleChangeInfo}
+                loading={loading && inputs !== currentUser}
+                disabledBy={inputs === currentUser}
+                animation={true}
+                padding={"sm"}
               >
                 Cập nhật thông tin
-              </button>
+              </Button>
             </div>
           </div>
           <div className="md:w-1/2 w-full space-y-3">
