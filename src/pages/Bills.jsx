@@ -49,7 +49,7 @@ const Bills = () => {
             dispatch(logout());
           }
         } else {
-          toast.error("abc");
+          toast.error("Network Error!");
         }
       }
     };

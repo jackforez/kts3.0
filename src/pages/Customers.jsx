@@ -59,7 +59,7 @@ const Customers = () => {
             dispatch(logout());
           }
         } else {
-          toast.error("abc");
+          toast.error("Network Error!");
         }
       }
     };
@@ -228,7 +228,7 @@ const Customers = () => {
             Sau khi thực hiện sẽ không thể hoàn tác. Các thông tin đơn hàng cũ
             cũng không thể truy xuất! <br />
             Bạn chắc chắn muốn xóa khách hàng
-            <span className="font-semibold italic bg-gray-300 mx-1 px-1 pb-0.5 rounded-md">
+            <span className="font-semibold italic bg-gray-300 mx-1 px-1 pb-0.5 rounded-md inline-block">
               {" " + inputs?.name + " "}
             </span>
             ?
@@ -236,7 +236,7 @@ const Customers = () => {
           <div className="flex justify-end gap-2 p-2">
             <Button
               type="outline-primary"
-              size="w-1/4"
+              size="px-4"
               padding={"xs"}
               callback={() => dispatch(onCloseModal())}
             >
@@ -244,7 +244,7 @@ const Customers = () => {
             </Button>
             <Button
               type="danger"
-              size="w-1/4"
+              size="px-4"
               callback={handleDelete}
               loading={loading}
               disabledBy={loading}
@@ -256,7 +256,7 @@ const Customers = () => {
           </div>
         </Modal>
       )}
-      <div className="flex items-center justify-between pb-3">
+      <div className="flex items-center justify-between  py-2">
         <Input
           placehoder={"Tìm theo tên/số điện thoại ..."}
           size={"w-1/3"}
@@ -265,12 +265,12 @@ const Customers = () => {
           padding="sm"
         />
         {openAddCustomer || openEditCustomer ? (
-          <div className="w-1/4 flex gap-2">
+          <div className="md:w-1/4 w-1/2 flex justify-end gap-2">
             <Button
               Button
               type="outline-danger"
               padding={"xs"}
-              size="w-1/2"
+              size="md:w-1/3 w-1/2 py-1.5"
               callback={() => {
                 setOpenAddCustomer(false);
                 setOpenEditCustomer(false);
@@ -283,7 +283,7 @@ const Customers = () => {
               Button
               type="success"
               padding={"xs"}
-              size="w-1/2"
+              size="md:w-1/3 w-1/2 py-1.5"
               disabledBy={loading}
               animation={true}
               loading={loading}
@@ -296,7 +296,7 @@ const Customers = () => {
           <Button
             type="primary"
             padding={"xs"}
-            size="w-1/6"
+            size="w-1/4 md:w-1/6 py-1.5"
             callback={() => {
               setOpenAddCustomer(true);
               setOpenEditCustomer(false);

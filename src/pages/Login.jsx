@@ -54,7 +54,7 @@ const Login = () => {
   };
   return (
     <div className="bg-[url('./assets/imgs/hero.jpg')] p-3 h-screen bg-cover bg-fixed bg-center bg-no-repeat overflow-hidden flex justify-center items-center">
-      <div className="2xl:w-1/4 md:w-1/3 w-full p-4 justify-between flex bg-indigo-900 text-white backdrop-blur rounded-lg overflow-hidden drop-shadow bg-opacity-10 items-center">
+      <div className="2xl:w-1/4 md:w-1/2 lg:w-1/3 w-full p-4 justify-between flex bg-indigo-900 text-white backdrop-blur rounded-lg overflow-hidden drop-shadow bg-opacity-10 items-center">
         <div className="w-full px-6">
           <Link
             title="Trang chủ"

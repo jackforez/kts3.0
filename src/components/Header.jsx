@@ -24,7 +24,9 @@ const Header = () => {
     <div className="flex h-[8vh] w-full items-center justify-between bg-white px-3 md:px-9 border-b border-ktsPrimary">
       <h3 className="font-bold uppercase">{header}</h3>
       <div className="flex items-center">
-        <h3 className="mr-4 font-bold">{currentUser?.displayName}</h3>
+        <h3 className="mr-4 font-bold hidden md:block">
+          {currentUser?.displayName}
+        </h3>
         <div
           className="relative flex h-9 w-9 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-orange-500 font-bold text-white"
           onClick={(e) => {

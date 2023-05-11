@@ -465,8 +465,8 @@ const Account = (props) => {
                     type="primary"
                     size="md:w-3/4 w-full"
                     callback={handleChangePwd}
-                    loading={loading}
-                    disabledBy={!checkChangePwd}
+                    loading={loading && checkChangePwd}
+                    disabledBy={!checkChangePwd || loading}
                     animation={true}
                     padding={"sm"}
                   >

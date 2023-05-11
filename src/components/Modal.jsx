@@ -5,7 +5,7 @@ const Modal = ({ children }) => {
   const dispatch = useDispatch();
   return (
     <div className="absolute z-10 h-screen w-screen bg-black/50 top-0 left-0 flex justify-center items-center">
-      <div className="bg-white overflow-hidden rounded-md w-1/3">
+      <div className="bg-white overflow-hidden rounded-md w-4/5 md:w-1/2 lg:w-1/3">
         <div className="bg-red-500 text-white uppercase font-semibold flex justify-between items-center ">
           <h3 className="px-4">cảnh báo</h3>
           <button

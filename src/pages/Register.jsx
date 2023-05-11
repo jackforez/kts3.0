@@ -112,6 +112,17 @@ const Register = () => {
       dispatch(loaded());
       return;
     }
+    if (!inputs.password) {
+      toast.warn("Mật khẩu không được để trống!");
+      dispatch(loaded());
+      return;
+    }
+    if (inputs.password !== inputs.repassword) {
+      toast.warn("Xác nhận mật khẩu không đúng");
+      dispatch(loaded());
+      return;
+    }
+
     if (!inputs.phone || inputs.phone.length !== 10) {
       toast.warn("Số điện thoại không hợp lệ");
       dispatch(loaded());

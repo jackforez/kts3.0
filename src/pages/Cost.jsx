@@ -158,7 +158,7 @@ const Cost = () => {
             Sau khi thực hiện sẽ không thể hoàn tác. Các thông tin đơn hàng cũ
             cũng không thể truy xuất! <br />
             Bạn chắc chắn muốn xóa mức giá
-            <span className="font-semibold italic bg-gray-300 mx-1 px-1 pb-0.5 rounded-md">
+            <span className="font-semibold italic bg-gray-300 mx-1 px-1 pb-0.5 rounded-md inline-block">
               {" " + costToDelete?.costName + " "}
             </span>
             ?
@@ -166,7 +166,7 @@ const Cost = () => {
           <div className="flex justify-end gap-2 p-2">
             <Button
               type="outline-primary"
-              size="w-1/4"
+              size="px-4"
               padding={"xs"}
               callback={() => dispatch(onCloseModal())}
             >
@@ -174,7 +174,7 @@ const Cost = () => {
             </Button>
             <Button
               type="danger"
-              size="w-1/4"
+              size="px-4"
               callback={handleDelete}
               loading={loading}
               disabledBy={loading}
