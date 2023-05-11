@@ -1,42 +1,36 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Button, Input, Selector } from "../components";
+import { key, mail, mapPin, phone } from "../ultis/svgs";
+import { userName } from "../ultis/svgs";
+import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 import { ktsRequest } from "../ultis/connections";
-import { setCurrentPage } from "../redux/systemSlice";
+import { loaded, onLoading } from "../redux/systemSlice";
+import { useNavigate } from "react-router-dom";
 
 const NewPartner = () => {
-  const [name, setName] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const [repassword, setRepassword] = useState("");
+  const { currentUser } = useSelector((state) => state.user);
+  const { loading } = useSelector((state) => state.system);
+  const navigate = useNavigate();
+  const [inputs, setInputs] = useState({});
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
   const [cityCode, setCityCode] = useState("");
   const [districtCode, setDistrictCode] = useState("");
   const [wardCode, setWardCode] = useState("");
-  const [cityName, setCityName] = useState("");
-  const [districtName, setDistrictName] = useState("");
-  const [wardName, setWardName] = useState("");
-  const [cityFullName, setCityFullName] = useState("");
-  const [districtFullName, setDistrictFullName] = useState("");
-  const [wardFullName, setWardFullName] = useState("");
-  const [address, setAddress] = useState("");
-  const [cost, setCost] = useState([]);
   const [costName, setCostName] = useState("");
+  const [cost, setCost] = useState([]);
+
   const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.user);
   useEffect(() => {
-    const setTitle = () => {
-      dispatch(setCurrentPage("tạo mới đối tác"));
-      document.title = "Tạo mới đối tác - KTSCORP.VN";
-    };
-    setTitle();
+    document.title = "Tạo mới đối tác - KTSCORP.VN";
   }, []);
+  const handelChange = (e) => {
+    setInputs((prev) => {
+      return { ...prev, [e.target.name]: e.target.value };
+    });
+  };
   useEffect(() => {
     const getCities = async () => {
       try {
@@ -52,12 +46,18 @@ const NewPartner = () => {
   useEffect(() => {
     const getDistricts = async () => {
       try {
-        const resd = await ktsRequest.get(`/cities/districts/${cityCode}`);
-        const cName = cities.find((city) => city.code === cityCode);
+        const cName = cities.find((city) => city.name_with_type == cityCode);
+        const resd = await ktsRequest.get(`/cities/districts/${cName.code}`);
         const data = Object.values(resd.data);
         setDistricts(data);
-        setCityName(cName.name);
-        setCityFullName(cName.name_with_type);
+        setInputs((prev) => {
+          return {
+            ...prev,
+            cityCode: cName.code,
+            cityName: cName.name,
+            cityFullName: cName.name_with_type,
+          };
+        });
       } catch (error) {
         toast.error(error);
       }
@@ -67,12 +67,18 @@ const NewPartner = () => {
   useEffect(() => {
     const getWards = async () => {
       try {
-        const resw = await ktsRequest.get(`/cities/wards/${districtCode}`);
+        const dName = districts.find((d) => d.name_with_type == districtCode);
+        const resw = await ktsRequest.get(`cities/wards/${dName.code}`);
         const data = Object.values(resw.data);
-        const dName = districts.find((d) => d.code === districtCode);
         setWards(data);
-        setDistrictName(dName.name);
-        setDistrictFullName(dName.name_with_type);
+        setInputs((prev) => {
+          return {
+            ...prev,
+            districtCode: dName.code,
+            districtName: dName.name,
+            districtFullName: dName.name_with_type,
+          };
+        });
       } catch (error) {
         toast.error(error);
       }
@@ -81,20 +87,29 @@ const NewPartner = () => {
   }, [districtCode]);
   useEffect(() => {
     const getWard = () => {
-      if (wardCode) {
-        const wName = wards.find((w) => w.code === wardCode);
-        setWardName(wName.name);
-        setWardFullName(wName.name_with_type);
+      try {
+        const wName = wards.find((w) => w.name_with_type === wardCode);
+        setInputs((prev) => {
+          return {
+            ...prev,
+            wardCode: wName?.code,
+            wardName: wName?.name,
+            wardFullName: wName?.name_with_type,
+          };
+        });
+      } catch (error) {
+        toast.error(error);
       }
     };
-    getWard();
+    wardCode && getWard();
   }, [wardCode]);
   useEffect(() => {
+    console.log("cost");
     const fetchCost = async () => {
       try {
         const res = await ktsRequest.get("/cost", {
           headers: {
-            Authorization: `Bearer ${currentUser.currentUser.token}`,
+            Authorization: `Bearer ${currentUser.token}`,
           },
         });
         setCost(res.data.data);
@@ -106,236 +121,203 @@ const NewPartner = () => {
     };
     fetchCost();
   }, []);
-  const handleClick = (e) => {
+  const handleCreate = async (e) => {
     e.preventDefault();
-    if (!name) {
-      toast.warn("Vui lòng chọn Tên đăng nhập!");
+    dispatch(onLoading());
+    if (!inputs.name) {
+      toast.warn("Tên đăng nhập không được để trống!");
+      dispatch(loaded());
       return;
     }
-    if (!password) {
-      toast.warn("Mật khẩu không hợp lệ!");
+    if (!inputs.phone || inputs.phone.length !== 10) {
+      toast.warn("Số điện thoại không hợp lệ");
+      dispatch(loaded());
       return;
     }
-    if (repassword !== password) {
-      toast.warn("Xác nhận mật khẩu không khớp");
+    if (!inputs.displayName) {
+      toast.warn("Tên shop không được để trống!");
+      dispatch(loaded());
       return;
     }
-    if (!phone) {
-      toast.warn("Vui lòng cung cấp số điện thoại!");
+    if (!inputs.address) {
+      toast.warn("Vui lòng nhập địa chỉ, tên đường!");
+      dispatch(loaded());
       return;
     }
-    if (!address) {
-      console.log(address);
-      toast.warn("Vui lòng nhập địa chỉ");
+    if (!inputs.cityCode) {
+      toast.warn("Vui lòng chọn Tỉnh/Thành!");
+      dispatch(loaded());
       return;
     }
-    if (!cityCode) {
-      toast.warn("Vui lòng chọn tỉnh thành!");
+    if (!inputs.districtCode) {
+      toast.warn("Vui lòng chọn Quận/Huyện!");
+      dispatch(loaded());
       return;
     }
-    if (!districtCode) {
-      toast.warn("Vui lòng chọn quận huyện!");
+    if (!inputs.wardCode) {
+      toast.warn("Vui lòng chọn Phường/Xã!");
+      dispatch(loaded());
       return;
     }
-    if (!wardCode) {
-      toast.warn("Vui lòng chọn phường xã!");
-      return;
+    try {
+      const res = await ktsRequest.post("/auth/signup", inputs);
+      toast.success(res.data);
+      dispatch(loaded());
+    } catch (er) {
+      console.log(er);
+      dispatch(loaded());
+      toast.error(er.response ? er.response.data : "Network Error");
     }
-    const data = JSON.stringify({
-      name,
-      password,
-      phone,
-      displayName,
-      cityCode,
-      districtCode,
-      wardCode,
-      cityName,
-      districtName,
-      wardName,
-      cityFullName,
-      districtFullName,
-      wardFullName,
-      address,
-      parentUser: currentUser.currentUser._id,
-      cost: costName,
-    });
-
-    const config = {
-      method: "post",
-      url: "/auth/signup",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-    ktsRequest(config)
-      .then(function (response) {
-        toast.success("Đăng ký thành công!");
-        setName("");
-        setDisplayName("");
-        setPassword("");
-        setRepassword("");
-        setPhone("");
-        setCityCode("");
-        setDistrictCode("");
-        setWardCode("");
-        setAddress("");
-      })
-      .catch(function (error) {
-        toast.error("Tên đăng nhập đã có người sử dụng!");
-      });
   };
-
   return (
-    <div className="h-full bg-slate-200 p-3">
-      <div className="mx-auto w-full lg:w-2/3">
-        <div className=" flex flex-col gap-2">
-          <span className="flex pl-2 after:ml-1 after:text-red-500 after:content-['*']">
-            <input
+    <div className="w-full p-2">
+      <form
+        className="w-full space-y-3 border border-gray-300 rounded p-2 bg-white"
+        action=""
+      >
+        <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
+          <div className="space-y-2">
+            <Input
+              padding="sm"
+              placehoder="Tên đăng nhập . . ."
               type="text"
-              placeholder="User name ..."
-              name="name"
-              value={name}
-              className="border-grey-light w-full rounded border p-2  focus:border-sky-500 focus:outline-none"
-              required="abc"
-              onChange={(e) => setName(e.target.value)}
+              icon={userName}
+              value={inputs?.name}
+              onChange={(e) =>
+                setInputs((prev) => {
+                  return {
+                    ...prev,
+                    name: e.target.value.replace(/[^a-zA-Z0-9]/g, ""),
+                  };
+                })
+              }
             />
-          </span>
-          <div className="pr-2.5 pl-2">
-            <input
-              type="text"
-              placeholder="Shop name ..."
-              name="displayname"
-              value={displayName}
-              className="border-grey-light block w-full rounded border p-2 focus:border-sky-500 focus:outline-none"
-              required="abc"
-              onChange={(e) => setDisplayName(e.target.value)}
-            />
-          </div>
-          <div className="flex pl-2 after:ml-1 after:text-red-500 after:content-['*']">
-            <input
-              type="password"
-              placeholder="Password ..."
+            <Input
               name="password"
-              value={password}
-              className="border-grey-light block w-full rounded border p-2 focus:border-sky-500 focus:outline-none"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-
-          <div className="flex pl-2 after:ml-1 after:text-red-500 after:content-['*']">
-            <input
+              padding="sm"
+              placehoder="Mật khẩu . . . "
               type="password"
-              placeholder="Confirm Password ..."
+              icon={key}
+              value={inputs?.password}
+              onChange={handelChange}
+            />
+            <Input
               name="repassword"
-              value={repassword}
-              className="border-grey-light block w-full rounded border p-2 focus:border-sky-500 focus:outline-none"
-              onChange={(e) => setRepassword(e.target.value)}
+              padding="sm"
+              placehoder="Xác nhận mật khẩu . . . "
+              type="password"
+              icon={key}
+              value={inputs?.repassword}
+              onChange={handelChange}
             />
-          </div>
-          <div className="flex pl-2 after:ml-1 after:text-red-500 after:content-['*']">
-            <input
+            <Input
+              name="displayName"
+              padding="sm"
+              placehoder="Tên shop . . ."
               type="text"
-              placeholder="Số điện thoại ..."
+              icon={userName}
+              value={inputs?.displayName}
+              onChange={handelChange}
+            />
+            <Input
               name="phone"
-              value={phone}
-              className="border-grey-light block w-full rounded border p-2 focus:border-sky-500 focus:outline-none"
-              onChange={(e) => setPhone(e.target.value)}
+              padding="sm"
+              placehoder="Số điện thoại . . ."
+              type="number"
+              icon={phone}
+              value={inputs?.phone}
+              onChange={handelChange}
             />
           </div>
-          <div className="flex pl-2 after:ml-1 after:text-red-500 after:content-['*']">
-            <select
-              id="cities"
-              class="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              onChange={(e) => setCityCode(e.target.value)}
-            >
-              <option selected>Tỉnh/Thành</option>
-              {cities.map((i) => {
-                return (
-                  <option value={i.code} key={i.code}>
-                    {i.name_with_type}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-          <div className="flex pl-2 after:ml-1 after:text-red-500 after:content-['*']">
-            <select
-              id="districts"
-              class="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              onChange={(e) => setDistrictCode(e.target.value)}
-            >
-              <option selected>Quận/Huyện</option>
-              {districts.map((i) => {
-                return (
-                  <option value={i.code} key={i.code}>
-                    {i.name_with_type}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-          <div className="flex pl-2 after:ml-1 after:text-red-500 after:content-['*']">
-            <select
-              id="wards"
-              class="block w-full rounded border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              onChange={(e) => setWardCode(e.target.value)}
-            >
-              <option selected>Phường/Xã</option>
-              {wards.map((i) => {
-                return (
-                  <option value={i.code} key={i.code}>
-                    {i.name_with_type}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-          <div className="flex pl-2 after:ml-1 after:text-red-500 after:content-['*']">
-            <input
+          <div className="space-y-2">
+            {" "}
+            <Input
+              name="email"
+              padding="sm"
+              placehoder="Email . . ."
+              type="email"
+              icon={mail}
+              value={inputs?.email}
+              onChange={handelChange}
+            />
+            <Input
+              name="address"
+              padding="sm"
+              placehoder="Số nhà tên đường . . ."
               type="text"
-              placeholder="Số nhà, tên đường ..."
-              name="displayname"
-              value={address}
-              className="border-grey-light block w-full rounded border p-2 focus:border-sky-500 focus:outline-none"
-              required="abc"
-              onChange={(e) => setAddress(e.target.value)}
+              icon={mapPin}
+              value={inputs?.address}
+              onChange={handelChange}
             />
-          </div>
-          <div className="flex pl-2 after:ml-1 after:text-red-500 after:content-['*']">
-            <select
-              id="cost"
-              class="block w-full rounded border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-              onChange={(e) => {
-                setCostName(e.target.value);
-              }}
-            >
-              <option value="" selected disabled hidden>
-                Chọn mức giá áp dụng
-              </option>
-              {cost.map((i, index) => {
-                return (
-                  <option value={i.costName} key={index}>
-                    {i.costName}
-                  </option>
-                );
-              })}
-            </select>
+            <div className="grid gap-2 w-full text-gray-900">
+              <div className="w-full z-30">
+                <Selector
+                  placehoder={"Tỉnh/Thành"}
+                  data={cities}
+                  field={["name"]}
+                  toShow="name_with_type"
+                  size={"sm"}
+                  output={setCityCode}
+                />
+              </div>
+              <div className="w-full z-20">
+                <Selector
+                  placehoder={"Quận/Huyện"}
+                  data={districts}
+                  field={["name_with_type"]}
+                  toShow="name_with_type"
+                  size={"sm"}
+                  output={setDistrictCode}
+                />
+              </div>
+              <div className="w-full z-10">
+                <Selector
+                  placehoder={"Phường/Xã"}
+                  data={wards}
+                  field={["name_with_type"]}
+                  toShow="name_with_type"
+                  size={"sm"}
+                  output={setWardCode}
+                />
+              </div>
+            </div>
           </div>
         </div>
+        <div className="w-full z-10">
+          <Selector
+            placehoder={"Chọn mức giá sẽ áp dụng"}
+            data={cost}
+            field={["costName"]}
+            toShow="costName"
+            size={"sm"}
+            output={setCostName}
+          />
+        </div>
 
-        <div className="px-2.5">
-          <button
-            type="submit"
-            className="mt-3 w-full rounded bg-primary-600 px-5 py-3 text-center text-sm font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-            onClick={handleClick}
+        <div className="flex justify-end gap-2 w-full">
+          <Button
+            type="outline-danger"
+            size="w-1/2 md:w-1/6"
+            padding={"sm"}
+            callback={() => navigate("/dashboard/partners")}
+          >
+            HỦY BỎ
+          </Button>
+          <Button
+            type="primary"
+            size="w-1/2 md:w-1/6"
+            style="uppercase font-semibold"
+            callback={(e) => handleCreate(e)}
+            loading={loading}
+            disabledBy={loading}
+            animation={true}
+            clickType="submit"
+            padding={"sm"}
           >
             Tạo mới đối tác
-          </button>
+          </Button>
         </div>
-
-        <ToastContainer />
-      </div>
+      </form>
     </div>
   );
 };

@@ -22,7 +22,7 @@ const Selector = ({
   return (
     <div
       className={`w-full border bg-white ${
-        openDataTable && "border-primary-500"
+        openDataTable ? "border-primary-500" : "border-gray-300"
       } rounded px-2 relative ${
         disabled && "pointer-events-none bg-slate-200"
       }`}

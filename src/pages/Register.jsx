@@ -1,19 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
-import img1 from "../assets/imgs/img1.jpg";
-import img2 from "../assets/imgs/img2.jpg";
 import { Button, Input, Selector } from "../components";
 import { key, mail, mapPin, phone } from "../ultis/svgs";
 import { userName } from "../ultis/svgs";
-import { Swiper, SwiperSlide } from "swiper/react";
-import SwiperCore, { Autoplay } from "swiper";
-import "swiper/css";
-import "swiper/css/autoplay";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { ktsRequest } from "../ultis/connections";
 import { loaded, onLoading } from "../redux/systemSlice";
-SwiperCore.use([Autoplay]);
 
 const Register = () => {
   const { currentUser } = useSelector((state) => state.user);

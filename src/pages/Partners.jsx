@@ -4,22 +4,28 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ktsRequest } from "../ultis/connections";
 import { logout } from "../redux/userSlice";
-import { Button, GridData, Input, Selector } from "../components";
+import { Button, GridData, Input, Modal, Selector } from "../components";
 import { search as myFilter, toVND } from "../ultis/functions";
 import { pencil, search, trash } from "../ultis/svgs";
 import logo from "../assets/logo.svg";
+import {
+  loaded,
+  onLoading,
+  onOpenModal,
+  onRefreh,
+  onCloseModal,
+} from "../redux/systemSlice";
 const Partners = () => {
   const nagative = useNavigate();
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user);
-  const isAdmin = currentUser.currentUser.role === "admin";
+  const { loading, openModal, refresh } = useSelector((state) => state.system);
   const [customers, setCustomers] = useState([]);
-  const [refresh, setRefresh] = useState(false);
   const [costName, setCostName] = useState([]);
   const [addCost, setAddCost] = useState(-1);
   const [cost, setCost] = useState([]);
   const [query, setQuery] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [userToDelete, setUserToDelete] = useState({});
   useEffect(() => {
     const setTitle = () => {
       document.title = "Đối tác - KTSCORP.VN";
@@ -27,7 +33,6 @@ const Partners = () => {
     setTitle();
   });
   useEffect(() => {
-    setLoading(true);
     const fetchData = async () => {
       try {
         const res = await ktsRequest.get("/users/children", {
@@ -48,7 +53,6 @@ const Partners = () => {
       }
     };
     fetchData();
-    setRefresh(false);
   }, [refresh]);
   useEffect(() => {
     const fetchCost = async () => {
@@ -67,25 +71,22 @@ const Partners = () => {
     };
     fetchCost();
   }, []);
-  const handleDelete = async (customer) => {
-    if (
-      confirm(
-        `Bạn chắc chắn muốn xóa khách hàng ${customer.name}?\n Sau khi thực hiện sẽ không thể hoàn tác!\n Các thông tin đơn hàng cũ cũng không thể truy xuất!`
-      )
-    ) {
-      try {
-        const res = await ktsRequest.delete(`/customers/${customer._id}`, {
-          headers: {
-            Authorization: `Bearer ${currentUser.currentUser.token}`,
-          },
-        });
-        toast.success(res.data);
-        setRefresh(true);
-      } catch (error) {
-        error.response
-          ? toast.error(error.response.data.message)
-          : toast.error("Network Error!");
-      }
+  const handleDelete = async () => {
+    dispatch(onLoading());
+    try {
+      const res = await ktsRequest.delete(`/users/${userToDelete?._id}`, {
+        headers: {
+          Authorization: `Bearer ${currentUser.currentUser.token}`,
+        },
+      });
+      toast.success(res.data);
+      dispatch(loaded());
+      dispatch(onRefreh());
+    } catch (error) {
+      dispatch(loaded());
+      toast.error(
+        error.response ? error.response.data.message : "Network Error!"
+      );
     }
   };
   const handleAddCost = async (user, cost_name) => {
@@ -104,7 +105,7 @@ const Partners = () => {
     await ktsRequest(config)
       .then(function (res) {
         res.status === 200 ? toast.success(res.data) : toast.warn(res.data);
-        setRefresh(true);
+        dispatch(onRefreh());
       })
       .catch(function (error) {
         error.response
@@ -128,7 +129,7 @@ const Partners = () => {
     await ktsRequest(config)
       .then(function (res) {
         res.status === 200 ? toast.success(res.data) : toast.warn(res.data);
-        setRefresh(true);
+        dispatch(onRefreh());
       })
       .catch(function (error) {
         error.response
@@ -143,8 +144,43 @@ const Partners = () => {
     { title: "Mức giá áp dụng", size: "w-3/12" },
     { title: "Thao tác", size: "w-2/12 text-center" },
   ];
+  console.log(openModal);
   return (
     <div className="h-full overflow-auto bg-slate-200 p-3">
+      {openModal && (
+        <Modal>
+          <div className="p-2">
+            Sau khi thực hiện sẽ không thể hoàn tác. Các thông tin đơn hàng cũ
+            cũng không thể truy xuất! <br />
+            Bạn chắc chắn muốn xóa đối tác
+            <span className="font-semibold italic bg-gray-300 mx-1 px-1 pb-0.5 rounded-md">
+              {" " + userToDelete?.displayName + " "}
+            </span>
+            ?
+          </div>
+          <div className="flex justify-end gap-2 p-2">
+            <Button
+              type="outline-primary"
+              size="w-1/4"
+              padding={"xs"}
+              callback={() => dispatch(onCloseModal())}
+            >
+              Hủy bỏ
+            </Button>
+            <Button
+              type="danger"
+              size="w-1/4"
+              callback={handleDelete}
+              loading={loading}
+              disabledBy={loading}
+              animation={true}
+              padding={"xs"}
+            >
+              Xác nhận xóa
+            </Button>
+          </div>
+        </Modal>
+      )}
       <div className="flex items-center justify-between py-3">
         <Input
           placehoder={"Nhập tên/số điện thoại đối tác...."}
@@ -200,41 +236,36 @@ const Partners = () => {
                       {c.cost.map((j, i) => {
                         return (
                           <span
-                            className="rounded-sm bg-gray-300 pb-0.5 inline-block m-1"
+                            className="rounded-sm bg-gray-300 pb-0.5 inline-flex m-0.5 text-xs items-center"
                             key={i}
                           >
                             <button
-                              className="mx-2 text-red-500 hover:font-bold"
+                              className="text-black font-semibold hover:text-red-500 px-1 pt-0.5"
                               onClick={(e) => {
                                 handleRemoveCost(c, j);
                               }}
                             >
-                              x
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className="w-3 h-3"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M6 18L18 6M6 6l12 12"
+                                />
+                              </svg>
                             </button>
-                            <span className="py-0.5 px-2">{j}</span>
+                            <span className="px-1">{j}</span>
                           </span>
                         );
                       })}
                       {addCost === k && (
                         <div className="mt-2 flex w-full gap-2 absolute -top-2 z-10">
-                          {/* <select
-                            id="cost"
-                            className="block w-full rounded border border-gray-300 bg-gray-50 py-1 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                            onChange={(e) => {
-                              setCostName(e.target.value);
-                            }}
-                          >
-                            <option value="" selected disabled hidden>
-                              Chọn mức giá áp dụng
-                            </option>
-                            {cost.map((co, index) => {
-                              return (
-                                <option value={co.costName} key={index}>
-                                  {co.costName}
-                                </option>
-                              );
-                            })}
-                          </select> */}
                           <Selector
                             placehoder={"Thêm mức giá"}
                             data={cost}
@@ -294,8 +325,14 @@ const Partners = () => {
                         type="outline-danger"
                         icon={trash}
                         iconSize={"4"}
-                        title={"Xóa khách hàng"}
+                        title={"Xóa đối tác"}
                         padding="xs"
+                        callback={() => {
+                          console.log("open modal");
+                          setUserToDelete(c);
+                          console.log(userToDelete);
+                          dispatch(onOpenModal());
+                        }}
                       ></Button>
                     </div>
                   </div>
