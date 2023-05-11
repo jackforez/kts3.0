@@ -2,16 +2,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Input } from "../components";
 import { key } from "../ultis/svgs";
 import { userName } from "../ultis/svgs";
-import SwiperCore, { Autoplay } from "swiper";
-import "swiper/css";
-import "swiper/css/autoplay";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { ktsRequest } from "../ultis/connections";
 import { loginFailure, loginSuccess } from "../redux/userSlice";
 import { loaded, onLoading } from "../redux/systemSlice";
-SwiperCore.use([Autoplay]);
 
 const Login = () => {
   const [username, setUsername] = useState("");
