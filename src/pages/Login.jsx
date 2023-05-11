@@ -90,6 +90,7 @@ const Login = () => {
               placehoder="Mật khẩu . . . "
               type="password"
               icon={key}
+              value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
             <Button

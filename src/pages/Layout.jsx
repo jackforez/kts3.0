@@ -20,9 +20,14 @@ import {
 } from ".";
 const Layout = () => {
   const { currentUser } = useSelector((state) => state.user);
-  const isShop = currentUser?.role === "shop";
   const ProtectedRoute = ({ children }) => {
-    if (isShop) {
+    if (!import.meta.env.VITE_KTS_LV2.includes(currentUser.role)) {
+      return <Navigate to="/dashboard" />;
+    }
+    return children;
+  };
+  const ProtectedRouteLv2 = ({ children }) => {
+    if (!import.meta.env.VITE_KTS_LV1.includes(currentUser.role)) {
       return <Navigate to="/dashboard" />;
     }
     return children;
@@ -42,18 +47,38 @@ const Layout = () => {
             <Route path="customers" element={<Customers />} />
             <Route path="customers/new" element={<NewCustomer />} />
             <Route path="tracking" element={<Tracking />} />
-            <Route path="accounts" element={<Accounts />} />
-            <Route path="cost" element={<Cost />} />
-            <Route path="cost/new" element={<NewCost />} />
             <Route
-              path="config"
+              path="accounts"
+              element={
+                <ProtectedRouteLv2>
+                  <Accounts />
+                </ProtectedRouteLv2>
+              }
+            />
+            <Route
+              path="cost"
               element={
                 <ProtectedRoute>
-                  <Config />
+                  <Cost />
                 </ProtectedRoute>
               }
             />
-            {/* <Route path="databases" element={<Databases />} /> */}
+            <Route
+              path="cost/new"
+              element={
+                <ProtectedRoute>
+                  <NewCost />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="config"
+              element={
+                <ProtectedRouteLv2>
+                  <Config />
+                </ProtectedRouteLv2>
+              }
+            />
             <Route
               path="partners"
               element={
