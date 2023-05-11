@@ -104,7 +104,6 @@ const NewPartner = () => {
     wardCode && getWard();
   }, [wardCode]);
   useEffect(() => {
-    console.log("cost");
     const fetchCost = async () => {
       try {
         const res = await ktsRequest.get("/cost", {
@@ -113,6 +112,7 @@ const NewPartner = () => {
           },
         });
         setCost(res.data.data);
+        setCostName(res.data.data[0].costName);
       } catch (error) {
         error.response
           ? toast.error(error.response.data.message)
@@ -160,11 +160,14 @@ const NewPartner = () => {
       return;
     }
     try {
-      const res = await ktsRequest.post("/auth/signup", inputs);
+      const res = await ktsRequest.post("/auth/signup", {
+        ...inputs,
+        parentUser: currentUser?._id,
+        cost: [costName],
+      });
       toast.success(res.data);
       dispatch(loaded());
     } catch (er) {
-      console.log(er);
       dispatch(loaded());
       toast.error(er.response ? er.response.data : "Network Error");
     }
