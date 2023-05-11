@@ -19,7 +19,7 @@ const Input = ({
     >
       <input
         name={name}
-        value={value || ""}
+        value={value}
         placeholder={placehoder}
         type={type}
         onChange={onChange}
