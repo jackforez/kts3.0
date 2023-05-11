@@ -263,7 +263,7 @@ const Bills = () => {
                         <span className="font-semibold">{toVND(b.costK)}</span>
                       </div>
                       {/* </div> */}
-                      <div className="w-1/12 flex justify-between md:justify-end md:gap-2">
+                      <div className="w-1/12 flex flex-col md:flex-row justify-between md:justify-end gap-2">
                         <Button
                           type="outline-primary"
                           icon={printer}
