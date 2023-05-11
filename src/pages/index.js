@@ -17,5 +17,6 @@ export { default as NewBill } from "./NewBill";
 export { default as NewCost } from "./NewCost";
 export { default as NewCustomer } from "./NewCustomer";
 export { default as NewPartner } from "./NewPartner";
+export { default as EditPartner } from "./EditPartner";
 export { default as Config } from "./Config";
 export { default as Databases } from "./Databases";

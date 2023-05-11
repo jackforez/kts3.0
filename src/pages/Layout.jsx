@@ -16,6 +16,7 @@ import {
   NewCost,
   Config,
   Databases,
+  EditPartner,
 } from ".";
 const Layout = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -66,6 +67,14 @@ const Layout = () => {
               element={
                 <ProtectedRoute>
                   <NewPartner />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="partners/:id"
+              element={
+                <ProtectedRoute>
+                  <EditPartner />
                 </ProtectedRoute>
               }
             />

@@ -16,7 +16,7 @@ import {
   onCloseModal,
 } from "../redux/systemSlice";
 const Partners = () => {
-  const nagative = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user);
   const { loading, openModal, refresh } = useSelector((state) => state.system);
@@ -321,7 +321,9 @@ const Partners = () => {
                         iconSize={"4"}
                         title={"Sửa thông tin khách hàng"}
                         padding="xs"
-                        callback={(e) => {}}
+                        callback={() => {
+                          navigate(`${c._id}`);
+                        }}
                       ></Button>
 
                       <Button
