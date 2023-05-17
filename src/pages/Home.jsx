@@ -5,9 +5,10 @@ import { search } from "../ultis/svgs";
 import { ktsRequest } from "../ultis/connections";
 import { toast } from "react-toastify";
 import { Swiper, SwiperSlide } from "swiper/react";
-import SwiperCore, { Autoplay } from "swiper";
+import SwiperCore, { Autoplay, EffectFade } from "swiper";
 import "swiper/css";
 import "swiper/css/autoplay";
+import "swiper/css/effect-fade";
 SwiperCore.use([Autoplay]);
 
 const Home = () => {
@@ -18,13 +19,14 @@ const Home = () => {
   const [orderDetails, setOrderDetails] = useState({});
   const [orderID, setOrderID] = useState("");
   const [config, setConfig] = useState({});
+  const [imgs, setImgs] = useState([]);
   document.title = title + " - KTSCORP.VN";
   useEffect(() => {
     const fetchConfig = async () => {
       try {
         const res = await ktsRequest.get("/system");
         setConfig(res.data);
-        console.log(res.data);
+        setImgs(res.data.homeBackgroundImages);
       } catch (error) {
         console.log("Không load được cấu hình hệ thống");
       }
@@ -59,7 +61,6 @@ const Home = () => {
         toast.error("Network Error!");
       });
   };
-
   return (
     <div>
       <Navbar setPage={setCurrentPage} page={currentPage} title={setTitle} />
@@ -70,24 +71,33 @@ const Home = () => {
             transform: `translateX(-${currentPage * 100}vw)`,
           }}
         >
-          <div className="w-screen h-screen flex-grow-0 flex-shrink-0">
-            <Swiper
-              spaceBetween={0}
-              slidesPerView={1}
-              className="h-full"
-              autoplay={{ delay: 1000 }}
-              loop={true}
-            >
-              <SwiperSlide
-                className={`w-screen h-screen bg-[url()] bg-cover bg-fixed bg-center bg-no-repeat`}
-              ></SwiperSlide>
-              <SwiperSlide
-                className={`w-screen h-screen bg-[url()] bg-cover bg-fixed bg-center bg-no-repeat`}
-              ></SwiperSlide>
-              <SwiperSlide
-                className={`w-screen h-screen bg-[url()] bg-cover bg-fixed bg-center bg-no-repeat`}
-              ></SwiperSlide>
-            </Swiper>
+          <div
+            className={`w-screen h-screen 
+              bg-[url('./assets/imgs/hero-home.jpg')] bg-cover bg-fixed bg-center bg-no-repeat flex-grow-0 flex-shrink-0`}
+          >
+            {currentPage === 0 && (
+              <Swiper
+                spaceBetween={0}
+                slidesPerView={1}
+                autoplay={{ delay: 60000 }}
+                loop={true}
+                modules={[EffectFade, Autoplay]}
+                effect={"fade"}
+              >
+                {imgs &&
+                  imgs.map((bg, i) => {
+                    return (
+                      <SwiperSlide
+                        key={i}
+                        className="w-screen h-screen bg-cover bg-fixed bg-center bg-no-repeat"
+                        style={{
+                          backgroundImage: `url(${bg})`,
+                        }}
+                      ></SwiperSlide>
+                    );
+                  })}
+              </Swiper>
+            )}
             <div className="w-full h-full bg-black/30 absolute top-0 z-10">
               <div className="max-w-screen-xl mx-auto h-screen md:pt-[15vh] pt-[20vh] px-2">
                 <div className={`flex text-white relative w-full `}>
