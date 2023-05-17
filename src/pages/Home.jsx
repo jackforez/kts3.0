@@ -19,6 +19,18 @@ const Home = () => {
   const [orderID, setOrderID] = useState("");
   const [config, setConfig] = useState({});
   document.title = title + " - KTSCORP.VN";
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const res = await ktsRequest.get("/system");
+        setConfig(res.data);
+        console.log(res.data);
+      } catch (error) {
+        console.log("Không load được cấu hình hệ thống");
+      }
+    };
+    fetchConfig();
+  }, []);
   const handleClick = () => {
     if (!orderID) {
       toast.warn("Vui lòng nhập mã vận đơn!", {
@@ -47,18 +59,7 @@ const Home = () => {
         toast.error("Network Error!");
       });
   };
-  useEffect(() => {
-    const fetchConfig = async () => {
-      try {
-        const res = await ktsRequest.get("/system");
-        setConfig(res.data);
-      } catch (error) {
-        console.log("Không load được cấu hình hệ thống");
-      }
-    };
-    fetchConfig();
-  }, []);
-  const bgs = ["bg-red-500", "bg-green-500", "bg-blue-500"];
+
   return (
     <div>
       <Navbar setPage={setCurrentPage} page={currentPage} title={setTitle} />
@@ -77,15 +78,15 @@ const Home = () => {
               autoplay={{ delay: 1000 }}
               loop={true}
             >
-              {config.homeBackgroundImages &&
-                config.homeBackgroundImages.map((bg, i) => {
-                  return (
-                    <SwiperSlide
-                      className={`w-screen h-screen bg-[url(${bg})] bg-cover bg-fixed bg-center bg-no-repeat`}
-                      key={i}
-                    ></SwiperSlide>
-                  );
-                })}
+              <SwiperSlide
+                className={`w-screen h-screen bg-[url()] bg-cover bg-fixed bg-center bg-no-repeat`}
+              ></SwiperSlide>
+              <SwiperSlide
+                className={`w-screen h-screen bg-[url()] bg-cover bg-fixed bg-center bg-no-repeat`}
+              ></SwiperSlide>
+              <SwiperSlide
+                className={`w-screen h-screen bg-[url()] bg-cover bg-fixed bg-center bg-no-repeat`}
+              ></SwiperSlide>
             </Swiper>
             <div className="w-full h-full bg-black/30 absolute top-0 z-10">
               <div className="max-w-screen-xl mx-auto h-screen md:pt-[15vh] pt-[20vh] px-2">
