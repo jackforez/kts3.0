@@ -1,9 +1,14 @@
-import { useState } from "react";
-import { Button, Footer, Hero, Input, Navbar } from "../components";
+import { useEffect, useState } from "react";
+import { Button, Input, Navbar } from "../components";
 import { Contact, About, Services } from ".";
 import { search } from "../ultis/svgs";
 import { ktsRequest } from "../ultis/connections";
 import { toast } from "react-toastify";
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperCore, { Autoplay } from "swiper";
+import "swiper/css";
+import "swiper/css/autoplay";
+SwiperCore.use([Autoplay]);
 
 const Home = () => {
   const [openResult, setOpenResult] = useState(false);
@@ -12,6 +17,7 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [orderDetails, setOrderDetails] = useState({});
   const [orderID, setOrderID] = useState("");
+  const [config, setConfig] = useState({});
   document.title = title + " - KTSCORP.VN";
   const handleClick = () => {
     if (!orderID) {
@@ -41,6 +47,18 @@ const Home = () => {
         toast.error("Network Error!");
       });
   };
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const res = await ktsRequest.get("/system");
+        setConfig(res.data);
+      } catch (error) {
+        console.log("Không load được cấu hình hệ thống");
+      }
+    };
+    fetchConfig();
+  }, []);
+  const bgs = ["bg-red-500", "bg-green-500", "bg-blue-500"];
   return (
     <div>
       <Navbar setPage={setCurrentPage} page={currentPage} title={setTitle} />
@@ -51,8 +69,25 @@ const Home = () => {
             transform: `translateX(-${currentPage * 100}vw)`,
           }}
         >
-          <div className="w-screen bg-[url('./assets/imgs/hero-home.jpg')] h-screen bg-cover bg-fixed bg-center bg-no-repeat flex-grow-0 flex-shrink-0">
-            <div className="w-full h-full bg-black/30">
+          <div className="w-screen h-screen flex-grow-0 flex-shrink-0">
+            <Swiper
+              spaceBetween={0}
+              slidesPerView={1}
+              className="h-full"
+              autoplay={{ delay: 1000 }}
+              loop={true}
+            >
+              {config.homeBackgroundImages &&
+                config.homeBackgroundImages.map((bg, i) => {
+                  return (
+                    <SwiperSlide
+                      className={`w-screen h-screen bg-[url(${bg})] bg-cover bg-fixed bg-center bg-no-repeat`}
+                      key={i}
+                    ></SwiperSlide>
+                  );
+                })}
+            </Swiper>
+            <div className="w-full h-full bg-black/30 absolute top-0 z-10">
               <div className="max-w-screen-xl mx-auto h-screen md:pt-[15vh] pt-[20vh] px-2">
                 <div className={`flex text-white relative w-full `}>
                   <div
