@@ -218,25 +218,12 @@ const Bills = () => {
                 (b, i) => {
                   return (
                     <div className="px-2 py-1.5 flex items-center" key={i}>
-                      <div className="w-3/12">
+                      <div className="w-3/12 space-x-1">
                         <span className="bg-primary-200 px-1 inline-block py-0.5 rounded text-primary-700 font-semibold text-xs">
                           {b.status}
                         </span>
-                        <span> {b.orderNumber}</span>{" "}
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          stroke="currentColor"
-                          className="h-4 w-4 inline-block text-primary-700 pb-0.5 cursor-pointer"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d={mapPin}
-                          />
-                        </svg>
+                        <span className="bg-white px-1 inline-block py-0.5 border border-ktsPrimary rounded text-primary-700 font-semibold text-xs">{new Date(b.createdAt).toLocaleDateString()}</span>
+                        <span> {b.orderNumber}</span>
                         <div>Mã tra cứu: {b.partnerTrackingId}</div>
                       </div>
                       {/* <div className="w-/12 md:grid md:auto-cols-fr md:grid-flow-col"> */}
