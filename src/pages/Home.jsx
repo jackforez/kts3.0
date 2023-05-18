@@ -79,21 +79,29 @@ const Home = () => {
               <Swiper
                 spaceBetween={0}
                 slidesPerView={1}
-                autoplay={{ delay: 60000 }}
+                autoplay={{ delay: 10000 }}
                 loop={true}
                 modules={[EffectFade, Autoplay]}
                 effect={"fade"}
+                // spaceBetween={0}
+                // slidesPerView={1}
+                // autoplay={{ delay: 2000 }}
+                // loop={true}
+                // modules={[EffectFade, Autoplay]}
+                // effect={"fade"}
               >
                 {imgs &&
                   imgs.map((bg, i) => {
                     return (
                       <SwiperSlide
                         key={i}
-                        className="w-screen h-screen bg-cover bg-fixed bg-center bg-no-repeat"
+                        className="w-screen h-screen"
                         style={{
                           backgroundImage: `url(${bg})`,
                         }}
-                      ></SwiperSlide>
+                      >
+                        <img src={bg} className="w-full h-full object-cover" />
+                      </SwiperSlide>
                     );
                   })}
               </Swiper>
