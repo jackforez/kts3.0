@@ -112,7 +112,6 @@ const Config = () => {
           <h3 className="font-semibold uppercase">Thay đổi hình nền</h3>
           <Button
             type="primary"
-            size={"w-1/12"}
             padding={"sm"}
             loading={loading}
             animation={true}
@@ -253,7 +252,6 @@ const Config = () => {
           <h3 className="font-semibold uppercase">Thay đổi hình nền</h3>
           <Button
             type="primary"
-            size={"w-1/12"}
             padding={"sm"}
             loading={loading}
             animation={true}
