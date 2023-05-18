@@ -9,10 +9,10 @@ import {
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
-import { Button } from "../components";
+import { Button, Input } from "../components";
 import { useNavigate } from "react-router-dom";
 import { loaded, onLoading, onRefreh } from "../redux/systemSlice";
-import { add } from "../ultis/svgs";
+import { add, copy } from "../ultis/svgs";
 const Config = () => {
   const { currentUser } = useSelector((state) => state.user);
   const { loading, refresh } = useSelector((state) => state.system);
@@ -248,18 +248,100 @@ const Config = () => {
             />
           </div>
         </div>
-        <div className="flex justify-between">
-          <h3 className="font-semibold uppercase">Thay đổi hình nền</h3>
-          <Button
-            type="primary"
-            padding={"sm"}
-            loading={loading}
-            animation={true}
-            disabledBy={loading}
-            callback={handleClick}
-          >
-            Cập nhật
-          </Button>
+        <div className=" mt-4 space-y-2">
+          <h3 className="font-semibold uppercase py-3">Reset token đối tác</h3>
+          <div className="flex justify-between gap-2">
+            <div className="w-1/6 rounded border border-gray-400 flex justify-center items-center">
+              <span>VNPost</span>
+            </div>
+            <div className="w-4/6 relative">
+              <Input size={"w-full"} padding={"sm"} />
+              <Button
+                icon={copy}
+                size={"absolute top-1 right-2"}
+                padding={"xs"}
+              ></Button>
+            </div>
+            <Button
+              type="primary"
+              padding={"sm"}
+              size={"w-1/6"}
+              loading={loading}
+              animation={true}
+              disabledBy={loading}
+            >
+              Cập nhật
+            </Button>
+          </div>
+          <div className="flex justify-between gap-2">
+            <div className="w-1/6 rounded border border-gray-400 flex justify-center items-center">
+              <span>VTPost</span>
+            </div>
+            <div className="w-4/6 relative">
+              <Input size={"w-full"} padding={"sm"} />
+              <Button
+                icon={copy}
+                size={"absolute top-1 right-2"}
+                padding={"xs"}
+              ></Button>
+            </div>
+            <Button
+              type="primary"
+              padding={"sm"}
+              size={"w-1/6"}
+              loading={loading}
+              animation={true}
+              disabledBy={loading}
+            >
+              Cập nhật
+            </Button>
+          </div>
+          <div className="flex justify-between gap-2">
+            <div className="w-1/6 rounded border border-gray-400 flex justify-center items-center">
+              <span>JNT</span>
+            </div>
+            <div className="w-4/6 relative">
+              <Input size={"w-full"} padding={"sm"} />
+              <Button
+                icon={copy}
+                size={"absolute top-1 right-2"}
+                padding={"xs"}
+              ></Button>
+            </div>
+            <Button
+              type="primary"
+              padding={"sm"}
+              size={"w-1/6"}
+              loading={loading}
+              animation={true}
+              disabledBy={loading}
+            >
+              Cập nhật
+            </Button>
+          </div>
+          <div className="flex justify-between gap-2">
+            <div className="w-1/6 rounded border border-gray-400 flex justify-center items-center">
+              <span>Snapy</span>
+            </div>
+            <div className="w-4/6 relative">
+              <Input size={"w-full"} padding={"sm"} />
+              <Button
+                icon={copy}
+                size={"absolute top-1 right-2"}
+                padding={"xs"}
+              ></Button>
+            </div>
+            <Button
+              type="primary"
+              padding={"sm"}
+              size={"w-1/6"}
+              loading={loading}
+              animation={true}
+              disabledBy={loading}
+            >
+              Cập nhật
+            </Button>
+          </div>
         </div>
       </div>
     </div>
