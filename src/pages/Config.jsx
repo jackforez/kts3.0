@@ -108,7 +108,20 @@ const Config = () => {
         <h3>Mức giá mặc định</h3>
       </div>
       <div>
-        <h3 className="py-3 font-semibold uppercase">Thay đổi hình nền</h3>
+        <div className="flex justify-between">
+          <h3 className="font-semibold uppercase">Thay đổi hình nền</h3>
+          <Button
+            type="primary"
+            size={"w-1/12"}
+            padding={"sm"}
+            loading={loading}
+            animation={true}
+            disabledBy={loading}
+            callback={handleClick}
+          >
+            Cập nhật
+          </Button>
+        </div>
         <div className="flex w-full items-center">
           <div className="max-w-3/4 flex items-center rounded-md border border-dashed border-ktsPrimary p-1.5 overflow-x-auto">
             {/* {file?.length > 0 ? ( */}
@@ -236,22 +249,6 @@ const Config = () => {
             />
           </div>
         </div>
-      </div>
-      <div className="flex justify-end gap-2 py-2">
-        <Button type="outline-danger" size={"w-1/6"} padding={"sm"}>
-          Hủy
-        </Button>
-        <Button
-          type="primary"
-          size={"w-1/6"}
-          padding={"sm"}
-          loading={loading}
-          animation={true}
-          disabledBy={loading}
-          callback={handleClick}
-        >
-          Cập nhật
-        </Button>
       </div>
     </div>
   );
