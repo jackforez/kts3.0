@@ -105,7 +105,7 @@ const Config = () => {
   return (
     <div className={`p-2 overflow-auto text-sm`}>
       <div>
-        <h3>Mức giá mặc định</h3>
+        <h3 className="font-semibold uppercase">Mức giá mặc định</h3>
       </div>
       <div>
         <div className="flex justify-between">
@@ -248,6 +248,20 @@ const Config = () => {
               }}
             />
           </div>
+        </div>
+        <div className="flex justify-between">
+          <h3 className="font-semibold uppercase">Thay đổi hình nền</h3>
+          <Button
+            type="primary"
+            size={"w-1/12"}
+            padding={"sm"}
+            loading={loading}
+            animation={true}
+            disabledBy={loading}
+            callback={handleClick}
+          >
+            Cập nhật
+          </Button>
         </div>
       </div>
     </div>
