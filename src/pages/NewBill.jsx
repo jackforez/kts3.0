@@ -8,7 +8,7 @@ import { Input, Button, Selector, Ratio } from "../components";
 import { add, minus, search } from "../ultis/svgs";
 import { loaded, onLoading, setCurrentPage } from "../redux/systemSlice";
 import { NumericFormat, removeNumericFormat } from "react-number-format";
-import { toVND } from "../ultis/functions";
+import { toVND, search as myFilter } from "../ultis/functions";
 const NewBill = () => {
   //lấy thông tin user đang đăng nhập
   const { currentUser } = useSelector((state) => state.user);
@@ -156,102 +156,102 @@ const NewBill = () => {
     };
     getCities();
   }, []);
-  console.log(sender);
-  // useEffect(() => {
-  //   const getDistricts = async () => {
-  //     try {
-  //       const cName = cities.find((city) => city.name_with_type == toCity);
-  //       const resd = await ktsRequest.get(`/cities/districts/${cName.code}`);
-  //       const data = Object.values(resd.data);
-  //       setDistricts(data);
-  //       setCityName(cName.name_with_type);
-  //       setGetter((prev) => {
-  //         return {
-  //           ...prev,
-  //           cityCode: cName.code,
-  //           cityName: cName.name,
-  //           cityFullName: cName.name_with_type,
-  //         };
-  //       });
-  //     } catch (error) {
-  //       toast.error(error);
-  //     }
-  //   };
-  //   getDistricts();
-  // }, [toCity]);
-  // useEffect(() => {
-  //   const getWards = async () => {
-  //     try {
-  //       const dName = districts.find((d) => d.name_with_type == toDistrict);
-  //       const resw = await ktsRequest.get(`cities/wards/${dName.code}`);
-  //       const data = Object.values(resw.data);
-  //       setWards(data);
-  //       setDistrictName(dName.name_with_type);
-  //       setGetter((prev) => {
-  //         return {
-  //           ...prev,
-  //           districtCode: dName.code,
-  //           districtName: dName.name,
-  //           districtFullName: dName.name_with_type,
-  //         };
-  //       });
-  //     } catch (error) {
-  //       toast.error(error);
-  //     }
-  //   };
-  //   getWards();
-  // }, [toDistrict]);
-  // useEffect(() => {
-  //   const getWard = () => {
-  //     try {
-  //       const wName = wards.find((w) => w.name_with_type === toWard);
-  //       setWardName(wName.name);
-  //       setGetter((prev) => {
-  //         return {
-  //           ...prev,
-  //           wardCode: wName.code,
-  //           wardName: wName.name,
-  //           wardFullName: wName.name_with_type,
-  //         };
-  //       });
-  //     } catch (error) {
-  //       toast.error(error);
-  //     }
-  //   };
-  //   getWard();
-  // }, [toWard]);
   useEffect(() => {
-    const getFullAddress = async () => {
+    const getDistricts = async () => {
       try {
-        const cName = cities.find((c) => c.name_with_type == toCity);
+        const cName = cities.find((city) => city.name_with_type == toCity);
         const resd = await ktsRequest.get(`/cities/districts/${cName.code}`);
-        const datad = Object.values(resd.data);
-        setDistricts(datad);
-        const dName = districts.find((d) => d.name_with_type == toDistrict);
-        const resw = await ktsRequest.get(`cities/wards/${dName.code}`);
-        const dataw = Object.values(resw.data);
-        setWards(dataw);
-        const wName = wards.find((w) => w.name_with_type == toWard);
-        setInputs((prev) => {
+        const data = Object.values(resd.data);
+        setDistricts(data);
+        setCityName(cName.name_with_type);
+        setGetter((prev) => {
           return {
             ...prev,
             cityCode: cName.code,
             cityName: cName.name,
             cityFullName: cName.name_with_type,
-            districtCode: dName.code,
-            districtName: dName.name,
-            districtFullName: dName.name_with_type,
-            wardCode: wName?.code,
-            wardName: wName?.name,
-            wardFullName: wName?.name_with_type,
           };
         });
       } catch (error) {
-        console.log(error);
+        toast.error(error);
       }
     };
-    getFullAddress();
-  }, [toCity, toDistrict, toWard]);
+    getDistricts();
+  }, [toCity]);
+  useEffect(() => {
+    const getWards = async () => {
+      try {
+        const dName = districts.find((d) => d.name_with_type == toDistrict);
+        const resw = await ktsRequest.get(`cities/wards/${dName.code}`);
+        const data = Object.values(resw.data);
+        setWards(data);
+        setDistrictName(dName.name_with_type);
+        setGetter((prev) => {
+          return {
+            ...prev,
+            districtCode: dName.code,
+            districtName: dName.name,
+            districtFullName: dName.name_with_type,
+          };
+        });
+      } catch (error) {
+        toast.error(error);
+      }
+    };
+    getWards();
+  }, [toDistrict]);
+  useEffect(() => {
+    const getWard = () => {
+      try {
+        const wName = wards.find((w) => w.name_with_type === toWard);
+        setWardName(wName.name);
+        setGetter((prev) => {
+          return {
+            ...prev,
+            wardCode: wName.code,
+            wardName: wName.name,
+            wardFullName: wName.name_with_type,
+          };
+        });
+      } catch (error) {
+        toast.error(error);
+      }
+    };
+    getWard();
+  }, [toWard]);
+  // useEffect(() => {
+  //   const getFullAddress = async () => {
+  //     try {
+  //       const cName = cities.find((c) => c.name_with_type == toCity);
+  //       const resd = await ktsRequest.get(`/cities/districts/${cName?.code}`);
+  //       const datad = Object.values(resd.data);
+  //       setDistricts(datad);
+  //       const dName =
+  //         districts.find((d) => d.name_with_type == toDistrict) || datad[0];
+  //       const resw = await ktsRequest.get(`cities/wards/${dName.code}`);
+  //       const dataw = Object.values(resw.data);
+  //       setWards(dataw);
+  //       const wName = wards.find((w) => w.name_with_type == toWard);
+  //       setInputs((prev) => {
+  //         return {
+  //           ...prev,
+  //           cityCode: cName.code,
+  //           cityName: cName.name,
+  //           cityFullName: cName.name_with_type,
+  //           districtCode: dName.code,
+  //           districtName: dName.name,
+  //           districtFullName: dName.name_with_type,
+  //           wardCode: wName?.code,
+  //           wardName: wName?.name,
+  //           wardFullName: wName?.name_with_type,
+  //         };
+  //       });
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   getFullAddress();
+  // }, [toCity, toDistrict, toWard]);
   const handleClick = async () => {
     dispatch(onLoading());
     if (!getter.phone || getter.phone.length != 10) {
@@ -449,8 +449,12 @@ const NewBill = () => {
                 />
               </div>
               <div className="rounded border border-gray-300 h-[85%] overflow-auto divide-y divide-dashed divide-ktsPrimary">
-                {senders.length > 0 ? (
-                  senders.map((s, i) => {
+                {myFilter(senders, senderSearchQuery, ["phone", "displayName"])
+                  .length > 0 ? (
+                  myFilter(senders, senderSearchQuery, [
+                    "phone",
+                    "displayName",
+                  ]).map((s, i) => {
                     return (
                       <div
                         key={i}
@@ -539,7 +543,7 @@ const NewBill = () => {
             />
             <label className="mt-2 block">Họ tên: </label>
             <Input
-              placehoder={"Họ tên người gửi người nhận"}
+              placehoder={"Họ tên người nhận"}
               value={getter.name || ""}
               name="name"
               onChange={handelChangeGetter}
@@ -597,44 +601,47 @@ const NewBill = () => {
                 />
               </div>
               <div className="rounded border border-gray-300 h-[85%] overflow-auto divide-y divide-dashed divide-ktsPrimary">
-                {getters.length > 0 ? (
-                  getters.map((g, i) => {
-                    return (
-                      <div
-                        key={i}
-                        className="flex justify-between items-center p-2 hover:bg-gray-200"
-                      >
-                        <div className="flex gap-2 w-full">
-                          <div className="w-1/4">
-                            <p className="font-semibold">{g.phone}</p>
-                            <p className="capitalize text-sm">{g.name}</p>
-                          </div>
-                          <span className="w-3/4 text-start">
-                            {g.address +
-                              ", " +
-                              g.wardFullName +
-                              ", " +
-                              g.districtFullName +
-                              ", " +
-                              g.cityFullName}
-                          </span>
-                        </div>
-                        <button
-                          onClick={() => {
-                            setGetter(g);
-                            setToCity(g.cityName);
-                            setToDistrict(g.districtName);
-                            setToWard(g.wardName);
-                            setGetters([]);
-                            setOpenSearchGetter(false);
-                          }}
-                          className="px-2 py-1 rounded border border-primary-600 active:scale-90 duration-500 hover:bg-primary-600 hover:text-white"
+                {myFilter(getters, getterSearchQuery, ["phone", "name"])
+                  .length > 0 ? (
+                  myFilter(getters, getterSearchQuery, ["phone", "name"]).map(
+                    (g, i) => {
+                      return (
+                        <div
+                          key={i}
+                          className="flex justify-between items-center p-2 hover:bg-gray-200"
                         >
-                          chọn
-                        </button>
-                      </div>
-                    );
-                  })
+                          <div className="flex gap-2 w-full">
+                            <div className="w-1/4">
+                              <p className="font-semibold">{g.phone}</p>
+                              <p className="capitalize text-sm">{g.name}</p>
+                            </div>
+                            <span className="w-3/4 text-start">
+                              {g.address +
+                                ", " +
+                                g.wardFullName +
+                                ", " +
+                                g.districtFullName +
+                                ", " +
+                                g.cityFullName}
+                            </span>
+                          </div>
+                          <button
+                            onClick={() => {
+                              setGetter(g);
+                              setToCity(g.cityName);
+                              setToDistrict(g.districtName);
+                              setToWard(g.wardName);
+                              setGetters([]);
+                              setOpenSearchGetter(false);
+                            }}
+                            className="px-2 py-1 rounded border border-primary-600 active:scale-90 duration-500 hover:bg-primary-600 hover:text-white"
+                          >
+                            chọn
+                          </button>
+                        </div>
+                      );
+                    }
+                  )
                 ) : (
                   <div className="flex flex-col items-center justify-center h-full gap-4">
                     <span className="font-bold">Không có dữ liệu</span>
