@@ -163,12 +163,8 @@ const Bills = () => {
             đang giao({searchByStatus("đang giao")})
           </span>
         </div>
-        {/* <div className="order-3 flex gap-3 lg:order-2">
-          <input type="date" name="fromDate" id="fromDate" className="px-2" />
-          <span>to</span>
-          <input type="date" name="toDate" id="toDate" className="px-2" />
-        </div> */}
-        <Button type={"outline-primary"} padding={"sm"} title="under construct">
+
+        {/* <Button type={"outline-primary"} padding={"sm"} title="under construct">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="21"
@@ -177,10 +173,11 @@ const Bills = () => {
             y="0"
             viewBox="0 0 50 50"
             className="w-5 h-5"
+            stroke="#4ade80"
           >
             <path d={excel}></path>
           </svg>
-        </Button>
+        </Button> */}
         {/* <div className="flex gap-2 text-xs">
           <Input
             placehoder={"Nhập số ID"}
