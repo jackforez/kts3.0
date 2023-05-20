@@ -7,6 +7,8 @@ import { ktsRequest } from "../ultis/connections";
 import { Input, Button, Selector, Ratio } from "../components";
 import { add, minus, search } from "../ultis/svgs";
 import { loaded, onLoading, setCurrentPage } from "../redux/systemSlice";
+import { NumericFormat, removeNumericFormat } from "react-number-format";
+import { toVND } from "../ultis/functions";
 const NewBill = () => {
   //lấy thông tin user đang đăng nhập
   const { currentUser } = useSelector((state) => state.user);
@@ -56,6 +58,7 @@ const NewBill = () => {
   const [senderSearchQuery, setSenderSearchQuery] = useState("");
   // const [loading, setLoading] = useState(false);
   const [shopPay, setShopPay] = useState(false);
+  const [tmpCost, setTmpCost] = useState(0);
   // const [saveGetterInfo, setSaveGetterInfo] = useState(false);
 
   const [fromWard, setFromWard] = useState(sender.wardName || "");
@@ -68,25 +71,25 @@ const NewBill = () => {
     dispatch(setCurrentPage("tạo mới đơn hàng"));
     document.title = "Tạo mới đơn hàng - KTSCORP.VN";
   }, []);
-  useEffect(() => {
-    const fetchCustomers = async () => {
-      try {
-        const res = await ktsRequest.post(
-          `/v2/customers/find/${getterSearchQuery}`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setGetters(res.data);
-      } catch (error) {
-        toast.error(error);
-      }
-    };
-    getterSearchQuery.length < 11 && fetchCustomers();
-  }, [getterSearchQuery.length]);
+  // useEffect(() => {
+  //   const fetchCustomers = async () => {
+  //     try {
+  //       const res = await ktsRequest.post(
+  //         `/v2/customers/find/${getterSearchQuery}`,
+  //         {},
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         }
+  //       );
+  //       setGetters(res.data);
+  //     } catch (error) {
+  //       toast.error(error);
+  //     }
+  //   };
+  //   getterSearchQuery.length < 11 && fetchCustomers();
+  // }, [getterSearchQuery.length]);
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
@@ -96,7 +99,7 @@ const NewBill = () => {
           },
         });
         setGetters(res.data);
-        console.log(getters);
+        // console.log(getters);
       } catch (error) {
         toast.error(error);
       }
@@ -106,22 +109,41 @@ const NewBill = () => {
   useEffect(() => {
     const fetchShop = async () => {
       try {
+        const res = await ktsRequest.get(`/users/children`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setSenders(res.data);
+      } catch (error) {
+        toast.error(error);
+      }
+    };
+    openSearchSender && fetchShop();
+  }, [openSearchSender]);
+  useEffect(() => {
+    const getCost = async () => {
+      try {
         const res = await ktsRequest.post(
-          `/v2/users/find/${senderSearchQuery}`,
-          {},
+          "/cost/calculate",
+          {
+            shopId: sender?._id,
+            weight,
+          },
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
-        setSenders(res.data);
+        setTmpCost(res.data);
       } catch (error) {
         toast.error(error);
       }
     };
-    senderSearchQuery.length > 3 && fetchShop();
-  }, [senderSearchQuery.length]);
+    weight > 0 && getCost();
+  }, [weight, sender]);
+
   useEffect(() => {
     const getCities = async () => {
       try {
@@ -134,69 +156,102 @@ const NewBill = () => {
     };
     getCities();
   }, []);
+  console.log(sender);
+  // useEffect(() => {
+  //   const getDistricts = async () => {
+  //     try {
+  //       const cName = cities.find((city) => city.name_with_type == toCity);
+  //       const resd = await ktsRequest.get(`/cities/districts/${cName.code}`);
+  //       const data = Object.values(resd.data);
+  //       setDistricts(data);
+  //       setCityName(cName.name_with_type);
+  //       setGetter((prev) => {
+  //         return {
+  //           ...prev,
+  //           cityCode: cName.code,
+  //           cityName: cName.name,
+  //           cityFullName: cName.name_with_type,
+  //         };
+  //       });
+  //     } catch (error) {
+  //       toast.error(error);
+  //     }
+  //   };
+  //   getDistricts();
+  // }, [toCity]);
+  // useEffect(() => {
+  //   const getWards = async () => {
+  //     try {
+  //       const dName = districts.find((d) => d.name_with_type == toDistrict);
+  //       const resw = await ktsRequest.get(`cities/wards/${dName.code}`);
+  //       const data = Object.values(resw.data);
+  //       setWards(data);
+  //       setDistrictName(dName.name_with_type);
+  //       setGetter((prev) => {
+  //         return {
+  //           ...prev,
+  //           districtCode: dName.code,
+  //           districtName: dName.name,
+  //           districtFullName: dName.name_with_type,
+  //         };
+  //       });
+  //     } catch (error) {
+  //       toast.error(error);
+  //     }
+  //   };
+  //   getWards();
+  // }, [toDistrict]);
+  // useEffect(() => {
+  //   const getWard = () => {
+  //     try {
+  //       const wName = wards.find((w) => w.name_with_type === toWard);
+  //       setWardName(wName.name);
+  //       setGetter((prev) => {
+  //         return {
+  //           ...prev,
+  //           wardCode: wName.code,
+  //           wardName: wName.name,
+  //           wardFullName: wName.name_with_type,
+  //         };
+  //       });
+  //     } catch (error) {
+  //       toast.error(error);
+  //     }
+  //   };
+  //   getWard();
+  // }, [toWard]);
   useEffect(() => {
-    const getDistricts = async () => {
+    const getFullAddress = async () => {
       try {
-        const cName = cities.find((city) => city.name_with_type == toCity);
+        const cName = cities.find((c) => c.name_with_type == toCity);
         const resd = await ktsRequest.get(`/cities/districts/${cName.code}`);
-        const data = Object.values(resd.data);
-        setDistricts(data);
-        setCityName(cName.name_with_type);
-        setGetter((prev) => {
+        const datad = Object.values(resd.data);
+        setDistricts(datad);
+        const dName = districts.find((d) => d.name_with_type == toDistrict);
+        const resw = await ktsRequest.get(`cities/wards/${dName.code}`);
+        const dataw = Object.values(resw.data);
+        setWards(dataw);
+        const wName = wards.find((w) => w.name_with_type == toWard);
+        setInputs((prev) => {
           return {
             ...prev,
             cityCode: cName.code,
             cityName: cName.name,
             cityFullName: cName.name_with_type,
-          };
-        });
-      } catch (error) {
-        toast.error(error);
-      }
-    };
-    getDistricts();
-  }, [toCity]);
-  useEffect(() => {
-    const getWards = async () => {
-      try {
-        const dName = districts.find((d) => d.name_with_type == toDistrict);
-        const resw = await ktsRequest.get(`cities/wards/${dName.code}`);
-        const data = Object.values(resw.data);
-        setWards(data);
-        setDistrictName(dName.name_with_type);
-        setGetter((prev) => {
-          return {
-            ...prev,
             districtCode: dName.code,
             districtName: dName.name,
             districtFullName: dName.name_with_type,
+            wardCode: wName?.code,
+            wardName: wName?.name,
+            wardFullName: wName?.name_with_type,
           };
         });
       } catch (error) {
-        toast.error(error);
+        console.log(error);
       }
     };
-    getWards();
-  }, [toDistrict]);
-  useEffect(() => {
-    const getWard = () => {
-      try {
-        const wName = wards.find((w) => w.name_with_type === toWard);
-        setWardName(wName.name);
-        setGetter((prev) => {
-          return {
-            ...prev,
-            wardCode: wName.code,
-            wardName: wName.name,
-            wardFullName: wName.name_with_type,
-          };
-        });
-      } catch (error) {
-        toast.error(error);
-      }
-    };
-    getWard();
-  }, [toWard]);
+    getFullAddress();
+  }, [toCity, toDistrict, toWard]);
   const handleClick = async () => {
     dispatch(onLoading());
     if (!getter.phone || getter.phone.length != 10) {
@@ -238,9 +293,9 @@ const NewBill = () => {
           fromName: sender.displayName,
           fromPhone: sender.phone,
           fromAddress: sender.address,
-          fromCity,
-          fromDistrict,
-          fromWard,
+          fromCity: sender.cityName,
+          fromDistrict: sender.districtName,
+          fromWard: sender.wardName,
           toName: getter.name,
           toPhone: getter.phone,
           toAddress: getter.address,
@@ -268,7 +323,6 @@ const NewBill = () => {
           },
         }
       );
-      console.log(res.data);
       toast.success(res.data);
       dispatch(loaded());
     } catch (err) {
@@ -609,11 +663,19 @@ const NewBill = () => {
           <div className="grid md:grid-cols-3 grid-cols-2 gap-2">
             <div>
               <label className="mt-2 block">Trọng lượng (gram): </label>
-              <Input
-                placehoder={weight}
-                type="number"
-                padding={"sm"}
-                onChange={(e) => setWeight(e.target.value)}
+              <NumericFormat
+                value={weight}
+                onValueChange={(values) => {
+                  const { value } = values;
+                  setWeight(value);
+                }}
+                thousandSeparator={"."}
+                decimalSeparator={","}
+                customInput={Input}
+                {...{
+                  padding: "sm",
+                  placehoder: "0",
+                }}
               />
             </div>
             <div>
@@ -644,12 +706,20 @@ const NewBill = () => {
               </div>
             </div>
             <div className="col-span-2 md:col-span-1">
-              <label className="mt-2 block">Thu hộ: </label>
-              <Input
-                placehoder={"0"}
-                type="number"
-                padding={"sm"}
-                onChange={(e) => setCod(e.target.value)}
+              <label className="mt-2 block">Thu hộ (VNĐ): </label>
+              <NumericFormat
+                value={cod}
+                onValueChange={(values) => {
+                  const { value } = values;
+                  setCod(value);
+                }}
+                thousandSeparator={"."}
+                decimalSeparator={","}
+                customInput={Input}
+                {...{
+                  padding: "sm",
+                  placehoder: "0",
+                }}
               />
             </div>
           </div>
@@ -661,6 +731,14 @@ const NewBill = () => {
               onChange={(e) => setNote(e.target.value)}
               padding={"sm"}
             />
+          </div>
+          <div>
+            <h3 className="font-bold py-3">
+              Tổng thu tạm tính (VNĐ):{" "}
+              {toVND(
+                shopPay ? parseInt(cod) : parseInt(cod) + parseInt(tmpCost) || 0
+              )}
+            </h3>
           </div>
         </div>
       </div>

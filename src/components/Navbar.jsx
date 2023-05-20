@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 const Navbar = ({ page, setPage, title }) => {
-  const navLinks = ["Trang chủ", "Giới thiệu", "Dịch vụ", "Liên hệ"];
+  const navLinks = ["Trang chủ", "Tra đơn", "Dịch vụ", "Liên hệ"];
   return (
     <nav
       className={`fixed z-30 w-full ${
-        page > 0 && "bg-ktsPrimary"
+        page > 0
+          ? "bg-ktsPrimary"
+          : "bg-black text-white backdrop-blur rounded-lg overflow-hidden drop-shadow bg-opacity-10"
       } duration-300`}
     >
       <div className="mx-auto flex flex-wrap max-w-screen-xl items-center justify-between md:px-4 px-2 lg:px-6 pb-4 md:pb-0">
@@ -34,7 +36,7 @@ const Navbar = ({ page, setPage, title }) => {
                 className={`uppercase font-semibold text-sm ${
                   page === i
                     ? "text-white underline underline-offset-8"
-                    : "text-white/30"
+                    : "text-white/50"
                 }`}
               >
                 {l}

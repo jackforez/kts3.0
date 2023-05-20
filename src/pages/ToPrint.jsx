@@ -10,13 +10,21 @@ const ToPrint = (props) => {
   let componentRef = useRef();
   return (
     <div className="absolute top-0 left-0 z-50 flex h-screen w-full items-center justify-center bg-white/30 backdrop-blur-sm">
-      <div className=" block  w-full rounded border border-red-300 bg-gray-300 shadow-lg md:w-1/2">
+      <div className=" block  w-full rounded border border-red-300 bg-gray-300 shadow-lg md:w-2/3 xl:w-1/2">
         <h3 className="p-3 font-semibold uppercase"> In vận đơn</h3>
         <div ref={(el) => (componentRef = el)} className="bg-white">
           {/* header */}
           <div className="flex items-center justify-between border-b-2 border-dashed border-red-300 p-3">
-            <img src={logo} alt="" className="h-10" />
-            <div className="flex w-1/2 flex-col justify-start">
+            <div className="flex justify-center flex-col items-center gap-1">
+              <img src={logo} alt="" className="h-10" />
+              <a
+                href="https://ktscorp.vn"
+                className="italic underline underline-offset-4"
+              >
+                ktscorp.vn
+              </a>
+            </div>
+            <div className="flex w-2/3 flex-col justify-start">
               <Barcode
                 value={printData.partnerTrackingId}
                 width={2}
@@ -25,8 +33,8 @@ const ToPrint = (props) => {
                 renderAs="svg"
                 displayValue={false}
               />
-              <div>
-                <span> ID đơn hàng: </span>
+              <div className="pl-2">
+                <span>ID đơn hàng: </span>
                 <span className="font-semibold"> {printData.orderNumber}</span>
               </div>
             </div>
@@ -85,7 +93,7 @@ const ToPrint = (props) => {
               <span>Ghi chú: </span>{" "}
               <span className="font-semibold">{printData.note}</span>
             </div>
-            <div className="border border-black px-2 pb-24 text-center">
+            <div className="border border-dashed border-black/50 px-2 pb-24 text-center">
               <h4 className="font-semibold uppercase">Người nhận</h4>
               <h4>(Ký, ghi rõ họ tên) </h4>
             </div>
