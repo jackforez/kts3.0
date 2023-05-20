@@ -12,6 +12,7 @@ import { search as myFilter, toVND } from "../ultis/functions";
 import logo from "../assets/logo.svg";
 import { loaded, onLoading, onRefreh } from "../redux/systemSlice";
 import axios from "axios";
+import { STATUS } from "../ultis/config";
 const Bills = () => {
   const currentUser = useSelector((state) => state.user);
   const token = currentUser.currentUser.token;
@@ -103,6 +104,13 @@ const Bills = () => {
     return bills.filter((el) =>
       el.status.normalize("NFC").toLowerCase().includes(q)
     ).length;
+  };
+  const getStatus = (_status) => {
+    return (
+      STATUS.find((item) =>
+        item.name.toLocaleLowerCase().includes(_status.toLocaleLowerCase())
+      ) || STATUS[0]
+    );
   };
   return (
     <div className="p-3">
@@ -216,13 +224,20 @@ const Bills = () => {
             0 ? (
               myFilter(bills, query, ["toPhone", "toName", "status"]).map(
                 (b, i) => {
+                  const st = getStatus(b.status);
                   return (
                     <div className="px-2 py-1.5 flex items-center" key={i}>
                       <div className="w-3/12 space-x-1">
-                        <span className="bg-primary-200 px-1 inline-block py-0.5 rounded text-primary-700 font-semibold text-xs">
+                        <span
+                          className={`${st.bgColor} px-1 inline-block py-0.5 rounded ${st.textColor} font-semibold text-xs`}
+                        >
                           {b.status}
                         </span>
-                        <span className="bg-white px-1 inline-block py-0.5 border border-ktsPrimary rounded text-primary-700 font-semibold text-xs">{new Date(b.createdAt).toLocaleDateString()}</span>
+                        <span className="bg-white px-1 inline-block py-0.5 border border-ktsPrimary rounded text-primary-700 font-semibold text-xs">
+                          {new Date(b.createdAt).toLocaleTimeString() +
+                            " - " +
+                            new Date(b.createdAt).toLocaleDateString()}
+                        </span>
                         <span> {b.orderNumber}</span>
                         <div>Mã tra cứu: {b.partnerTrackingId}</div>
                       </div>
