@@ -18,6 +18,7 @@ const Selector = ({
     size === "xs" ? "py-1 text-xs" : size === "sm" ? "py-2 text-sm" : "py-2.5";
   useEffect(() => {
     setSelected(placehoder);
+    output(placehoder);
   }, [placehoder]);
   return (
     <div
@@ -75,7 +76,7 @@ const Selector = ({
                 <div
                   key={i}
                   className={`cursor-pointer hover:bg-green-500 truncate px-2 ${sz} ${
-                    i === selectedIndex ? "bg-green-500" : ""
+                    el[toShow] === selected ? "bg-green-500" : ""
                   }`}
                   onClick={(e) => {
                     setSelected(e.target.textContent);

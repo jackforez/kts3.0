@@ -164,6 +164,9 @@ const NewBill = () => {
         const data = Object.values(resd.data);
         setDistricts(data);
         setCityName(cName.name_with_type);
+
+        data.findIndex((el) => el.name_with_type.includes(toDistrict)) < 0 &&
+          setToDistrict(data[0].name_with_type);
         setGetter((prev) => {
           return {
             ...prev,
@@ -186,6 +189,8 @@ const NewBill = () => {
         const data = Object.values(resw.data);
         setWards(data);
         setDistrictName(dName.name_with_type);
+        data.findIndex((el) => el.name_with_type.includes(toWard)) < 0 &&
+          setToWard(data[0].name_with_type);
         setGetter((prev) => {
           return {
             ...prev,
