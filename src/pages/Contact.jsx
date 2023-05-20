@@ -11,7 +11,7 @@ const Contact = () => {
             <iframe
               className="w-full pr-3 h-full"
               id="gmap_canvas"
-              src="https://maps.google.com/maps?q=766 Nguyễn Văn Linh Hải Phòng&t=&z=10&ie=UTF8&iwloc=&output=embed"
+              src="https://maps.google.com/maps?q=20C3/75/213 Thiên Lôi Lê Chân Hải Phòng&t=&z=10&ie=UTF8&iwloc=&output=embed"
               frameBorder="0"
               scrolling="no"
               marginHeight="0"
