@@ -314,7 +314,7 @@ const NewBill = () => {
           toWardCode: getter.wardCode || "",
           toWardFullName: getter.wardFullName || "",
           itemName,
-          itemQauntity: qty,
+          itemQauntity: 1,
           weight,
           cod: cod || 0,
           note,
@@ -690,35 +690,8 @@ const NewBill = () => {
                 }}
               />
             </div>
-            <div>
-              <label className="mt-2 block">Số lượng: </label>
-              <div className="flex gap-1">
-                <Button
-                  type="primary"
-                  icon={minus}
-                  padding={"sm"}
-                  callback={() =>
-                    qty > 1 ? setQty((qty) => qty - 1) : setQty(1)
-                  }
-                ></Button>
-                <Input
-                  placehoder={0}
-                  type={"number"}
-                  textCenter={true}
-                  value={qty}
-                  padding={"sm"}
-                  onChange={(e) => setQty(parseInt(e.target.value))}
-                />
-                <Button
-                  type="primary"
-                  icon={add}
-                  callback={() => setQty((qty) => qty + 1)}
-                  padding={"sm"}
-                ></Button>
-              </div>
-            </div>
             <div className="col-span-2 md:col-span-1">
-              <label className="mt-2 block">Thu hộ (VNĐ): </label>
+              <label className="mt-2 block">COD (VNĐ): </label>
               <NumericFormat
                 value={cod}
                 onValueChange={(values) => {
@@ -734,6 +707,23 @@ const NewBill = () => {
                 }}
               />
             </div>
+            <div className="col-span-2 md:col-span-1 font-semibold">
+              <label className="mt-2 block">Tổng thu hộ tạm tính (VNĐ): </label>
+              <div className="flex gap-1 ">
+                <Input
+                  disabledBy={true}
+                  placehoder={0}
+                  textCenter={true}
+                  value={toVND(
+                    shopPay
+                      ? parseInt(cod)
+                      : parseInt(cod) + parseInt(tmpCost) || 0
+                  )}
+                  padding={"sm"}
+                  onChange={(e) => setQty(parseInt(e.target.value))}
+                />
+              </div>
+            </div>
           </div>
           <div>
             <label className="mt-2 block">Ghi chú: </label>
@@ -743,14 +733,6 @@ const NewBill = () => {
               onChange={(e) => setNote(e.target.value)}
               padding={"sm"}
             />
-          </div>
-          <div>
-            <h3 className="font-bold py-3">
-              Tổng thu tạm tính (VNĐ):{" "}
-              {toVND(
-                shopPay ? parseInt(cod) : parseInt(cod) + parseInt(tmpCost) || 0
-              )}
-            </h3>
           </div>
         </div>
       </div>
