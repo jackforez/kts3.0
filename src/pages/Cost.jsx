@@ -53,6 +53,7 @@ const Cost = () => {
     fetchData();
   }, [refresh]);
   const handleDelete = async () => {
+    dispatch(onLoading());
     try {
       const res = await ktsRequest.delete(`/cost/${costToDelete._id}`, {
         headers: {
@@ -61,8 +62,10 @@ const Cost = () => {
       });
       toast.success(res.data.message);
       dispatch(onRefreh());
+      dispatch(loaded());
       dispatch(onCloseModal());
     } catch (err) {
+      dispatch(loaded());
       toast.error(err.response ? err.response.data.message : "Network Error!");
     }
   };

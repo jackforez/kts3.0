@@ -44,7 +44,7 @@ const Home = () => {
           }}
         >
           <div
-            className={`w-screen h-screen 
+            className={`w-screen h-screen
               bg-[url('./assets/imgs/hero-home.jpg')] bg-cover bg-fixed bg-center bg-no-repeat flex-grow-0 flex-shrink-0`}
           >
             {currentPage === 0 && (

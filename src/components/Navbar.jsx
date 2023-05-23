@@ -1,12 +1,16 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import androidLink from "../assets/adr-link.png";
+import androidQr from "../assets/adr-qr.png";
 const Navbar = ({ page, setPage, title }) => {
   const navLinks = ["Trang chủ", "Tra đơn", "Dịch vụ", "Liên hệ"];
+  const [openDownload, setOpenDownload] = useState(false);
   return (
     <nav
       className={`fixed z-30 w-full ${
         page > 0
           ? "bg-ktsPrimary"
-          : "bg-black text-white backdrop-blur rounded-lg overflow-hidden drop-shadow bg-opacity-10"
+          : "bg-black text-white backdrop-blur rounded-lg drop-shadow bg-opacity-10"
       } duration-300`}
     >
       <div className="mx-auto flex flex-wrap max-w-screen-xl items-center justify-between md:px-4 px-2 lg:px-6 pb-4 md:pb-0">
@@ -31,6 +35,7 @@ const Navbar = ({ page, setPage, title }) => {
                 onClick={() => {
                   setPage(i);
                   title(l);
+                  setOpenDownload(false);
                 }}
                 key={i}
                 className={`uppercase font-semibold text-sm ${
@@ -43,6 +48,27 @@ const Navbar = ({ page, setPage, title }) => {
               </button>
             );
           })}
+          <div className="relative">
+            <button
+              onClick={() => setOpenDownload(!openDownload)}
+              className={`uppercase font-semibold text-sm text-white
+            }`}
+            >
+              Download
+            </button>
+            {openDownload && (
+              <div className="absolute bg-white p-2 w-36 z-50 flex">
+                <a
+                  href="https://firebasestorage.googleapis.com/v0/b/ktscorp-f5af2.appspot.com/o/setup%2Fkts-viet-nam-1.0.2.apk?alt=media&token=3e79795a-21db-47f5-a58b-11a0889a1f6f"
+                  download
+                >
+                  {" "}
+                  <img src={androidQr} className="h-32 w-32" />
+                  <img src={androidLink} className="w-32" />
+                </a>
+              </div>
+            )}
+          </div>
         </div>
         <div className="flex items-center order-2 md:order-3">
           <Link
