@@ -7,7 +7,7 @@ import ReactToPrint, { useReactToPrint } from "react-to-print";
 import { ktsRequest } from "../ultis/connections";
 import { logout } from "../redux/userSlice";
 import { Button, GridData, Input } from "../components";
-import { excel, mapPin, printer, search, trash } from "../ultis/svgs";
+import { copy, excel, mapPin, printer, search, trash } from "../ultis/svgs";
 import { search as myFilter, toVND } from "../ultis/functions";
 import logo from "../assets/logo.svg";
 import { loaded, onLoading, onRefreh } from "../redux/systemSlice";
@@ -92,8 +92,9 @@ const Bills = () => {
     }
   };
   const headers = [
-    { title: "Đơn hàng ", size: "w-3/12" },
-    { title: "người gửi/nhận", size: "w-4/12" },
+    { title: "Đơn hàng ", size: "w-2/12" },
+    { title: "Ngày tạo đơn", size: "w-2/12" },
+    { title: "người gửi/nhận", size: "w-3/12" },
     { title: "chịu cước", size: "w-1/12 text-end" },
     { title: "COD", size: "w-1/12 text-end" },
     { title: "cước shop", size: "w-1/12 text-end" },
@@ -163,35 +164,6 @@ const Bills = () => {
             đang giao({searchByStatus("đang giao")})
           </span>
         </div>
-
-        {/* <Button type={"outline-primary"} padding={"sm"} title="under construct">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="21"
-            height="21"
-            x="0"
-            y="0"
-            viewBox="0 0 50 50"
-            className="w-5 h-5"
-            stroke="#4ade80"
-          >
-            <path d={excel}></path>
-          </svg>
-        </Button> */}
-        {/* <div className="flex gap-2 text-xs">
-          <Input
-            placehoder={"Nhập số ID"}
-            padding={"sm"}
-            onChange={(e) => setPID(e.target.value)}
-          />
-          <Button
-            type={"outline-danger"}
-            padding={"xs"}
-            icon={trash}
-            iconSize={"4"}
-            callback={deleteP}
-          ></Button>
-        </div> */}
         <Link
           to="/dashboard/bills/new"
           className="order-2 flex items-center bg-white gap-1 rounded border border-primary-600 p-1.5 text-xs text-primary-600 hover:bg-primary-600 hover:text-white md:text-base lg:order-3"
@@ -224,22 +196,50 @@ const Bills = () => {
                   const st = getStatus(b.status);
                   return (
                     <div className="px-2 py-1.5 flex items-center" key={i}>
-                      <div className="w-3/12 space-x-1">
+                      <div className="w-2/12 space-x-1">
                         <span
                           className={`${st.bgColor} px-1 inline-block py-0.5 rounded ${st.textColor} font-semibold text-xs`}
                         >
                           {b.status}
                         </span>
-                        <span className="bg-white px-1 inline-block py-0.5 border border-ktsPrimary rounded text-primary-700 font-semibold text-xs">
+
+                        <span> {b.orderNumber}</span>
+                        <div className="flex items-center">
+                          <span className="px-1">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="#081A51"
+                              className={`w-4 h-4 text-primary inline`}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d={mapPin}
+                              />
+                            </svg>
+                          </span>
+                          <span className="text-sm">{b.partnerTrackingId}</span>
+                          {/* <span className="px-2" title="sao chép mã tra cứu">
+                            <Button
+                              icon={copy}
+                              padding={"xs"}
+                              iconSize={"4"}
+                            ></Button>
+                          </span> */}
+                        </div>
+                      </div>
+                      <div className="w-2/12 space-x-1">
+                        <span className="bg-white px-1 inline-block py-0.5  text-ktsPrimary font-semibold text-xs">
                           {new Date(b.createdAt).toLocaleTimeString() +
                             " - " +
                             new Date(b.createdAt).toLocaleDateString()}
                         </span>
-                        <span> {b.orderNumber}</span>
-                        <div>Mã tra cứu: {b.partnerTrackingId}</div>
                       </div>
                       {/* <div className="w-/12 md:grid md:auto-cols-fr md:grid-flow-col"> */}
-                      <div className="w-4/12">
+                      <div className="w-3/12">
                         <div>
                           <span className="font-semibold">Từ: </span>{" "}
                           <span>{b.fromName + " - " + b.fromPhone}</span>
