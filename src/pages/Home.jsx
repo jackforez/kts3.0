@@ -12,12 +12,8 @@ import "swiper/css/effect-fade";
 SwiperCore.use([Autoplay]);
 
 const Home = () => {
-  const [openResult, setOpenResult] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [title, setTitle] = useState("Trang chủ");
-  const [loading, setLoading] = useState(false);
-  const [orderDetails, setOrderDetails] = useState({});
-  const [orderID, setOrderID] = useState("");
   const [config, setConfig] = useState({});
   const [imgs, setImgs] = useState([]);
   document.title = title + " - KTSCORP.VN";

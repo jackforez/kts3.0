@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import androidLink from "../assets/adr-link.png";
 import androidQr from "../assets/adr-qr.png";
-const Navbar = ({ page, setPage, title }) => {
+const Navbar = ({ page, setPage, title, links }) => {
   const navLinks = ["Trang chủ", "Tra đơn", "Dịch vụ", "Liên hệ"];
   const [openDownload, setOpenDownload] = useState(false);
   return (
@@ -58,12 +58,8 @@ const Navbar = ({ page, setPage, title }) => {
             </button>
             {openDownload && (
               <div className="absolute bg-white p-2 w-36 z-50 flex">
-                <a
-                  href="https://firebasestorage.googleapis.com/v0/b/ktscorp-f5af2.appspot.com/o/setup%2Fkts-viet-nam-1.0.2.apk?alt=media&token=3e79795a-21db-47f5-a58b-11a0889a1f6f"
-                  download
-                >
-                  {" "}
-                  <img src={androidQr} className="h-32 w-32" />
+                <a href={links.main} download>
+                  <img src={links.qr} className="h-32 w-32" />
                   <img src={androidLink} className="w-32" />
                 </a>
               </div>

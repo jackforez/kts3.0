@@ -21,6 +21,8 @@ const Config = () => {
   const token = currentUser.token;
   const [file, setFile] = useState([]);
   const [urls, setUrls] = useState([]);
+  const [dlFile, setDlFile] = useState(null);
+  const [downloadUrl, setDownloadUrl] = useState("");
   const [isLoadedFiles, setIsLoadedFiles] = useState(false);
   const [percs, setPercs] = useState(0);
   const [currentParams, setCurrentParams] = useState({});
@@ -67,6 +69,36 @@ const Config = () => {
     };
     file && uploadFile();
   }, [file]);
+  useEffect(() => {
+    setIsLoadedFiles(false);
+    const uploadFile = async () => {
+      setDlFile(null);
+      setPercs(0);
+
+      file.map((f, i) => {
+        const name = new Date().getTime() + currentUser._id + "_" + f.name;
+        const storageRef = ref(storage, `setup/${name}`);
+        const uploadTask = uploadBytesResumable(storageRef, f);
+
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {},
+          (error) => {
+            console.log(error);
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              setDownloadUrl(downloadURL);
+            });
+          }
+        );
+      });
+
+      setIsLoadedFiles(true);
+      setPercs(100);
+    };
+    dlFile && uploadFile();
+  }, [dlFile]);
   const handleDeleteFireBase = (url = "") => {
     const imgRef = ref(storage, url);
     // Delete the file
@@ -248,100 +280,183 @@ const Config = () => {
             />
           </div>
         </div>
-        <div className=" mt-4 space-y-2">
-          <h3 className="font-semibold uppercase py-3">Reset token đối tác</h3>
-          <div className="flex justify-between gap-2">
-            <div className="w-1/6 rounded border border-gray-400 flex justify-center items-center">
-              <span>VNPost</span>
+      </div>
+      <div>
+        <div className="flex justify-between mt-4">
+          <h3 className="font-semibold uppercase ">Link download</h3>
+          <Button
+            type="primary"
+            padding={"sm"}
+            loading={loading}
+            animation={true}
+            disabledBy={loading}
+            callback={handleClick}
+          >
+            Cập nhật
+          </Button>
+        </div>
+        <div className="flex w-full items-center">
+          <div className="max-w-3/4 flex items-center rounded-md border border-dashed border-ktsPrimary p-1.5 overflow-x-auto">
+            {/* {file?.length > 0 ? ( */}
+            <div className="flex gap-1.5">
+              <div className="w-36 relative overflow-hidden">
+                {dlFile ? (
+                  <div className="w-36 h-24 overflow-hidden flex rounded bg-white">
+                    <img
+                      src={dlFile}
+                      alt=""
+                      className="object-cover w-full h-auto"
+                    />
+                    {/* <div
+                      className={`flex justify-between absolute bottom-0 w-[${percs}%] h-4 bg-primary rounded-b-md`}
+                    ></div> */}
+                  </div>
+                ) : (
+                  <button
+                    className="hover:text-white hover:bg-red-500 p-1 rounded-full absolute top-0 right-0"
+                    onClick={() => {
+                      handleDeleteFireBase(downloadUrl);
+                      setDownloadUrl("");
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={3}
+                      stroke="currentColor"
+                      className="w-3 h-3"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                )}
+              </div>
             </div>
-            <div className="w-4/6 relative">
-              <Input size={"w-full"} padding={"sm"} />
+            <div className="w-36 h-24 flex items-center justify-center">
               <Button
-                icon={copy}
-                size={"absolute top-1 right-2"}
-                padding={"xs"}
+                type={"primary"}
+                size="rounded-full"
+                icon={add}
+                padding={"md"}
+                disabledBy={loading}
+                animation={true}
+                loading={loading}
+                callback={() => {
+                  document.getElementById("downloadInput").click();
+                  console.log(dlFile);
+                }}
               ></Button>
             </div>
-            <Button
-              type="primary"
-              padding={"sm"}
-              size={"w-1/6"}
-              loading={loading}
-              animation={true}
-              disabledBy={loading}
-            >
-              Cập nhật
-            </Button>
+            <input
+              type="file"
+              multiple
+              id="downloadInput"
+              hidden
+              onChange={(e) => {
+                setFile(Array.from(e.target.files[0]));
+              }}
+            />
           </div>
-          <div className="flex justify-between gap-2">
-            <div className="w-1/6 rounded border border-gray-400 flex justify-center items-center">
-              <span>VTPost</span>
-            </div>
-            <div className="w-4/6 relative">
-              <Input size={"w-full"} padding={"sm"} />
-              <Button
-                icon={copy}
-                size={"absolute top-1 right-2"}
-                padding={"xs"}
-              ></Button>
-            </div>
-            <Button
-              type="primary"
-              padding={"sm"}
-              size={"w-1/6"}
-              loading={loading}
-              animation={true}
-              disabledBy={loading}
-            >
-              Cập nhật
-            </Button>
+        </div>
+      </div>
+      <div className=" mt-4 space-y-2">
+        <h3 className="font-semibold uppercase py-3">Reset token đối tác</h3>
+        <div className="flex justify-between gap-2">
+          <div className="w-1/6 rounded border border-gray-400 flex justify-center items-center">
+            <span>VNPost</span>
           </div>
-          <div className="flex justify-between gap-2">
-            <div className="w-1/6 rounded border border-gray-400 flex justify-center items-center">
-              <span>JNT</span>
-            </div>
-            <div className="w-4/6 relative">
-              <Input size={"w-full"} padding={"sm"} />
-              <Button
-                icon={copy}
-                size={"absolute top-1 right-2"}
-                padding={"xs"}
-              ></Button>
-            </div>
+          <div className="w-4/6 relative">
+            <Input size={"w-full"} padding={"sm"} />
             <Button
-              type="primary"
-              padding={"sm"}
-              size={"w-1/6"}
-              loading={loading}
-              animation={true}
-              disabledBy={loading}
-            >
-              Cập nhật
-            </Button>
+              icon={copy}
+              size={"absolute top-1 right-2"}
+              padding={"xs"}
+            ></Button>
           </div>
-          <div className="flex justify-between gap-2">
-            <div className="w-1/6 rounded border border-gray-400 flex justify-center items-center">
-              <span>Snapy</span>
-            </div>
-            <div className="w-4/6 relative">
-              <Input size={"w-full"} padding={"sm"} />
-              <Button
-                icon={copy}
-                size={"absolute top-1 right-2"}
-                padding={"xs"}
-              ></Button>
-            </div>
+          <Button
+            type="primary"
+            padding={"sm"}
+            size={"w-1/6"}
+            loading={loading}
+            animation={true}
+            disabledBy={loading}
+          >
+            Cập nhật
+          </Button>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div className="w-1/6 rounded border border-gray-400 flex justify-center items-center">
+            <span>VTPost</span>
+          </div>
+          <div className="w-4/6 relative">
+            <Input size={"w-full"} padding={"sm"} />
             <Button
-              type="primary"
-              padding={"sm"}
-              size={"w-1/6"}
-              loading={loading}
-              animation={true}
-              disabledBy={loading}
-            >
-              Cập nhật
-            </Button>
+              icon={copy}
+              size={"absolute top-1 right-2"}
+              padding={"xs"}
+            ></Button>
           </div>
+          <Button
+            type="primary"
+            padding={"sm"}
+            size={"w-1/6"}
+            loading={loading}
+            animation={true}
+            disabledBy={loading}
+          >
+            Cập nhật
+          </Button>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div className="w-1/6 rounded border border-gray-400 flex justify-center items-center">
+            <span>JNT</span>
+          </div>
+          <div className="w-4/6 relative">
+            <Input size={"w-full"} padding={"sm"} />
+            <Button
+              icon={copy}
+              size={"absolute top-1 right-2"}
+              padding={"xs"}
+            ></Button>
+          </div>
+          <Button
+            type="primary"
+            padding={"sm"}
+            size={"w-1/6"}
+            loading={loading}
+            animation={true}
+            disabledBy={loading}
+          >
+            Cập nhật
+          </Button>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div className="w-1/6 rounded border border-gray-400 flex justify-center items-center">
+            <span>Snapy</span>
+          </div>
+          <div className="w-4/6 relative">
+            <Input size={"w-full"} padding={"sm"} />
+            <Button
+              icon={copy}
+              size={"absolute top-1 right-2"}
+              padding={"xs"}
+            ></Button>
+          </div>
+          <Button
+            type="primary"
+            padding={"sm"}
+            size={"w-1/6"}
+            loading={loading}
+            animation={true}
+            disabledBy={loading}
+          >
+            Cập nhật
+          </Button>
         </div>
       </div>
     </div>
