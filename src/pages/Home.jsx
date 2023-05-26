@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { Button, Input, Navbar } from "../components";
+import { Navbar } from "../components";
 import { Contact, About, Services } from ".";
-import { search } from "../ultis/svgs";
 import { ktsRequest } from "../ultis/connections";
-import { toast } from "react-toastify";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Autoplay, EffectFade } from "swiper";
 import "swiper/css";
@@ -31,7 +29,12 @@ const Home = () => {
   }, []);
   return (
     <div>
-      <Navbar setPage={setCurrentPage} page={currentPage} title={setTitle} />
+      <Navbar
+        setPage={setCurrentPage}
+        page={currentPage}
+        title={setTitle}
+        links={{ link: config.link, qr: config.qr }}
+      />
       <div className="w-screen overflow-hidden">
         <div
           className="flex flex-nowrap scroll scroll-smooth scrollbar-hide duration-500"

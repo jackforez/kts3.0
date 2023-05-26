@@ -58,7 +58,7 @@ const Navbar = ({ page, setPage, title, links }) => {
             </button>
             {openDownload && (
               <div className="absolute bg-white p-2 w-36 z-50 flex">
-                <a href={links.main} download>
+                <a href={links.link} download>
                   <img src={links.qr} className="h-32 w-32" />
                   <img src={androidLink} className="w-32" />
                 </a>
