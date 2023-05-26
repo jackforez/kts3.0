@@ -80,7 +80,7 @@ const Config = () => {
     const uploadFile = async () => {
       dispatch(onLoading());
       const name = new Date().getTime() + currentUser._id + "_" + dlFile.name;
-      const storageRef = ref(storage, `setup/${name}`);
+      const storageRef = ref(storage, `images/qr/${name}`);
       const uploadTask = uploadBytesResumable(storageRef, dlFile);
       uploadTask.on(
         "state_changed",
