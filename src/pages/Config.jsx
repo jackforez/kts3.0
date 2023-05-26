@@ -38,7 +38,6 @@ const Config = () => {
         setCurrentBgs(res.data.homeBackgroundImages);
         setCurrentQR(res.data.qr);
         setQrUrl(res.data.link);
-        console.log(currentQR);
       } catch (error) {
         toast.error("Không get được thông số hệ thống");
       }
@@ -340,7 +339,7 @@ const Config = () => {
                       </svg>
                     </button>
 
-                    {isLoadedFiles && (
+                    {isLoadedFiles && dlFile && (
                       <div
                         className={`absolute bottom-0 p-0.5 bg-green-500 rounded`}
                       >
