@@ -73,7 +73,7 @@ const Home = () => {
             )}
           </div>
           <div className="w-screen h-screen flex-grow-0 flex-shrink-0">
-            <About />
+            <About slogan={config.slogan} description={config.description} />
           </div>
           <div className="w-screen h-screen flex-grow-0 flex-shrink-0">
             <Services />

@@ -18,7 +18,7 @@ import { toast } from "react-toastify";
 //     </div>
 //   );
 // };
-const About = () => {
+const About = ({ slogan, description }) => {
   const [openResult, setOpenResult] = useState(false);
   const [title, setTitle] = useState("Tra cứu đơn hàng");
   const [loading, setLoading] = useState(false);
@@ -62,12 +62,10 @@ const About = () => {
             } duration-500`}
           >
             <h1 className="mb-4 max-w-2xl text-3xl font-extrabold leading-none md:text-4xl xl:text-5xl">
-              Nhanh chóng an toàn đáng tin cậy
+              {slogan}
             </h1>
             <p className="mb-6 max-w-2xl font-light text-gray-700  md:text-lg lg:mb-8 lg:text-xl">
-              KTS hiện đã triển khai liên kết với dịch vụ của VNPOST, cùng với
-              VietelPost, SNAPY, JT&T, NinjaVan, chúng tôi đã có mạng lưới bưu
-              cục rộng khắp cả nước
+              {description}
             </p>
             <div className="flex w-full">
               <Input
@@ -152,7 +150,7 @@ const About = () => {
                     </h3>
                   </div>
                   <div className="h-[50vh] overflow-auto overflow-y-auto p-3 text-ktsPrimary">
-                    <div className="col-span-12 space-y-0.5  px-4 sm:col-span-9">
+                    <div className="col-span-12 space-y-2  px-4 sm:col-span-9">
                       {orderDetails.TBL_DINH_VI ? (
                         orderDetails.TBL_DINH_VI.map((i, index) => {
                           return (

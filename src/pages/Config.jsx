@@ -30,6 +30,8 @@ const Config = () => {
   const [currentParams, setCurrentParams] = useState({});
   const [currentBgs, setCurrentBgs] = useState([]);
   const [currentQR, setCurrentQR] = useState("");
+  const [slogan, setSlogan] = useState("");
+  const [description, setDescription] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -139,13 +141,68 @@ const Config = () => {
       });
     dispatch(onRefreh());
   };
+  const handleChange = (e) => {
+    setCurrentParams((prev) => {
+      return { ...prev, [e.target.name]: e.target.value };
+    });
+  };
   return (
     <div className={`p-2 overflow-auto text-sm`}>
       <div>
-        <h3 className="font-semibold uppercase">Mức giá mặc định</h3>
+        <h3 className="font-semibold uppercase ">Slogan</h3>
+        <div>
+          <div className="flex justify-between gap-2 mt-4">
+            <div className="w-1/12 rounded border border-gray-400 flex justify-center items-center">
+              <span>Slogan</span>
+            </div>
+
+            <Input
+              size={"w-5/6"}
+              padding={"sm"}
+              value={currentParams.slogan}
+              name="slogan"
+              onChange={handleChange}
+            />
+
+            <Button
+              type="primary"
+              padding={"sm"}
+              loading={loading}
+              animation={true}
+              disabledBy={loading}
+              callback={handleClick}
+            >
+              Cập nhật
+            </Button>
+          </div>
+          <div className="flex justify-between gap-2 mt-4">
+            <div className="w-1/12 rounded border border-gray-400 flex justify-center items-center">
+              <span>Description</span>
+            </div>
+
+            <Input
+              size={"w-5/6"}
+              padding={"sm"}
+              value={currentParams.description}
+              name="description"
+              onChange={handleChange}
+            />
+
+            <Button
+              type="primary"
+              padding={"sm"}
+              loading={loading}
+              animation={true}
+              disabledBy={loading}
+              callback={handleClick}
+            >
+              Cập nhật
+            </Button>
+          </div>
+        </div>
       </div>
       <div>
-        <div className="flex justify-between">
+        <div className="flex justify-between mt-4">
           <h3 className="font-semibold uppercase">Thay đổi hình nền</h3>
           <Button
             type="primary"

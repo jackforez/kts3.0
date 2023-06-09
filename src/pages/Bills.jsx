@@ -13,6 +13,7 @@ import logo from "../assets/logo.svg";
 import { loaded, onLoading, onRefreh } from "../redux/systemSlice";
 import axios from "axios";
 import { STATUS } from "../ultis/config";
+import { stringify } from "postcss";
 const Bills = () => {
   const currentUser = useSelector((state) => state.user);
   const token = currentUser.currentUser.token;
@@ -103,7 +104,10 @@ const Bills = () => {
   ];
   const searchByStatus = (q) => {
     return bills.filter((el) =>
-      el.status.normalize("NFC").toLowerCase().includes(q)
+      el.status
+        .normalize("NFC")
+        .toLowerCase()
+        .includes(q.normalize("NFC").toLowerCase())
     ).length;
   };
   const getStatus = (_status) => {
@@ -133,36 +137,17 @@ const Bills = () => {
           >
             Tất cả ({searchByStatus("")})
           </span>
-          <span
-            className="inline-block bg-white px-2 pt-0.5 pb-1 rounded-md border border-red-500 cursor-pointer hover:bg-red-500 text-red-500 hover:text-white"
-            onClick={() => setQuery("hủy")}
-          >
-            hủy ({searchByStatus("hủy")})
-          </span>
-          <span
-            className="inline-block bg-white px-2 pt-0.5 pb-1 rounded-md border border-green-500 cursor-pointer hover:bg-green-500 text-green-500 hover:text-white"
-            onClick={() => {
-              setQuery("thành công");
-            }}
-          >
-            thành công({searchByStatus("thành công")})
-          </span>
-          <span
-            className="inline-block bg-white px-2 pt-0.5 pb-1 rounded-md border border-blue-500 cursor-pointer hover:bg-blue-500 text-blue-500 hover:text-white"
-            onClick={() => {
-              setQuery("đơn mới");
-            }}
-          >
-            Đơn mới({searchByStatus("đơn mới")})
-          </span>
-          <span
-            className="inline-block bg-white px-2 pt-0.5 pb-1 rounded-md border border-orange-500 cursor-pointer hover:bg-orange-500 text-orange-500 hover:text-white"
-            onClick={() => {
-              setQuery("đang giao");
-            }}
-          >
-            đang giao({searchByStatus("đang giao")})
-          </span>
+          {STATUS.map((st, i) => {
+            return (
+              <span
+                key={i}
+                className={`inline-block bg-white px-2 pt-0.5 pb-1 rounded-md border border-${st.textColor}-500 cursor-pointer hover:bg-${st.textColor}-500 text-${st.textColor}-500 hover:text-white`}
+                onClick={() => setQuery(st.name.toString().toLowerCase())}
+              >
+                {st.name} ({searchByStatus(st.name.toString())})
+              </span>
+            );
+          })}
         </div>
         <Link
           to="/dashboard/bills/new"
@@ -198,7 +183,7 @@ const Bills = () => {
                     <div className="px-2 py-1.5 flex items-center" key={i}>
                       <div className="w-2/12 space-x-1">
                         <span
-                          className={`${st.bgColor} px-1 inline-block py-0.5 rounded ${st.textColor} font-semibold text-xs`}
+                          className={`${st.bgColor} px-1.5 inline-block py-0.5 rounded text-${st.textColor}-700 font-semibold text-xs`}
                         >
                           {b.status}
                         </span>
