@@ -58,7 +58,7 @@ const Navbar = ({ page, setPage, title, links }) => {
               Download
             </button>
             {openDownload && (
-              <div className="absolute bg-white right-0 flex">
+              <div className="absolute bg-white right-0 top-8 flex">
                 <div className="p-2 w-36 z-50 flex">
                   <a href={links.link} download>
                     <img src={links.qr} className="h-32 w-32" />
@@ -66,8 +66,11 @@ const Navbar = ({ page, setPage, title, links }) => {
                   </a>
                 </div>
                 <div className="p-2 w-36 z-50 flex">
-                  <a href={links.link} download>
-                    <img src={links.qr} className="h-32 w-32" />
+                  <a href="https://apps.apple.com/vn/app/ktv-vi%E1%BB%87t-nam/id6449803353?l=vi">
+                    <img
+                      src="https://firebasestorage.googleapis.com/v0/b/ktscorp-f5af2.appspot.com/o/images%2Fqr%2Fqr-ios.png?alt=media&token=8ddefbcd-bac9-4086-ab3d-b6640fe71de1"
+                      className="h-32 w-32"
+                    />
                     {/* <img src={iosLink} className="w-32 h-10" /> */}
                   </a>
                 </div>
