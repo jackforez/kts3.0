@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import androidLink from "../assets/adr-link.png";
+import iosLink from "../assets/ios-link.png";
 import androidQr from "../assets/adr-qr.png";
 const Navbar = ({ page, setPage, title, links }) => {
   const navLinks = ["Trang chủ", "Tra đơn", "Dịch vụ", "Liên hệ"];
@@ -57,11 +58,19 @@ const Navbar = ({ page, setPage, title, links }) => {
               Download
             </button>
             {openDownload && (
-              <div className="absolute bg-white p-2 w-36 z-50 flex">
-                <a href={links.link} download>
-                  <img src={links.qr} className="h-32 w-32" />
-                  <img src={androidLink} className="w-32" />
-                </a>
+              <div className="absolute bg-white right-0 flex">
+                <div className="p-2 w-36 z-50 flex">
+                  <a href={links.link} download>
+                    <img src={links.qr} className="h-32 w-32" />
+                    {/* <img src={androidLink} className="w-32 h-10" /> */}
+                  </a>
+                </div>
+                <div className="p-2 w-36 z-50 flex">
+                  <a href={links.link} download>
+                    <img src={links.qr} className="h-32 w-32" />
+                    {/* <img src={iosLink} className="w-32 h-10" /> */}
+                  </a>
+                </div>
               </div>
             )}
           </div>
