@@ -4,20 +4,6 @@ import { search } from "../ultis/svgs";
 import { ktsRequest } from "../ultis/connections";
 import { toast } from "react-toastify";
 
-// const Card = ({ img = "", name = "anhvan", position = "thợ code" }) => {
-//   return (
-//     <div className="w-full border border-primary-300 rounded overflow-hidden object-cover">
-//       <div>
-//         <img src={img} alt="" className="h-full w-full" />
-//       </div>
-//       <div className="px-3 pb-2">
-//         <h3 className="uppercase font-semibold">{name}</h3>
-//         <h3 className="text-gray-500 text-xs">{position}</h3>
-//         <div className="text-sm">handsome man</div>
-//       </div>
-//     </div>
-//   );
-// };
 const About = ({ slogan, description }) => {
   const [openResult, setOpenResult] = useState(false);
   const [title, setTitle] = useState("Tra cứu đơn hàng");
@@ -42,14 +28,15 @@ const About = ({ slogan, description }) => {
 
     ktsRequest(config)
       .then(function (response) {
+        console.log(response);
         setOrderDetails(response.data.data);
+
         setLoading(false);
         setOpenResult(!openResult);
       })
       .catch(function (error) {
         setLoading(false);
-        console.log(error);
-        toast.error("Network Error!");
+        toast.error("Mã vận đơn đang được xử lý!");
       });
   };
   return (
