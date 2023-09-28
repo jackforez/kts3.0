@@ -105,9 +105,6 @@ const Card = (prop) => {
     <div className="rounded-md bg-white drop-shadow">
       <div className="flex items-center justify-between border-b-2 border-red-300 p-2">
         <div className="flex gap-3 font-semibold">
-          <span className="text-white bg-sky-500 px-1 rounded pb-0.5">
-            {user.role}
-          </span>
           <span>{user.name}</span>
         </div>
         <div className="flex gap-2">
@@ -165,8 +162,14 @@ const Card = (prop) => {
             ", " +
             user.cityFullName}
         </span>
+        <span>Tạo bởi: {prop.parent.name || "Hệ Thống"}</span>
         <div className="flex justify-between">
-          <span>Role: {user.role.toUpperCase()}</span>
+          <span>
+            Role:{" "}
+            <span className="text-white bg-sky-500 px-2 rounded  py-1 font-semibold text-sm">
+              {user.role.toUpperCase()}
+            </span>
+          </span>
           <button
             className="rounded border border-green-600 py-0.5 px-1 font-bold text-green-700 hover:bg-green-600 hover:text-white"
             onClick={(e) => {

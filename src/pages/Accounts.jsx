@@ -54,6 +54,7 @@ const Accounts = () => {
             success={setChange}
             token={token}
             cost={cost}
+            parent={data.find((el) => el._id === i.parentUser) || ""}
           />
         );
       })}
