@@ -10,6 +10,10 @@ const Accounts = () => {
   const [cost, setCost] = useState([]);
   const [change, setChange] = useState(false);
   useEffect(() => {
+    const setTitle = () => {
+      document.title = "Danh sách người dùng - KTSCORP.VN";
+    };
+    setTitle();
     const fetchData = async () => {
       try {
         const res = await ktsRequest.get("/users", {

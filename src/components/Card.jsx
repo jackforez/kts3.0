@@ -105,6 +105,9 @@ const Card = (prop) => {
     <div className="rounded-md bg-white drop-shadow">
       <div className="flex items-center justify-between border-b-2 border-red-300 p-2">
         <div className="flex gap-3 font-semibold">
+          <span className="text-white bg-sky-500 px-1 rounded pb-0.5">
+            {user.role}
+          </span>
           <span>{user.name}</span>
         </div>
         <div className="flex gap-2">
@@ -151,7 +154,6 @@ const Card = (prop) => {
         </div>
       </div>
       <div className="flex flex-col flex-wrap gap-1 p-3">
-        <span>ID: {user._id}</span>
         <span>Số điện thoại: {user.phone}</span>
         <span>
           Địa chỉ:{" "}
@@ -234,12 +236,12 @@ const Card = (prop) => {
             </button>
           </div>
         )}
-        <div className="flex justify-between">
+        <div className="relative">
           <span>
             Mức giá áp dụng:
             {user.cost.map((j) => {
               return (
-                <span className="ml-3 rounded-sm bg-gray-300 pb-0.5">
+                <span className="ml-3 inline-block rounded-sm bg-gray-300 pb-0.5">
                   <button
                     className="mx-2 text-red-500 hover:font-bold"
                     onClick={(e) => {
@@ -248,13 +250,13 @@ const Card = (prop) => {
                   >
                     x
                   </button>
-                  <span className="py-0.5 px-1">{j}</span>
+                  <span className="py-0.5 px-1 text-xs">{j}</span>
                 </span>
               );
             })}
           </span>
           <button
-            className="rounded border border-green-600 py-0.5 px-1 font-bold text-green-700 hover:bg-green-600 hover:text-white"
+            className="absolute right-0 top-0 rounded border border-green-600 py-0.5 px-1 font-bold text-green-700 hover:bg-green-600 hover:text-white"
             onClick={(e) => {
               setOpenCostSelector(!openCostSelector);
             }}
