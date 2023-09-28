@@ -1,18 +1,53 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { ktsRequest } from "../ultis/connections";
+import { useSearchParams } from "react-router-dom";
 const Tracking = () => {
   const [openPop, setOpenPop] = useState(false);
   const [orderID, setOrderID] = useState("");
   const [loading, setLoading] = useState(false);
   const [edit, setEdit] = useState(true);
   const [orderDetails, setOrderDetails] = useState({});
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const handleSearch = (orderID = "") => {
+    if (!orderID) {
+      toast.warning("Bạn hãy nhập mã vận đơn!");
+      return;
+    }
+    setLoading(true);
+    setEdit(false);
+    const config = {
+      method: "get",
+      url: `tracking/${orderID}`,
+      params: {
+        id: orderID,
+      },
+    };
+
+    ktsRequest(config)
+      .then(function (response) {
+        setOrderDetails(JSON.stringify(response.data));
+        setOpenPop(true);
+        setLoading(false);
+      })
+      .catch(function (error) {
+        toast.error("Network Error!");
+      });
+  };
+
   useEffect(() => {
     const setTitle = () => {
-      document.title = "Tra cứu hành trình đơn hàng - KTSCORP.VN";
+      document.title = `Tra cứu hành trình đơn hàng ${
+        searchParams.get("order") || ""
+      } - KTSCORP.VN`;
     };
     setTitle();
-  });
+    setOrderID(searchParams.get("order"));
+    if (searchParams.get("order")) {
+      handleSearch(searchParams.get("order"));
+    }
+  }, []);
   return (
     <div className="flex w-full flex-1 flex-col gap-3 p-4">
       <div className="relative w-full lg:w-1/2 ">
@@ -31,32 +66,7 @@ const Tracking = () => {
           type="button"
           className=" absolute top-0 -right-1 inline-flex items-center rounded-r-lg border border-blue-700 bg-blue-700 py-2.5 px-8 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300"
           disabled={loading}
-          onClick={(e) => {
-            e.preventDefault;
-            if (!orderID) {
-              toast.warning("Bạn hãy nhập mã vận đơn!");
-              return;
-            }
-            setLoading(true);
-            setEdit(false);
-            var config = {
-              method: "get",
-              url: `tracking/${orderID}`,
-              params: {
-                id: orderID,
-              },
-            };
-
-            ktsRequest(config)
-              .then(function (response) {
-                setOrderDetails(JSON.stringify(response.data));
-                setOpenPop(true);
-                setLoading(false);
-              })
-              .catch(function (error) {
-                toast.error("Network Error!");
-              });
-          }}
+          onClick={() => handleSearch(orderID)}
         >
           {loading ? (
             <svg

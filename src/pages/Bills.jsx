@@ -183,7 +183,7 @@ const Bills = () => {
                     <div className="px-2 py-1.5 flex items-center" key={i}>
                       <div className="w-2/12 space-x-1">
                         <span
-                          className={`${st.bgColor} px-1.5 inline-block py-0.5 rounded ${st.textColor} font-semibold text-xs`}
+                          className={`${st.bgColor} px-1 inline-block py-0.5 rounded ${st.textColor} font-semibold text-xs`}
                         >
                           {b.status}
                         </span>
@@ -206,7 +206,12 @@ const Bills = () => {
                               />
                             </svg>
                           </span>
-                          <span className="text-sm">{b.partnerTrackingId}</span>
+                          <Link
+                            to={`/dashboard/tracking?order=${b.partnerTrackingId}`}
+                            className="text-sm"
+                          >
+                            {b.partnerTrackingId}
+                          </Link>
                           {/* <span className="px-2" title="sao chép mã tra cứu">
                             <Button
                               icon={copy}
