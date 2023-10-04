@@ -1,5 +1,5 @@
 import { Button, Input, Selector } from "../components";
-import { key, mail, mapPin, phone } from "../ultis/svgs";
+import { add, key, mail, mapPin, phone } from "../ultis/svgs";
 import { userName } from "../ultis/svgs";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -112,7 +112,7 @@ const NewPartner = () => {
           },
         });
         setCost(res.data.data);
-        setCostName(res.data.data[0].costName);
+        setCostName(res.data.data[0]?.costName);
       } catch (error) {
         error.response
           ? toast.error(error.response.data.message)
@@ -296,15 +296,31 @@ const NewPartner = () => {
             </div>
           </div>
         </div>
-        <div className="w-full z-10">
+        <div className="w-full z-10 flex gap-2">
           <Selector
-            placehoder={"Chọn mức giá sẽ áp dụng"}
+            disabled={cost.length < 1}
+            placehoder={
+              cost.length > 0
+                ? "Chọn mức giá sẽ áp dụng"
+                : "Bạn chưa cài đặt mức giá nào"
+            }
             data={cost}
             field={["costName"]}
             toShow="costName"
             size={"sm"}
             output={setCostName}
           />
+          {cost.length < 1 && (
+            <Button
+              type="primary"
+              icon={add}
+              iconSize={"4"}
+              title={"In vận đơn"}
+              style={"px-3"}
+              padding={"xs"}
+              callback={() => navigate("/dashboard/cost")}
+            ></Button>
+          )}
         </div>
 
         <div className="flex justify-end gap-2 w-full">
