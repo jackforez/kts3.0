@@ -9,7 +9,6 @@ const Tracking = () => {
   const [edit, setEdit] = useState(true);
   const [orderDetails, setOrderDetails] = useState({});
   const [searchParams, setSearchParams] = useSearchParams();
-
   const handleSearch = (orderID = "") => {
     if (!orderID) {
       toast.warning("Bạn hãy nhập mã vận đơn!");

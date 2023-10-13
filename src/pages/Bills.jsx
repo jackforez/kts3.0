@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import ToPrint from "./ToPrint";
-import ReactToPrint, { useReactToPrint } from "react-to-print";
 import { ktsRequest } from "../ultis/connections";
 import { logout } from "../redux/userSlice";
 import { Button, GridData, Input } from "../components";
@@ -11,13 +10,11 @@ import { copy, excel, mapPin, printer, search, trash } from "../ultis/svgs";
 import { search as myFilter, toVND } from "../ultis/functions";
 import logo from "../assets/logo.svg";
 import { loaded, onLoading, onRefreh } from "../redux/systemSlice";
-import axios from "axios";
 import { STATUS } from "../ultis/config";
-import { stringify } from "postcss";
 const Bills = () => {
   const currentUser = useSelector((state) => state.user);
   const token = currentUser.currentUser.token;
-  const isAdmin = currentUser.currentUser.role === "admin";
+  const isShop = currentUser.currentUser.role === "shop";
   const { loading } = useSelector((state) => state.system);
   const { refresh } = useSelector((state) => state.system);
   const dispatch = useDispatch();
@@ -57,26 +54,6 @@ const Bills = () => {
     };
     fetch();
   }, [refresh]);
-  // const deleteP = async () => {
-  //   try {
-  //     const res = await axios.get(
-  //       `https://connect-my.vnpost.vn/customer-partner/deleteOrderByDraft?type=2&code=1683441836`,
-  //       {
-  //         headers: {
-  //           token:
-  //             "CCBM0a0WqkVPAvIDw3ph+6ljzpcAfUhyeDfGjA+KIj+z4UzD0j72uj3ye2K9cJ1rYrshNjZ4fCWDIrC8Ee2QnFoTQnUVim7iQjUOpm30QIQilUKqHNa5bhFrs6ayPHPaJdY3jlQNFmz33SOsFcL5jA==",
-  //         },
-  //       }
-  //     );
-  //     // {
-  //     //   OriginalId: pID,
-  //     // },
-
-  //     toast.success(res.data);
-  //   } catch (error) {
-  //     toast.error(error.response.data.message);
-  //   }
-  // };
   const handleDelete = async (bill) => {
     try {
       const res = await ktsRequest.delete(`v2/bills/${bill._id}`, {
@@ -92,16 +69,25 @@ const Bills = () => {
         : toast.error("Network Error!");
     }
   };
-  const headers = [
-    { title: "Đơn hàng ", size: "w-2/12" },
-    { title: "Ngày tạo đơn", size: "w-2/12" },
-    { title: "người gửi/nhận", size: "w-3/12" },
-    { title: "chịu cước", size: "w-1/12 text-end" },
-    { title: "COD", size: "w-1/12 text-end" },
-    { title: "cước shop", size: "w-1/12 text-end" },
-    { title: "cước KTS", size: "w-1/12 text-end" },
-    { title: "Thao tác", size: "w-1/12 text-end" },
-  ];
+  const headers = isShop
+    ? [
+        { title: "Đơn hàng ", size: "w-3/12" },
+        { title: "Ngày tạo đơn", size: "w-2/12" },
+        { title: "người gửi/nhận", size: "w-4/12" },
+        { title: "shop trả cước", size: "w-1/12 text-end" },
+        { title: "COD", size: "w-1/12 text-end" },
+        { title: "Thao tác", size: "w-1/12 text-end" },
+      ]
+    : [
+        { title: "Đơn hàng ", size: "w-2/12" },
+        { title: "Ngày tạo đơn", size: "w-2/12" },
+        { title: "người gửi/nhận", size: "w-3/12" },
+        { title: "shop trả cước", size: "w-1/12 text-end" },
+        { title: "COD", size: "w-1/12 text-end" },
+        { title: "cước shop", size: "w-1/12 text-end" },
+        { title: "cước KTS", size: "w-1/12 text-end" },
+        { title: "Thao tác", size: "w-1/12 text-end" },
+      ];
   const searchByStatus = (q) => {
     return bills.filter((el) =>
       el.status
@@ -110,6 +96,7 @@ const Bills = () => {
         .includes(q.normalize("NFC").toLowerCase())
     ).length;
   };
+  console.log(currentUser.role);
   const getStatus = (_status) => {
     return (
       STATUS.find((item) =>
@@ -179,7 +166,87 @@ const Bills = () => {
               myFilter(bills, query, ["toPhone", "toName", "status"]).map(
                 (b, i) => {
                   const st = getStatus(b.status);
-                  return (
+                  return isShop ? (
+                    <div className="px-2 py-1.5 flex items-center" key={i}>
+                      <div className="w-3/12 space-x-1">
+                        <span
+                          className={`${st.bgColor} px-1 inline-block py-0.5 rounded ${st.textColor} font-semibold text-xs`}
+                        >
+                          {b.status}
+                        </span>
+
+                        <span> {b.orderNumber}</span>
+                        <div className="flex items-center">
+                          <span className="px-1">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="#081A51"
+                              className={`w-4 h-4 text-primary inline`}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d={mapPin}
+                              />
+                            </svg>
+                          </span>
+                          <Link
+                            to={`/dashboard/tracking?order=${b.partnerTrackingId}`}
+                            className="text-sm"
+                          >
+                            {b.partnerTrackingId}
+                          </Link>
+                        </div>
+                      </div>
+                      <div className="w-2/12 space-x-1">
+                        <span className="bg-white px-1 inline-block py-0.5  text-ktsPrimary font-semibold text-xs">
+                          {new Date(b.createdAt).toLocaleTimeString() +
+                            " - " +
+                            new Date(b.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <div className="w-4/12">
+                        <div>
+                          <span className="font-semibold">Từ: </span>{" "}
+                          <span>{b.fromName + " - " + b.fromPhone}</span>
+                        </div>
+                        <div>
+                          <span className="font-semibold">Tới: </span>{" "}
+                          <span>{b.toName + " - " + b.toPhone}</span>
+                        </div>
+                      </div>
+                      <div className="w-1/12 text-end">
+                        <span>{toVND(b.shopPay ? b.costP : 0)}</span>
+                      </div>
+                      <div className="w-1/12 text-end">
+                        <span>{toVND(b.cod)}</span>
+                      </div>
+                      <div className="w-1/12 flex flex-col md:flex-row justify-between md:justify-end gap-2">
+                        <Button
+                          type="outline-primary"
+                          icon={printer}
+                          iconSize={"4"}
+                          title={"In vận đơn"}
+                          padding={"xs"}
+                          callback={(e) => {
+                            setShowPrint(true);
+                            setDataPrint(JSON.stringify(b));
+                          }}
+                        ></Button>
+                        <Button
+                          type="outline-danger"
+                          icon={trash}
+                          iconSize={"4"}
+                          title={"Hủy vận đơn"}
+                          padding={"xs"}
+                          callback={() => handleDelete(b)}
+                        ></Button>
+                      </div>
+                    </div>
+                  ) : (
                     <div className="px-2 py-1.5 flex items-center" key={i}>
                       <div className="w-2/12 space-x-1">
                         <span
@@ -212,13 +279,6 @@ const Bills = () => {
                           >
                             {b.partnerTrackingId}
                           </Link>
-                          {/* <span className="px-2" title="sao chép mã tra cứu">
-                            <Button
-                              icon={copy}
-                              padding={"xs"}
-                              iconSize={"4"}
-                            ></Button>
-                          </span> */}
                         </div>
                       </div>
                       <div className="w-2/12 space-x-1">
@@ -228,7 +288,6 @@ const Bills = () => {
                             new Date(b.createdAt).toLocaleDateString()}
                         </span>
                       </div>
-                      {/* <div className="w-/12 md:grid md:auto-cols-fr md:grid-flow-col"> */}
                       <div className="w-3/12">
                         <div>
                           <span className="font-semibold">Từ: </span>{" "}
@@ -251,7 +310,6 @@ const Bills = () => {
                       <div className="w-1/12 text-end">
                         <span className="font-semibold">{toVND(b.costK)}</span>
                       </div>
-                      {/* </div> */}
                       <div className="w-1/12 flex flex-col md:flex-row justify-between md:justify-end gap-2">
                         <Button
                           type="outline-primary"

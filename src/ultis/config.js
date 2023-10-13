@@ -167,3 +167,8 @@ export const STATUS = [
     hover: "hover:bg-red-500",
   },
 ];
+export const ktsTitle = {
+  0: { vn: "Mã vận đơn", cn: "快遞單號" },
+  1: { vn: "Trạng thái cuối cùng", cn: "快遞狀態" },
+  2: { vn: "Chi tiết bưu gửi", cn: "查看物流" },
+};
