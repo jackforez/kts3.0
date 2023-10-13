@@ -9,14 +9,20 @@ import { Button, GridData, Input } from "../components";
 import { copy, excel, mapPin, printer, search, trash } from "../ultis/svgs";
 import { search as myFilter, toVND } from "../ultis/functions";
 import logo from "../assets/logo.svg";
-import { loaded, onLoading, onRefreh } from "../redux/systemSlice";
+import {
+  loaded,
+  onLoading,
+  onRefreh,
+  onOpenModal,
+  onCloseModal,
+} from "../redux/systemSlice";
 import { STATUS } from "../ultis/config";
+import { Modal } from "../components";
 const Bills = () => {
   const currentUser = useSelector((state) => state.user);
   const token = currentUser.currentUser.token;
   const isShop = currentUser.currentUser.role === "shop";
-  const { loading } = useSelector((state) => state.system);
-  const { refresh } = useSelector((state) => state.system);
+  const { loading, refresh, openModal } = useSelector((state) => state.system);
   const dispatch = useDispatch();
   const [bills, setBills] = useState([]);
   const [query, setQuery] = useState("");
@@ -54,19 +60,21 @@ const Bills = () => {
     };
     fetch();
   }, [refresh]);
-  const handleDelete = async (bill) => {
+  const handleDelete = async (id) => {
     try {
-      const res = await ktsRequest.delete(`v2/bills/${bill._id}`, {
+      const res = await ktsRequest.delete(`v2/bills/${id}`, {
         headers: {
           Authorization: `Beare ${currentUser.currentUser.token}`,
         },
       });
       toast.success(res.data);
       dispatch(onRefreh());
+      dispatch(onCloseModal());
     } catch (error) {
       error.response
         ? toast.error(error.response.data.message)
         : toast.error("Network Error!");
+      dispatch(onCloseModal());
     }
   };
   const headers = isShop
@@ -96,7 +104,6 @@ const Bills = () => {
         .includes(q.normalize("NFC").toLowerCase())
     ).length;
   };
-  console.log(currentUser.role);
   const getStatus = (_status) => {
     return (
       STATUS.find((item) =>
@@ -107,6 +114,30 @@ const Bills = () => {
   return (
     <div className="p-3">
       {showPrint && <ToPrint data={dataPrint} setClose={setShowPrint} />}
+      {openModal && (
+        <Modal>
+          <div className="p-3">
+            <p>Đơn hàng sau khi huỷ không thể khôi phục</p>
+            <p>
+              Bạn chắc chắn muốn huỷ đơn hàng{" "}
+              <span className="font-semibold">{pID.orderNumber}</span> -{" "}
+              <span className="font-semibold">{pID.trackingID}</span>
+            </p>
+          </div>
+          <div className="p-3 flex justify-end gap-2">
+            <Button
+              type="danger"
+              title={"Hủy vận đơn"}
+              callback={() => handleDelete(pID.id)}
+            >
+              Xác nhận xoá
+            </Button>
+            <Button type="primary" callback={() => dispatch(onCloseModal())}>
+              Thoát
+            </Button>
+          </div>
+        </Modal>
+      )}
       <div className="flex flex-wrap items-center justify-between gap-3 pb-3">
         <Input
           placehoder={"Số điện thoại người nhận ..."}
@@ -242,7 +273,13 @@ const Bills = () => {
                           iconSize={"4"}
                           title={"Hủy vận đơn"}
                           padding={"xs"}
-                          callback={() => handleDelete(b)}
+                          callback={() => {
+                            setPID({
+                              orderNumber: b.orderNumber,
+                              trackingID: b.partnerTrackingId,
+                            });
+                            dispatch(onOpenModal());
+                          }}
                         ></Button>
                       </div>
                     </div>
@@ -328,7 +365,14 @@ const Bills = () => {
                           iconSize={"4"}
                           title={"Hủy vận đơn"}
                           padding={"xs"}
-                          callback={() => handleDelete(b)}
+                          callback={() => {
+                            setPID({
+                              id: b._id,
+                              orderNumber: b.orderNumber,
+                              trackingID: b.partnerTrackingId,
+                            });
+                            dispatch(onOpenModal());
+                          }}
                         ></Button>
                       </div>
                     </div>
