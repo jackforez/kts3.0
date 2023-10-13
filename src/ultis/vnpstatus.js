@@ -20,6 +20,7 @@ export const vnpStatus ={
   18: { vn: "Bắt đầu chuyển hoàn", cn: "退件" },
   19: { vn: "Hoàn thành công", cn: "退件成功" },
   20: { vn: "Đã trả hàng 1 phần", cn: "" },
-  21: { vn: "Đã trả tiền COD", cn: "已付COD" },
+  21: { vn: "Đã trả tiền COD", cn: "已付 COD" },
   22: { vn: "Hủy giao hàng", cn: "取消派件" },
+  25: { vn: "Đã thu tiền COD", cn: "已收 COD" },
 };

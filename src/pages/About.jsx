@@ -137,6 +137,9 @@ const About = ({ slogan, description }) => {
                       <div className="col-span-12 sm:col-span-9">
                         {orderDetails[0].statusHistory.length > 0 ? (
                           orderDetails[0].statusHistory.map((i, index) => {
+                            const stt = vnpStatus[i.statusCode] || {
+                              10: { vn: "Đang vận chuyển", cn: "正在出貨" },
+                            };
                             return (
                               <div
                                 key={index}
@@ -145,7 +148,7 @@ const About = ({ slogan, description }) => {
                                 <div className="w-4 h-4 bg-green-500 rounded-full absolute top-[50%] -left-2.5"></div>
                                 <div className="flex flex-col pl-4">
                                   <h6 className="font-semibold tracking-wide">
-                                    {vnpStatus[i.statusCode || 10][lang]}
+                                    {stt[lang]}
                                   </h6>
                                   <p className="text-xs uppercase tracking-wide">
                                     {i.createHour + " - " + i.createdDate}
