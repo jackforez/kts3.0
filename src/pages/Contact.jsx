@@ -3,6 +3,11 @@ import logo from "../assets/logo.svg";
 import { homeConfig } from "../ultis/config";
 
 const Contact = () => {
+  const partnersAddress = [
+    "Tầng 7 tòa nhà Bạch Đằng, 268 Trần Nguyên Hãn , Phường Niệm Nghĩa, Quận Lê Chân, Thành phố Hải Phòng",
+    "",
+  ];
+  const location = `https://maps.google.com/maps?q=20C3/75/213 Thiên Lôi Lê Chân Hải Phòng,${partnersAddress.toString()}&t=&z=10&ie=UTF8&iwloc=&output=embed`;
   return (
     <div className="mx-auto max-w-screen-xl px-4 md:mt-[9vh] mt-[17vh] h-[92vh]">
       <div className="flex flex-col justify-between h-full overflow-auto">
@@ -11,7 +16,7 @@ const Contact = () => {
             <iframe
               className="w-full pr-3 h-full"
               id="gmap_canvas"
-              src="https://maps.google.com/maps?q=20C3/75/213 Thiên Lôi Lê Chân Hải Phòng&t=&z=10&ie=UTF8&iwloc=&output=embed"
+              src={location}
               frameBorder="0"
               scrolling="no"
               marginHeight="0"
