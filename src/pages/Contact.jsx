@@ -2,17 +2,20 @@ import { Button, GridData, Input } from "../components";
 import logo from "../assets/logo.svg";
 import { homeConfig } from "../ultis/config";
 import { search as myFilter } from "../ultis/functions";
+import { search } from "../ultis/svgs";
+import { useState } from "react";
 
 const Contact = () => {
+  const [q, setQ] = useState("");
   const partnersAddress = [
     "Tầng 7 tòa nhà Bạch Đằng, 268 Trần Nguyên Hãn , Phường Niệm Nghĩa, Quận Lê Chân, Thành phố Hải Phòng",
     "",
   ];
   const location = `https://maps.google.com/maps?q=20C3/75/213 Thiên Lôi Lê Chân Hải Phòng,${partnersAddress.toString()}&t=&z=10&ie=UTF8&iwloc=&output=embed`;
   const headers = [
-    { title: "Đại lý ", size: "w-3/12" },
+    { title: "Đại lý ", size: "w-2/12" },
     { title: "Số liên lạc", size: "w-2/12" },
-    { title: "Địa chỉ", size: "w-6/12" },
+    { title: "Địa chỉ", size: "w-7/12" },
     { title: "Tỉnh thành", size: "w-1/12" },
   ];
   const partners = [
@@ -112,22 +115,37 @@ const Contact = () => {
           </form>
         </div>
         <div className="flex-1 p-3">
-          <h3 className="py-3 uppercase font-semibold">
-            Danh sách đại lý KTS Việt Nam
-          </h3>
+          <div className="flex justify-between">
+            <h3 className="py-3 uppercase font-semibold">
+              Danh sách đại lý KTS Việt Nam
+            </h3>
+            <Input
+              placehoder={"Tìm kiếm theo địa chỉ"}
+              size="w-1/2"
+              padding={"sm"}
+              icon={search}
+              onChange={(e) => setQ(e.target.value)}
+            />
+          </div>
           <div className="border border-ktsPrimary rounded-md overflow-auto relative max-h-72">
             <GridData headers={headers}>
               <div className="divide-y text-sm divide-dashed divide-ktsPrimary bg-white shadow-lg rounded-md">
-                {partners.map((i) => {
-                  return (
-                    <div className="p-3 flex items-center" key={i.id}>
-                      <div className="w-3/12">{i.name}</div>
-                      <div className="w-2/12">{i.number}</div>
-                      <div className="w-6/12">{i.add}</div>
-                      <div className="w-1/12">{i.city}</div>
-                    </div>
-                  );
-                })}
+                {myFilter(partners, q, ["add"]).length > 0 ? (
+                  myFilter(partners, q, ["add"]).map((i) => {
+                    return (
+                      <div className="p-3 flex items-center" key={i.id}>
+                        <div className="w-2/12">{i.name}</div>
+                        <div className="w-2/12">{i.number}</div>
+                        <div className="w-7/12">{i.add}</div>
+                        <div className="w-1/12">{i.city}</div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="p-3 text-center">
+                    Không có dữ liệu phù hợp
+                  </div>
+                )}
               </div>
             </GridData>
           </div>
