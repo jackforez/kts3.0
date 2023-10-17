@@ -1,6 +1,7 @@
-import { Button, Input } from "../components";
+import { Button, GridData, Input } from "../components";
 import logo from "../assets/logo.svg";
 import { homeConfig } from "../ultis/config";
+import { search as myFilter } from "../ultis/functions";
 
 const Contact = () => {
   const partnersAddress = [
@@ -8,12 +9,59 @@ const Contact = () => {
     "",
   ];
   const location = `https://maps.google.com/maps?q=20C3/75/213 Thiên Lôi Lê Chân Hải Phòng,${partnersAddress.toString()}&t=&z=10&ie=UTF8&iwloc=&output=embed`;
+  const headers = [
+    { title: "Đại lý ", size: "w-3/12" },
+    { title: "Số liên lạc", size: "w-2/12" },
+    { title: "Địa chỉ", size: "w-6/12" },
+    { title: "Tỉnh thành", size: "w-1/12" },
+  ];
+  const partners = [
+    {
+      id: 1,
+      name: "HP0001",
+      number: "0123456789",
+      add: "20C3/75/213 Thiên Lôi, Lê Chân,Thành phô Hải Phòng",
+      city: "Hải Phòng",
+    },
+    {
+      id: 2,
+      name: "HP0002",
+      number: "0382001959",
+      add: "Tầng 7 tòa nhà Bạch Đằng, 268 Trần Nguyên Hãn , Phường Niệm Nghĩa, Quận Lê Chân, Thành phố Hải Phòng",
+      city: "Hải Phòng",
+    },
+    {
+      id: 3,
+      name: "HP0003",
+      number: "0921992112",
+      add: "Số 83 Đường Đồng Hoà, Phường Quán Trữ, Quận Kiến An, Thành phố Hải Phòng",
+      city: "Hải Phòng",
+    },
+    {
+      id: 4,
+      name: "HP0004",
+      number: "0913592393",
+      add: "Thôn 1, Xã Lại Xuân, Huyện Thuỷ Nguyên, Thành phố Hải Phòng",
+      city: "Hải Phòng",
+    },
+    {
+      id: 5,
+      name: "HN0001",
+      number: "0123456789",
+      add: "Toà nhà A ngõ 90, Nguỵ Nhu Kon Tum, Phường Nhân Chính, Quận Thanh Xuân, Hà Nội",
+      city: "Hà Nội",
+    },
+  ];
   return (
     <div className="mx-auto max-w-screen-xl px-4 md:mt-[9vh] mt-[17vh] h-[92vh]">
       <div className="flex flex-col justify-between h-full overflow-auto">
         <div className="flex flex-col md:flex-row px-3.5 py-5 w-full max-h-[70vh]">
-          <div className="w-full md:w-1/2">
+          <div className="w-full md:w-2/3">
             <iframe
+              src="https://www.google.com/maps/d/embed?mid=1lF3MzVXE-xxWJ92YKy0Js8_YpKkWszg&ehbc=2E312F&noprof=1"
+              className="w-full pr-3 h-full"
+            ></iframe>
+            {/* <iframe
               className="w-full pr-3 h-full"
               id="gmap_canvas"
               src={location}
@@ -21,10 +69,10 @@ const Contact = () => {
               scrolling="no"
               marginHeight="0"
               marginWidth="0"
-            ></iframe>
+            ></iframe> */}
             <br />
           </div>
-          <form className="space-2 gap-2 w-full md:w-1/2 ">
+          <form className="space-2 gap-2 w-full md:w-1/3 ">
             <div>
               <label htmlFor="name">Họ và tên</label>
               <Input placehoder={"Chúng tôi gọi bạn là?"} padding={"sm"} />
@@ -63,7 +111,28 @@ const Contact = () => {
             </div>
           </form>
         </div>
-        <div className="md:grid grid-cols-4 w-full hidden">
+        <div className="flex-1 p-3">
+          <h3 className="py-3 uppercase font-semibold">
+            Danh sách đại lý KTS Việt Nam
+          </h3>
+          <div className="border border-ktsPrimary rounded-md overflow-auto relative max-h-72">
+            <GridData headers={headers}>
+              <div className="divide-y text-sm divide-dashed divide-ktsPrimary bg-white shadow-lg rounded-md">
+                {partners.map((i) => {
+                  return (
+                    <div className="p-3 flex items-center" key={i.id}>
+                      <div className="w-3/12">{i.name}</div>
+                      <div className="w-2/12">{i.number}</div>
+                      <div className="w-6/12">{i.add}</div>
+                      <div className="w-1/12">{i.city}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </GridData>
+          </div>
+        </div>
+        <div className="mt-6 md:grid grid-cols-4 w-full hidden">
           <img src={logo} className="mx-auto" alt="ktscorp Logo" />
 
           <ul className="text-gray-600 ">
