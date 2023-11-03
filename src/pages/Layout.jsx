@@ -17,6 +17,7 @@ import {
   Config,
   Databases,
   EditPartner,
+  Viettel,
 } from ".";
 const Layout = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -28,6 +29,12 @@ const Layout = () => {
   };
   const ProtectedRouteLv2 = ({ children }) => {
     if (!import.meta.env.VITE_KTS_LV1.includes(currentUser.role)) {
+      return <Navigate to="/dashboard" />;
+    }
+    return children;
+  };
+  const ProtectedRouteLv3 = ({ children }) => {
+    if (!import.meta.env.VITE_KTS_LV0.includes(currentUser.role)) {
       return <Navigate to="/dashboard" />;
     }
     return children;
@@ -77,6 +84,14 @@ const Layout = () => {
                 <ProtectedRouteLv2>
                   <Config />
                 </ProtectedRouteLv2>
+              }
+            />
+            <Route
+              path="viettel"
+              element={
+                <ProtectedRouteLv3>
+                  <Viettel />
+                </ProtectedRouteLv3>
               }
             />
             <Route

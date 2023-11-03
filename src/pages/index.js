@@ -20,3 +20,4 @@ export { default as NewPartner } from "./NewPartner";
 export { default as EditPartner } from "./EditPartner";
 export { default as Config } from "./Config";
 export { default as Databases } from "./Databases";
+export { default as Viettel } from "./Viettel";
