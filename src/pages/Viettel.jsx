@@ -8,6 +8,7 @@ const Viettel = () => {
     // content
     <div className="p-3">
       {/* header */}
+      <h3 className="uppercase font-semibold py-3 ">Tạo đơn từ file excel</h3>
       <div className="flex justify-between h-full">
         <div className="w-1/2 bg-white p-1 rounded">
           <input
@@ -36,7 +37,7 @@ const Viettel = () => {
         </div> */}
       </div>
       {/* main */}
-      <div>abc</div>
+      <h3 className="uppercase font-semibold py-3 ">Tạo đơn lẻ</h3>
     </div>
   );
 };

@@ -18,6 +18,7 @@ import {
   Databases,
   EditPartner,
   Viettel,
+  ChangeLogs,
 } from ".";
 const Layout = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -54,6 +55,7 @@ const Layout = () => {
             <Route path="customers" element={<Customers />} />
             <Route path="customers/new" element={<NewCustomer />} />
             <Route path="tracking" element={<Tracking />} />
+            <Route path="changelogs" element={<ChangeLogs />} />
             <Route
               path="accounts"
               element={

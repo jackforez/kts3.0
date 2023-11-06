@@ -172,3 +172,8 @@ export const ktsTitle = {
   1: { vn: "Trạng thái cuối cùng", cn: "快遞狀態" },
   2: { vn: "Chi tiết bưu gửi", cn: "查看物流" },
 };
+
+export const ktsChangeLogs = [
+  { v: "3.1.0", detail: [] },
+  { v: "3.1.1", detail: [] },
+];

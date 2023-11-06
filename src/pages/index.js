@@ -21,3 +21,4 @@ export { default as EditPartner } from "./EditPartner";
 export { default as Config } from "./Config";
 export { default as Databases } from "./Databases";
 export { default as Viettel } from "./Viettel";
+export { default as ChangeLogs } from "./ChangeLogs";

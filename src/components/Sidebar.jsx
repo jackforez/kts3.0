@@ -146,7 +146,12 @@ const Sidebar = () => {
             Đăng xuất
           </span>
         </div>
-        <h3 className="text-white absolute bottom-3">v3.1.0</h3>
+        <Link
+          to="/dashboard/changelogs"
+          className="text-white absolute bottom-3"
+        >
+          v3.1.1
+        </Link>
       </div>
     </div>
   );
