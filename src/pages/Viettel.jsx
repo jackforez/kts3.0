@@ -25,6 +25,9 @@ const Viettel = () => {
       return { ...prev, [e.target.name]: e.target.value };
     });
   };
+  const handleCreateByExcel = async () => {
+    await toast.success("Gửi thông tin thành công!");
+  };
   useEffect(() => {
     const getCities = async () => {
       try {
@@ -140,31 +143,32 @@ const Viettel = () => {
             {file?.name || "Chưa có file nào được chọn"}
           </span>
         </div>
-        {/* <div className="space-x-3"> */}
-        <a
-          href="/Downloads/kts_template.xlsx"
-          download
-          className="bg-white rounded flex items-center justify-around px-3"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6"
+        <div className="space-x-3 flex">
+          <Button type="success" callback={handleCreateByExcel}>
+            Gửi thông tin
+          </Button>
+          <a
+            href="/Downloads/kts_template.xlsx"
+            download
+            className="bg-white rounded flex items-center justify-around px-3"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
-            />
-          </svg>
-
-          <span className="px-3 hidden md:block">Tải file mẫu</span>
-        </a>
-        {/* <Button>Xuất file</Button>
-        </div> */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
+              />
+            </svg>
+            <span className="px-3 hidden md:block">Tải file mẫu</span>
+          </a>
+        </div>
       </div>
       {/* main */}
       <h3 className="uppercase font-semibold py-3 ">Tạo đơn lẻ</h3>
@@ -228,6 +232,11 @@ const Viettel = () => {
               output={setToWard}
             />
           </div>
+        </div>
+        <div className="py-2 text-end">
+          <Button type="success" padding={"sm"} size={"px-4"}>
+            Tạo đơn
+          </Button>
         </div>
       </div>
     </div>

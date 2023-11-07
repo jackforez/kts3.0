@@ -174,6 +174,6 @@ export const ktsTitle = {
 };
 
 export const ktsChangeLogs = [
-  { v: "3.1.0", detail: [] },
-  { v: "3.1.1", detail: [] },
+  { v: "3.1.0", detail: ["Bắt đầu sử dụng engine UI mới"],date:"11-3-2023" },
+  { v: "3.1.1", detail: ["Mở khoá NCC Viettel Post", "Thêm mới tính năng tạo đơn lẻ (VTP)","Thêm mới tính năng tạo đơn theo lô bằng Excel (VTP)"],date:"11-11-2023" },
 ];
