@@ -3,6 +3,7 @@ import { Button, Input, Selector } from "../components";
 import { download, excel, upload } from "../ultis/svgs";
 import { toast } from "react-toastify";
 import { ktsRequest } from "../ultis/connections";
+import { read, utils, writeFile } from "xlsx";
 const exceptFileTypes = [
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   "application/vnd.ms-excel",
@@ -10,6 +11,7 @@ const exceptFileTypes = [
 ];
 const Viettel = () => {
   const [file, setFile] = useState({});
+  const [dataFromExcell, setDataFromExcel] = useState([]);
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
@@ -108,6 +110,18 @@ const Viettel = () => {
     };
     getWard();
   }, [toWard]);
+  useEffect(() => {
+    const readFile = () => {
+      console.log(file.name);
+      const workbook = read(file, { type: "buffer" });
+      const worksheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[worksheetName];
+      const data = utils.sheet_to_json(worksheet);
+      setDataFromExcel(data);
+    };
+    file && readFile();
+  }, [file]);
+  console.log(dataFromExcell?.toString() || "No excel");
   return (
     // content
     <div className="p-3">
@@ -122,7 +136,20 @@ const Viettel = () => {
             accept=".xlsx, .xls, .csv"
             onChange={(e) => {
               if (exceptFileTypes.includes(e.target.files[0].type)) {
-                setFile(e.target.files[0]);
+                const files = e.target.files,
+                  f = files[0];
+                const reader = new FileReader();
+                reader.onload = function (ev) {
+                  const data = ev.target.result;
+                  let readedData = read(data, { type: "buffer" });
+                  const wsname = readedData.SheetNames[0];
+                  const ws = readedData.Sheets[wsname];
+                  console.log(data);
+                  /* Convert array to json*/
+                  const dataParse = utils.sheet_to_json(ws, { header: 1 });
+                  setFile(dataParse);
+                };
+                reader.readAsBinaryString(f);
               } else {
                 toast.error("Chỉ hỗ trợ định dạng file Excel/CSV");
                 setFile({});
