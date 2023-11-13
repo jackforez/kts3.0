@@ -112,7 +112,6 @@ const Viettel = () => {
   }, [toWard]);
   useEffect(() => {
     const readFile = () => {
-      console.log(file.name);
       const workbook = read(file, { type: "buffer" });
       const worksheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[worksheetName];
@@ -121,7 +120,7 @@ const Viettel = () => {
     };
     file && readFile();
   }, [file]);
-  console.log(dataFromExcell?.toString() || "No excel");
+  // console.log(dataFromExcell?.toString() || "No excel");
   return (
     // content
     <div className="p-3">
@@ -141,10 +140,9 @@ const Viettel = () => {
                 const reader = new FileReader();
                 reader.onload = function (ev) {
                   const data = ev.target.result;
-                  let readedData = read(data, { type: "buffer" });
+                  let readedData = read(data, { type: "binary" });
                   const wsname = readedData.SheetNames[0];
                   const ws = readedData.Sheets[wsname];
-                  console.log(data);
                   /* Convert array to json*/
                   const dataParse = utils.sheet_to_json(ws, { header: 1 });
                   setFile(dataParse);
