@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button, Input, Selector } from "../components";
 import { download, excel, upload } from "../ultis/svgs";
 import { toast } from "react-toastify";
 import { ktsRequest } from "../ultis/connections";
-import { read, utils, writeFile } from "xlsx";
+import * as XLSX from "xlsx";
 const exceptFileTypes = [
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   "application/vnd.ms-excel",
@@ -22,13 +22,19 @@ const Viettel = () => {
   const [districtName, setDistrictName] = useState("");
   const [wardName, setWardName] = useState("");
   const [getter, setGetter] = useState({});
+  const [excelFile, setExcelFile] = useState(null);
+  const [typeError, setTypeError] = useState(null);
+
+  // submit state
+  const [excelData, setExcelData] = useState(null);
+
   const handelChangeGetter = (e) => {
     setGetter((prev) => {
       return { ...prev, [e.target.name]: e.target.value };
     });
   };
-  const handleCreateByExcel = async () => {
-    await toast.success("Gửi thông tin thành công!");
+  const handleCreateByExcel = () => {
+    toast.success("Gửi thông tin thành công!");
   };
   useEffect(() => {
     const getCities = async () => {
@@ -111,16 +117,42 @@ const Viettel = () => {
     getWard();
   }, [toWard]);
   useEffect(() => {
-    const readFile = () => {
-      const workbook = read(file, { type: "buffer" });
-      const worksheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[worksheetName];
-      const data = utils.sheet_to_json(worksheet);
-      setDataFromExcel(data);
-    };
+    const readFile = () => {};
     file && readFile();
   }, [file]);
-  // console.log(dataFromExcell?.toString() || "No excel");
+
+  /* get state data and export to XLSX */
+  // onchange event
+  const handleFile = (e) => {
+    let fileTypes = [
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "text/csv",
+    ];
+    let selectedFile = e.target.files[0];
+    if (selectedFile) {
+      if (selectedFile && fileTypes.includes(selectedFile.type)) {
+        setTypeError(null);
+        let reader = new FileReader();
+        reader.readAsArrayBuffer(selectedFile);
+        reader.onload = (e) => {
+          setExcelFile(e.target.result);
+        };
+      } else {
+        setTypeError("Please select only excel file types");
+        setExcelFile(null);
+      }
+      const workbook = XLSX.read(excelFile, { type: "buffer" });
+      const worksheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[worksheetName];
+      const data = XLSX.utils.sheet_to_json(worksheet);
+      setExcelData(data.slice(0, 10));
+    } else {
+      console.log("Please select your file");
+    }
+  };
+
+  // submit event
   return (
     // content
     <div className="p-3">
@@ -133,26 +165,16 @@ const Viettel = () => {
             className="hidden"
             id="myip"
             accept=".xlsx, .xls, .csv"
-            onChange={(e) => {
-              if (exceptFileTypes.includes(e.target.files[0].type)) {
-                const files = e.target.files,
-                  f = files[0];
-                const reader = new FileReader();
-                reader.onload = function (ev) {
-                  const data = ev.target.result;
-                  let readedData = read(data, { type: "binary" });
-                  const wsname = readedData.SheetNames[0];
-                  const ws = readedData.Sheets[wsname];
-                  /* Convert array to json*/
-                  const dataParse = utils.sheet_to_json(ws, { header: 1 });
-                  setFile(dataParse);
-                };
-                reader.readAsBinaryString(f);
-              } else {
-                toast.error("Chỉ hỗ trợ định dạng file Excel/CSV");
-                setFile({});
-              }
-            }}
+            // onChange={(e) => {
+            //   if (exceptFileTypes.includes(e.target.files[0].type)) {
+            //     setFile(e.target.files[0]);
+            //     readFile(e.target.files[0]);
+            //   } else {
+            //     toast.error("Chỉ hỗ trợ định dạng file Excel/CSV");
+            //     setFile({});
+            //   }
+            // }}
+            onChange={handleFile}
           />
           <Button
             type="primary"
@@ -194,6 +216,33 @@ const Viettel = () => {
             <span className="px-3 hidden md:block">Tải file mẫu</span>
           </a>
         </div>
+      </div>
+      <div>
+        {excelData ? (
+          <div className="table-responsive">
+            <table className="table">
+              <thead>
+                <tr>
+                  {Object.keys(excelData[0]).map((key) => (
+                    <th key={key}>{key}</th>
+                  ))}
+                </tr>
+              </thead>
+
+              <tbody>
+                {excelData.map((individualExcelData, index) => (
+                  <tr key={index}>
+                    {Object.keys(individualExcelData).map((key) => (
+                      <td key={key}>{individualExcelData[key]}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div>No File is uploaded yet!</div>
+        )}
       </div>
       {/* main */}
       <h3 className="uppercase font-semibold py-3 ">Tạo đơn lẻ</h3>
