@@ -9,9 +9,38 @@ const exceptFileTypes = [
   "application/vnd.ms-excel",
   "text/csvs",
 ];
+const ExcelDisplay = ({ jsonData }) => {
+  // console.log(jsonData[6]);
+  // console.log(jsonData[7]);
+  return (
+    jsonData && (
+      <div className="bg-white mt-2 rounded-md overflow-hidden ta">
+        <div className="bg-green-300  p-2 ">
+          {jsonData.slice(0, 6).map((header, index) => (
+            <span key={index}>{header}</span>
+          ))}
+        </div>
+        <div className="max-h-[50vh] overflow-auto p-2 divide-y divide-gray-400 bg-red-300 relative w-full">
+          {jsonData.slice(6).map(
+            (row, rowIndex) =>
+              row[1] && (
+                <div className="flex flex-nowrap w-full" key={rowIndex}>
+                  {row.map((cell, cellIndex) => (
+                    <span className="px-2" key={cellIndex}>
+                      {cell || ""}
+                    </span>
+                  ))}
+                </div>
+              )
+          )}
+        </div>
+      </div>
+    )
+  );
+};
+
 const Viettel = () => {
   const [file, setFile] = useState({});
-  const [dataFromExcell, setDataFromExcel] = useState([]);
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
@@ -22,9 +51,7 @@ const Viettel = () => {
   const [districtName, setDistrictName] = useState("");
   const [wardName, setWardName] = useState("");
   const [getter, setGetter] = useState({});
-  const [excelFile, setExcelFile] = useState(null);
-  const [typeError, setTypeError] = useState(null);
-
+  const [jsonData, setJsonData] = useState(null);
   // submit state
   const [excelData, setExcelData] = useState(null);
 
@@ -35,6 +62,29 @@ const Viettel = () => {
   };
   const handleCreateByExcel = () => {
     toast.success("Gửi thông tin thành công!");
+  };
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setFile(e.target.files[0]);
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const data = e.target.result;
+        const workbook = XLSX.read(data, { type: "binary" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const excelData = XLSX.utils.sheet_to_json(worksheet, {
+          header: 1,
+          defval: "",
+          blankrows: true,
+        });
+
+        setJsonData(excelData);
+      };
+
+      reader.readAsBinaryString(file);
+    }
   };
   useEffect(() => {
     const getCities = async () => {
@@ -116,43 +166,6 @@ const Viettel = () => {
     };
     getWard();
   }, [toWard]);
-  useEffect(() => {
-    const readFile = () => {};
-    file && readFile();
-  }, [file]);
-
-  /* get state data and export to XLSX */
-  // onchange event
-  const handleFile = (e) => {
-    let fileTypes = [
-      "application/vnd.ms-excel",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "text/csv",
-    ];
-    let selectedFile = e.target.files[0];
-    if (selectedFile) {
-      if (selectedFile && fileTypes.includes(selectedFile.type)) {
-        setTypeError(null);
-        let reader = new FileReader();
-        reader.readAsArrayBuffer(selectedFile);
-        reader.onload = (e) => {
-          setExcelFile(e.target.result);
-        };
-      } else {
-        setTypeError("Please select only excel file types");
-        setExcelFile(null);
-      }
-      const workbook = XLSX.read(excelFile, { type: "buffer" });
-      const worksheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[worksheetName];
-      const data = XLSX.utils.sheet_to_json(worksheet);
-      setExcelData(data.slice(0, 10));
-    } else {
-      console.log("Please select your file");
-    }
-  };
-
-  // submit event
   return (
     // content
     <div className="p-3">
@@ -165,16 +178,7 @@ const Viettel = () => {
             className="hidden"
             id="myip"
             accept=".xlsx, .xls, .csv"
-            // onChange={(e) => {
-            //   if (exceptFileTypes.includes(e.target.files[0].type)) {
-            //     setFile(e.target.files[0]);
-            //     readFile(e.target.files[0]);
-            //   } else {
-            //     toast.error("Chỉ hỗ trợ định dạng file Excel/CSV");
-            //     setFile({});
-            //   }
-            // }}
-            onChange={handleFile}
+            onChange={handleFileChange}
           />
           <Button
             type="primary"
@@ -217,33 +221,7 @@ const Viettel = () => {
           </a>
         </div>
       </div>
-      <div>
-        {excelData ? (
-          <div className="table-responsive">
-            <table className="table">
-              <thead>
-                <tr>
-                  {Object.keys(excelData[0]).map((key) => (
-                    <th key={key}>{key}</th>
-                  ))}
-                </tr>
-              </thead>
-
-              <tbody>
-                {excelData.map((individualExcelData, index) => (
-                  <tr key={index}>
-                    {Object.keys(individualExcelData).map((key) => (
-                      <td key={key}>{individualExcelData[key]}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div>No File is uploaded yet!</div>
-        )}
-      </div>
+      <ExcelDisplay jsonData={jsonData} />
       {/* main */}
       <h3 className="uppercase font-semibold py-3 ">Tạo đơn lẻ</h3>
       <div className="rounded border border-gray-300 bg-white p-2">
