@@ -14,26 +14,72 @@ const ExcelDisplay = ({ jsonData }) => {
   // console.log(jsonData[7]);
   return (
     jsonData && (
-      <div className="bg-white mt-2 rounded-md overflow-hidden ta">
-        <div className="bg-green-300  p-2 ">
-          {jsonData.slice(0, 6).map((header, index) => (
-            <span key={index}>{header}</span>
-          ))}
-        </div>
-        <div className="max-h-[50vh] overflow-auto p-2 divide-y divide-gray-400 bg-red-300 relative w-full">
+      <div className="bg-white mt-2 rounded-md overflow-auto max-w-[73vw] md:max-w-[86vw]">
+        <div className="max-w-[200vw]">
           {jsonData.slice(6).map(
             (row, rowIndex) =>
               row[1] && (
-                <div className="flex flex-nowrap w-full" key={rowIndex}>
-                  {row.map((cell, cellIndex) => (
-                    <span className="px-2" key={cellIndex}>
-                      {cell || ""}
-                    </span>
-                  ))}
-                </div>
+                <tr className="flex w-full py-2" key={rowIndex}>
+                  <td className="w-[40px] text-center">{row[0]}</td>
+                  <td className="w-[120px] text-center">{row[1]}</td>
+                  <td className="w-[120px] text-center">{row[2]}</td>
+                  <td className="w-[160px] text-center">{row[3]}</td>
+                  <td className="w-[340px] text-center">{row[4]}</td>
+                  <td className="w-[340px] text-center">{row[5]}</td>
+                  <td className="w-[120px] text-center">{row[6]}</td>
+                  <td className="w-[160px] text-center">{row[7]}</td>
+                  <td className="w-[40px] text-center">{row[8]}</td>
+                  <td className="w-[120px] text-center">{row[9]}</td>
+                  <td className="w-[120px] text-center">{row[10]}</td>
+                  <td className="w-[160px] text-center">{row[11]}</td>
+                  <td className="w-[40px] text-center">{row[12]}</td>
+                  <td className="w-[120px] text-center">{row[13]}</td>
+                  <td className="w-[120px] text-center">{row[14]}</td>
+                  <td className="w-[160px] text-center">{row[15]}</td>
+                  <td className="w-[40px] text-center">{row[16]}</td>
+                  <td className="w-[120px] text-center">{row[17]}</td>
+                  <td className="w-[120px] text-center">{row[18]}</td>
+                  <td className="w-[160px] text-center">{row[19]}</td>
+                  <td className="w-[40px] text-center">{row[20]}</td>
+                </tr>
               )
           )}
         </div>
+        {/* <table className="text-sm">
+          <thead>
+            <div className="bg-red-500 p-2">các trường * là bắt buộc</div>
+          </thead>
+          <tbody className="bg-green-500">
+            {jsonData.slice(6).map(
+              (row, rowIndex) =>
+                row[1] && (
+                  <tr className="flex w-full py-2" key={rowIndex}>
+                    <td className="w-[40px] text-center">{row[0]}</td>
+                    <td className="w-[120px] text-center">{row[1]}</td>
+                    <td className="w-[120px] text-center">{row[2]}</td>
+                    <td className="w-[160px] text-center">{row[3]}</td>
+                    <td className="w-[340px] text-center">{row[4]}</td>
+                    <td className="w-[340px] text-center">{row[5]}</td>
+                    <td className="w-[120px] text-center">{row[6]}</td>
+                    <td className="w-[160px] text-center">{row[7]}</td>
+                    <td className="w-[40px] text-center">{row[8]}</td>
+                    <td className="w-[120px] text-center">{row[9]}</td>
+                    <td className="w-[120px] text-center">{row[10]}</td>
+                    <td className="w-[160px] text-center">{row[11]}</td>
+                    <td className="w-[40px] text-center">{row[12]}</td>
+                    <td className="w-[120px] text-center">{row[13]}</td>
+                    <td className="w-[120px] text-center">{row[14]}</td>
+                    <td className="w-[160px] text-center">{row[15]}</td>
+                    <td className="w-[40px] text-center">{row[16]}</td>
+                    <td className="w-[120px] text-center">{row[17]}</td>
+                    <td className="w-[120px] text-center">{row[18]}</td>
+                    <td className="w-[160px] text-center">{row[19]}</td>
+                    <td className="w-[40px] text-center">{row[20]}</td>
+                  </tr>
+                )
+            )}
+          </tbody>
+        </table> */}
       </div>
     )
   );
@@ -221,7 +267,6 @@ const Viettel = () => {
           </a>
         </div>
       </div>
-      <ExcelDisplay jsonData={jsonData} />
       {/* main */}
       <h3 className="uppercase font-semibold py-3 ">Tạo đơn lẻ</h3>
       <div className="rounded border border-gray-300 bg-white p-2">
