@@ -10,76 +10,154 @@ const exceptFileTypes = [
   "text/csvs",
 ];
 const ExcelDisplay = ({ jsonData }) => {
-  // console.log(jsonData[6]);
-  // console.log(jsonData[7]);
+  console.log(jsonData[6]);
   return (
     jsonData && (
-      <div className="bg-white mt-2 rounded-md overflow-auto max-w-[73vw] md:max-w-[86vw]">
-        <div className="max-w-[200vw]">
-          {jsonData.slice(6).map(
-            (row, rowIndex) =>
-              row[1] && (
-                <tr className="flex w-full py-2" key={rowIndex}>
-                  <td className="w-[40px] text-center">{row[0]}</td>
-                  <td className="w-[120px] text-center">{row[1]}</td>
-                  <td className="w-[120px] text-center">{row[2]}</td>
-                  <td className="w-[160px] text-center">{row[3]}</td>
-                  <td className="w-[340px] text-center">{row[4]}</td>
-                  <td className="w-[340px] text-center">{row[5]}</td>
-                  <td className="w-[120px] text-center">{row[6]}</td>
-                  <td className="w-[160px] text-center">{row[7]}</td>
-                  <td className="w-[40px] text-center">{row[8]}</td>
-                  <td className="w-[120px] text-center">{row[9]}</td>
-                  <td className="w-[120px] text-center">{row[10]}</td>
-                  <td className="w-[160px] text-center">{row[11]}</td>
-                  <td className="w-[40px] text-center">{row[12]}</td>
-                  <td className="w-[120px] text-center">{row[13]}</td>
-                  <td className="w-[120px] text-center">{row[14]}</td>
-                  <td className="w-[160px] text-center">{row[15]}</td>
-                  <td className="w-[40px] text-center">{row[16]}</td>
-                  <td className="w-[120px] text-center">{row[17]}</td>
-                  <td className="w-[120px] text-center">{row[18]}</td>
-                  <td className="w-[160px] text-center">{row[19]}</td>
-                  <td className="w-[40px] text-center">{row[20]}</td>
-                </tr>
-              )
-          )}
-        </div>
-        {/* <table className="text-sm">
-          <thead>
-            <div className="bg-red-500 p-2">các trường * là bắt buộc</div>
+      <div className="overflow-auto mt-2 max-h-[40vh]">
+        <table className="bg-white text-xs rounded-md">
+          <thead className="bg-white sticky top-0">
+            {jsonData[6] && (
+              <tr className="font-semibold">
+                <td className="w-[40px] text-center border border-gray-200">
+                  {jsonData[6][0]}
+                </td>
+                <td className="w-[160px] text-center border border-gray-200">
+                  {jsonData[6][1]}
+                </td>
+                <td className="w-[160px] text-center border border-gray-200">
+                  {jsonData[6][2]}
+                </td>
+                <td className="w-[160px] text-center border border-gray-200">
+                  {jsonData[6][3]}
+                </td>
+                <td className="w-[340px] text-center border border-gray-200">
+                  {jsonData[6][4]}
+                </td>
+                <td className="w-[340px] text-center border border-gray-200">
+                  {jsonData[6][5]}
+                </td>
+                <td className="w-[120px] text-center border border-gray-200">
+                  {jsonData[6][6]}
+                </td>
+                <td className="w-[160px] text-center border border-gray-200">
+                  {jsonData[6][7]}
+                </td>
+                <td className="w-[160px] text-center border border-gray-200">
+                  {jsonData[6][8]}
+                </td>
+                <td className="w-[160px] text-center border border-gray-200">
+                  {jsonData[6][9]}
+                </td>
+                <td className="w-[120px] text-center border border-gray-200">
+                  {jsonData[6][10]}
+                </td>
+                <td className="w-[200px] text-center border border-gray-200">
+                  {jsonData[6][11]}
+                </td>
+                <td className="w-[140px] text-center border border-gray-200">
+                  {jsonData[6][12]}
+                </td>
+                <td className="w-[120px] text-center border border-gray-200">
+                  {jsonData[6][13]}
+                </td>
+                <td className="w-[120px] text-center border border-gray-200">
+                  {jsonData[6][14]}
+                </td>
+                <td className="w-[60px] text-center border border-gray-200">
+                  {jsonData[6][15]}
+                </td>
+                <td className="w-[60px] text-center border border-gray-200">
+                  {jsonData[6][16]}
+                </td>
+                <td className="w-[60px] text-center border border-gray-200">
+                  {jsonData[6][17]}
+                </td>
+                <td className="w-[120px] text-center border border-gray-200">
+                  {jsonData[6][18]}
+                </td>
+                <td className="w-[160px] text-center border border-gray-200">
+                  {jsonData[6][19]}
+                </td>
+                <td className="w-[140px] text-center border border-gray-200">
+                  {jsonData[6][20]}
+                </td>
+              </tr>
+            )}
           </thead>
-          <tbody className="bg-green-500">
-            {jsonData.slice(6).map(
+          <tbody className="">
+            {jsonData.slice(7).map(
               (row, rowIndex) =>
-                row[1] && (
-                  <tr className="flex w-full py-2" key={rowIndex}>
-                    <td className="w-[40px] text-center">{row[0]}</td>
-                    <td className="w-[120px] text-center">{row[1]}</td>
-                    <td className="w-[120px] text-center">{row[2]}</td>
-                    <td className="w-[160px] text-center">{row[3]}</td>
-                    <td className="w-[340px] text-center">{row[4]}</td>
-                    <td className="w-[340px] text-center">{row[5]}</td>
-                    <td className="w-[120px] text-center">{row[6]}</td>
-                    <td className="w-[160px] text-center">{row[7]}</td>
-                    <td className="w-[40px] text-center">{row[8]}</td>
-                    <td className="w-[120px] text-center">{row[9]}</td>
-                    <td className="w-[120px] text-center">{row[10]}</td>
-                    <td className="w-[160px] text-center">{row[11]}</td>
-                    <td className="w-[40px] text-center">{row[12]}</td>
-                    <td className="w-[120px] text-center">{row[13]}</td>
-                    <td className="w-[120px] text-center">{row[14]}</td>
-                    <td className="w-[160px] text-center">{row[15]}</td>
-                    <td className="w-[40px] text-center">{row[16]}</td>
-                    <td className="w-[120px] text-center">{row[17]}</td>
-                    <td className="w-[120px] text-center">{row[18]}</td>
-                    <td className="w-[160px] text-center">{row[19]}</td>
-                    <td className="w-[40px] text-center">{row[20]}</td>
+                row[2] &&
+                row[3] && (
+                  <tr className="w-full bg-red-100" key={rowIndex}>
+                    <td className="w-[40px] text-center border border-gray-200">
+                      {row[0]}
+                    </td>
+                    <td className="w-[160px] text-center border border-gray-200">
+                      {row[1]}
+                    </td>
+                    <td className="w-[160px] text-center border border-gray-200">
+                      {row[2]}
+                    </td>
+                    <td className="w-[160px] text-center border border-gray-200 bg-red-400">
+                      {row[3]}
+                    </td>
+                    <td className="w-[340px] text-center border border-gray-200">
+                      {row[4]}
+                    </td>
+                    <td className="w-[340px] text-center border border-gray-200">
+                      {row[5]}
+                    </td>
+                    <td className="w-[120px] text-center border border-gray-200">
+                      {row[6]}
+                    </td>
+                    <td className="w-[160px] text-center border border-gray-200">
+                      {row[7]}
+                    </td>
+                    <td className="w-[160px] text-center border border-gray-200">
+                      {row[8]}
+                    </td>
+                    <td className="w-[160px] text-center border border-gray-200">
+                      {row[9]}
+                    </td>
+                    <td className="w-[120px] text-center border border-gray-200">
+                      {row[10]}
+                    </td>
+                    <td className="w-[200px] text-center border border-gray-200">
+                      {row[11]}
+                    </td>
+                    <td className="w-[140px] text-center border border-gray-200">
+                      {row[12]}
+                    </td>
+                    <td className="w-[120px] text-center border border-gray-200">
+                      {row[13]}
+                    </td>
+                    <td className="w-[120px] text-center border border-gray-200">
+                      {row[14]}
+                    </td>
+                    <td className="w-[60px] text-center border border-gray-200">
+                      {row[15]}
+                    </td>
+                    <td className="w-[60px] text-center border border-gray-200">
+                      {row[16]}
+                    </td>
+                    <td className="w-[60px] text-center border border-gray-200">
+                      {row[17]}
+                    </td>
+                    <td className="w-[120px] text-center border border-gray-200">
+                      {row[18]}
+                    </td>
+                    <td className="w-[160px] text-center border border-gray-200">
+                      {row[19]}
+                    </td>
+                    <td className="w-[140px] text-center border border-gray-200">
+                      {row[20]}
+                    </td>
                   </tr>
                 )
             )}
           </tbody>
-        </table> */}
+        </table>
       </div>
     )
   );
@@ -122,8 +200,8 @@ const Viettel = () => {
         const worksheet = workbook.Sheets[sheetName];
         const excelData = XLSX.utils.sheet_to_json(worksheet, {
           header: 1,
-          defval: "",
-          blankrows: true,
+          // defval: "",
+          // blankrows: true,
         });
 
         setJsonData(excelData);
@@ -267,6 +345,7 @@ const Viettel = () => {
           </a>
         </div>
       </div>
+      <ExcelDisplay jsonData={jsonData} />
       {/* main */}
       <h3 className="uppercase font-semibold py-3 ">Tạo đơn lẻ</h3>
       <div className="rounded border border-gray-300 bg-white p-2">
