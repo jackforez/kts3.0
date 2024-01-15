@@ -4,6 +4,9 @@ import { download, excel, upload } from "../ultis/svgs";
 import { toast } from "react-toastify";
 import { ktsRequest } from "../ultis/connections";
 import * as XLSX from "xlsx";
+import { loaded, onLoading } from "../redux/systemSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { json } from "react-router-dom";
 const exceptFileTypes = [
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   "application/vnd.ms-excel",
@@ -163,6 +166,9 @@ const ExcelDisplay = ({ jsonData }) => {
 };
 
 const Viettel = () => {
+  const { currentUser } = useSelector((state) => state.user);
+  const { loading } = useSelector((state) => state.system);
+  const { token } = currentUser || "";
   const [file, setFile] = useState({});
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -177,14 +183,78 @@ const Viettel = () => {
   const [jsonData, setJsonData] = useState(null);
   // submit state
   const [excelData, setExcelData] = useState(null);
-
+  const dispatch = useDispatch();
   const handelChangeGetter = (e) => {
     setGetter((prev) => {
       return { ...prev, [e.target.name]: e.target.value };
     });
   };
-  const handleCreateByExcel = () => {
-    toast.success("Gửi thông tin thành công!");
+  const handleCreateByExcel = async () => {
+    dispatch(onLoading());
+    // if (!getter.phone || getter.phone.length != 10) {
+    //   toast.warn("Số điện thoại người nhận hàng không hợp lệ");
+    //   dispatch(loaded());
+    //   return;
+    // }
+    // if (!getter.name) {
+    //   toast.warn("Chưa nhập tên người nhận hàng");
+    //   dispatch(loaded());
+    //   return;
+    // }
+
+    // if (!getter.address) {
+    //   toast.warn("Chưa nhập địa chỉ người nhận hàng");
+    //   dispatch(loaded());
+    //   return;
+    // }
+    // if (!weight || weight <= 0) {
+    //   toast.warn("Khối lượng không hợp lệ");
+    //   dispatch(loaded());
+    //   return;
+    // }
+    // if (!itemName) {
+    //   toast.warn("Cần nhập nội dung hàng hóa");
+    //   dispatch(loaded());
+    //   return;
+    // }
+    // if (qty < 1) {
+    //   toast.warn("Số lượng không hợp lệ!");
+    //   dispatch(loaded());
+    // }
+    try {
+      const res = await ktsRequest.post(
+        "/v2/bills",
+        {
+          billsList: jsonData.slice(7),
+          shopID: currentUser._id,
+          weight: 300,
+          cod: 0,
+          note: "Test vtp",
+          partner: "VTP",
+          shopPay: true,
+          isBroken: false,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success(res.data);
+      dispatch(loaded());
+    } catch (err) {
+      toast.error(
+        err.response ? (
+          <div>
+            <p className="font-semibold">{err.response.data.message}</p>
+            <p>Vui lòng thông báo cho chúng tôi về lỗi này qua kênh CSKH!</p>
+          </div>
+        ) : (
+          "Network Error"
+        )
+      );
+      dispatch(loaded());
+    }
   };
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -318,7 +388,13 @@ const Viettel = () => {
           </span>
         </div>
         <div className="space-x-3 flex">
-          <Button type="success" callback={handleCreateByExcel}>
+          <Button
+            type="success"
+            callback={handleCreateByExcel}
+            loading={loading}
+            disabledBy={loading}
+            animation={true}
+          >
             Gửi thông tin
           </Button>
           <a
