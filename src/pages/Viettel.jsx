@@ -10,7 +10,6 @@ const exceptFileTypes = [
   "text/csvs",
 ];
 const ExcelDisplay = ({ jsonData }) => {
-  console.log(jsonData[6]);
   return (
     jsonData && (
       <div className="overflow-auto mt-2 max-h-[40vh]">
