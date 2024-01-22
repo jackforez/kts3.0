@@ -15,7 +15,7 @@ const exceptFileTypes = [
 const ExcelDisplay = ({ jsonData }) => {
   return (
     jsonData && (
-      <div className="overflow-auto mt-2 max-h-[40vh]">
+      <div className="overflow-auto mt-2 max-h-[60vh]">
         <table className="bg-white text-xs rounded-md">
           <thead className="bg-white sticky top-0">
             {jsonData[6] && (
@@ -91,7 +91,12 @@ const ExcelDisplay = ({ jsonData }) => {
               (row, rowIndex) =>
                 row[2] &&
                 row[3] && (
-                  <tr className="w-full bg-red-100" key={rowIndex}>
+                  <tr
+                    className={`w-full ${
+                      row[1] ? "bg-green-200" : "bg-red-100"
+                    }`}
+                    key={rowIndex}
+                  >
                     <td className="w-[40px] text-center border border-gray-200">
                       {row[0]}
                     </td>
@@ -101,7 +106,7 @@ const ExcelDisplay = ({ jsonData }) => {
                     <td className="w-[160px] text-center border border-gray-200">
                       {row[2]}
                     </td>
-                    <td className="w-[160px] text-center border border-gray-200 bg-red-400">
+                    <td className="w-[160px] text-center border border-gray-200">
                       {row[3]}
                     </td>
                     <td className="w-[340px] text-center border border-gray-200">
@@ -422,7 +427,7 @@ const Viettel = () => {
       </div>
       <ExcelDisplay jsonData={jsonData} />
       {/* main */}
-      <h3 className="uppercase font-semibold py-3 ">Tạo đơn lẻ</h3>
+      {/* <h3 className="uppercase font-semibold py-3 ">Tạo đơn lẻ</h3>
       <div className="rounded border border-gray-300 bg-white p-2">
         <div className="flex justify-between">
           <h3 className="uppercase font-bold">người nhận</h3>
@@ -489,7 +494,7 @@ const Viettel = () => {
             Tạo đơn
           </Button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
