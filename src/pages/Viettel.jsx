@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Input, Selector } from "../components";
-import { download, excel, upload } from "../ultis/svgs";
+import { download, excel, upload, xMark } from "../ultis/svgs";
 import { toast } from "react-toastify";
 import { ktsRequest } from "../ultis/connections";
 import * as XLSX from "xlsx";
@@ -12,81 +12,83 @@ const exceptFileTypes = [
   "text/csvs",
 ];
 const ExcelDisplay = ({ jsonData }) => {
+  const headers = jsonData[6];
+  const body = jsonData.slice(7);
   return (
-    jsonData && (
-      <div className="overflow-auto mt-2 max-h-[60vh]">
-        <table className="bg-white text-xs rounded-md">
-          <thead className="bg-white sticky top-0">
-            {jsonData[6] && (
-              <tr className="font-semibold">
-                <td className="w-[40px] text-center border border-gray-200">
-                  {jsonData[6][0]}
-                </td>
-                <td className="w-[160px] text-center border border-gray-200">
-                  {jsonData[6][1]}
-                </td>
-                <td className="w-[160px] text-center border border-gray-200">
-                  {jsonData[6][2]}
-                </td>
-                <td className="w-[160px] text-center border border-gray-200">
-                  {jsonData[6][3]}
-                </td>
-                <td className="w-[340px] text-center border border-gray-200">
-                  {jsonData[6][4]}
-                </td>
-                <td className="w-[340px] text-center border border-gray-200">
-                  {jsonData[6][5]}
-                </td>
-                <td className="w-[120px] text-center border border-gray-200">
-                  {jsonData[6][6]}
-                </td>
-                <td className="w-[160px] text-center border border-gray-200">
-                  {jsonData[6][7]}
-                </td>
-                <td className="w-[160px] text-center border border-gray-200">
-                  {jsonData[6][8]}
-                </td>
-                <td className="w-[160px] text-center border border-gray-200">
-                  {jsonData[6][9]}
-                </td>
-                <td className="w-[120px] text-center border border-gray-200">
-                  {jsonData[6][10]}
-                </td>
-                <td className="w-[200px] text-center border border-gray-200">
-                  {jsonData[6][11]}
-                </td>
-                <td className="w-[140px] text-center border border-gray-200">
-                  {jsonData[6][12]}
-                </td>
-                <td className="w-[120px] text-center border border-gray-200">
-                  {jsonData[6][13]}
-                </td>
-                <td className="w-[120px] text-center border border-gray-200">
-                  {jsonData[6][14]}
-                </td>
-                <td className="w-[60px] text-center border border-gray-200">
-                  {jsonData[6][15]}
-                </td>
-                <td className="w-[60px] text-center border border-gray-200">
-                  {jsonData[6][16]}
-                </td>
-                <td className="w-[60px] text-center border border-gray-200">
-                  {jsonData[6][17]}
-                </td>
-                <td className="w-[120px] text-center border border-gray-200">
-                  {jsonData[6][18]}
-                </td>
-                <td className="w-[160px] text-center border border-gray-200">
-                  {jsonData[6][19]}
-                </td>
-                <td className="w-[140px] text-center border border-gray-200">
-                  {jsonData[6][20]}
-                </td>
-              </tr>
-            )}
-          </thead>
-          <tbody className="">
-            {jsonData.slice(7).map((row, rowIndex) => (
+    <div className="overflow-auto mt-2 max-h-full">
+      <table className="bg-white text-xs rounded-md">
+        <thead className="bg-white sticky top-0">
+          {headers && (
+            <tr className="font-semibold">
+              <td className="w-[40px] text-center border border-gray-200">
+                {headers[0]}
+              </td>
+              <td className="w-[160px] text-center border border-gray-200">
+                {headers[1]}
+              </td>
+              <td className="w-[160px] text-center border border-gray-200">
+                {headers[2]}
+              </td>
+              <td className="w-[160px] text-center border border-gray-200">
+                {headers[3]}
+              </td>
+              <td className="w-[340px] text-center border border-gray-200">
+                {headers[4]}
+              </td>
+              <td className="w-[340px] text-center border border-gray-200">
+                {headers[5]}
+              </td>
+              <td className="w-[120px] text-center border border-gray-200">
+                {headers[6]}
+              </td>
+              <td className="w-[160px] text-center border border-gray-200">
+                {headers[7]}
+              </td>
+              <td className="w-[160px] text-center border border-gray-200">
+                {headers[8]}
+              </td>
+              <td className="w-[160px] text-center border border-gray-200">
+                {headers[9]}
+              </td>
+              <td className="w-[120px] text-center border border-gray-200">
+                {headers[10]}
+              </td>
+              <td className="w-[200px] text-center border border-gray-200">
+                {headers[11]}
+              </td>
+              <td className="w-[140px] text-center border border-gray-200">
+                {headers[12]}
+              </td>
+              <td className="w-[120px] text-center border border-gray-200">
+                {headers[13]}
+              </td>
+              <td className="w-[120px] text-center border border-gray-200">
+                {headers[14]}
+              </td>
+              <td className="w-[60px] text-center border border-gray-200">
+                {headers[15]}
+              </td>
+              <td className="w-[60px] text-center border border-gray-200">
+                {headers[16]}
+              </td>
+              <td className="w-[60px] text-center border border-gray-200">
+                {headers[17]}
+              </td>
+              <td className="w-[120px] text-center border border-gray-200">
+                {headers[18]}
+              </td>
+              <td className="w-[160px] text-center border border-gray-200">
+                {headers[19]}
+              </td>
+              <td className="w-[140px] text-center border border-gray-200">
+                {headers[20]}
+              </td>
+            </tr>
+          )}
+        </thead>
+        <tbody className="">
+          {body.map((row, rowIndex) => {
+            return (
               <tr
                 className={`w-full ${row[1] ? "bg-green-200" : "bg-red-100"}`}
                 key={rowIndex}
@@ -155,11 +157,11 @@ const ExcelDisplay = ({ jsonData }) => {
                   {row[20]}
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    )
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
@@ -169,18 +171,8 @@ const Viettel = () => {
   const { token } = currentUser || "";
   const [file, setFile] = useState({});
   const [jsonData, setJsonData] = useState(null);
-  // submit state
   const dispatch = useDispatch();
-  console.log(jsonData);
-  // useEffect(() => {
-  //   jsonData &&
-  //     setJsonData(
-  //       jsonData.slice(
-  //         0,
-  //         7 + jsonData.slice(7).indexOf(jsonData.slice(7).find((e) => !e[2]))
-  //       )
-  //     );
-  // }, [file]);
+
   const handleCreateByExcel = async () => {
     dispatch(onLoading());
     if (!jsonData) {
@@ -206,16 +198,13 @@ const Viettel = () => {
           },
         }
       );
-
-      setJsonData((prev) => {
-        return prev.map((i) => {
-          i[2] && (i[1] = res.data.find((j) => j.id == i[0])?.ktsNumber);
-        });
+      jsonData.slice(7).map((i) => {
+        i[2] && (i[1] = res.data.find((j) => j.id == i[0])?.ktsNumber);
       });
-      // console.log(jsonData);
       toast.success("Gửi thông tin thành công!");
       dispatch(loaded());
     } catch (err) {
+      console.log(err);
       toast.error(
         err.response ? (
           <div>
@@ -260,11 +249,11 @@ const Viettel = () => {
 
   return (
     // content
-    <div className="p-3">
+    <div className="p-3 flex flex-col">
       {/* header */}
       <h3 className="uppercase font-semibold py-3 ">Tạo đơn từ file excel</h3>
       <div className="flex justify-between h-full">
-        <div className="w-1/2 bg-white p-1 rounded flex items-center">
+        <div className="w-1/2 bg-white p-1 rounded flex items-center relative">
           <input
             type="file"
             className="hidden"
@@ -285,7 +274,21 @@ const Viettel = () => {
           <span className="px-3 truncate">
             {file?.name || "Chưa có file nào được chọn"}
           </span>
+          {/* {jsonData && (
+            <div className="absolute right-2 top-2">
+              <Button
+                type={"outline-danger"}
+                icon={xMark}
+                iconSize={3}
+                padding={"xs"}
+                callback={() => {
+                  setJsonData(null);
+                }}
+              ></Button>
+            </div>
+          )} */}
         </div>
+
         <div className="space-x-3 flex">
           <Button
             type="success"
@@ -321,7 +324,8 @@ const Viettel = () => {
           </a>
         </div>
       </div>
-      <ExcelDisplay jsonData={jsonData} />
+
+      {jsonData && <ExcelDisplay jsonData={jsonData} />}
       {/* main */}
       {/* <h3 className="uppercase font-semibold py-3 ">Tạo đơn lẻ</h3>
       <div className="rounded border border-gray-300 bg-white p-2">
