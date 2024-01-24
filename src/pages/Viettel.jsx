@@ -6,6 +6,7 @@ import { ktsRequest } from "../ultis/connections";
 import * as XLSX from "xlsx";
 import { loaded, onLoading } from "../redux/systemSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { ktsCurrencyFomat } from "../ultis/functions";
 const exceptFileTypes = [
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   "application/vnd.ms-excel",
@@ -118,7 +119,8 @@ const ExcelDisplay = ({ jsonData }) => {
                   {row[7]}
                 </td>
                 <td className="w-[160px] text-center border border-gray-200">
-                  {row[8]}
+                  {}
+                  {ktsCurrencyFomat(row[8].toString())}
                 </td>
                 <td className="w-[160px] text-center border border-gray-200">
                   {row[9]}
