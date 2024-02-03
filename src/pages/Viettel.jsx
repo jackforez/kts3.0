@@ -15,8 +15,21 @@ const exceptFileTypes = [
 const ExcelDisplay = ({ jsonData, query }) => {
   const headers = jsonData[6];
   const body = jsonData.slice(7);
+  const vcn = [
+    "hải phòng",
+    "phú quốc",
+    "phú quý",
+    "thổ chu",
+    "cô tô",
+    "hoàng sa",
+    "trường sa",
+  ];
   return (
     <div className="overflow-auto mt-2 max-h-full">
+      <div className="text-xs italic font-semibold">
+        Các địa chỉ nhận thuộc Hải Phòng, Huyện đảo Phú Quốc, Phú Quý, Thổ Chu,
+        Cô Tô, Hoàng Sa, Trường Sa phải chọn VCN{" "}
+      </div>
       <table className="bg-white text-xs rounded-md">
         <thead className="bg-white sticky top-0">
           {headers && (
@@ -89,6 +102,10 @@ const ExcelDisplay = ({ jsonData, query }) => {
         </thead>
         <tbody className="">
           {body.map((row, rowIndex) => {
+            const checkService = vcn.some((e) =>
+              row[4].toLowerCase().includes(e)
+            );
+            console.log(checkService);
             return (
               <tr
                 className={`w-full ${row[1] ? "bg-green-200" : "bg-red-100"}`}
@@ -98,16 +115,26 @@ const ExcelDisplay = ({ jsonData, query }) => {
                   {row[0]}
                 </td>
                 <td className="w-[160px] text-center border border-gray-200">
-                  {row[1]}
+                  {row[1] || (
+                    <span className="text-red-500">
+                      {checkService ? "Sai loại dịch vụ" : ""}
+                    </span>
+                  )}
                 </td>
                 <td className="w-[160px] text-center border border-gray-200">
-                  {row[2]}
+                  {row[2] || (
+                    <span className="text-red-500">Thiếu tên người nhận</span>
+                  )}
                 </td>
                 <td className="w-[160px] text-center border border-gray-200">
-                  {row[3]}
+                  {row[3] || (
+                    <span className="text-red-500">Thiếu SĐT người nhận</span>
+                  )}
                 </td>
                 <td className="w-[340px] text-center border border-gray-200">
-                  {row[4]}
+                  {row[4] || (
+                    <span className="text-red-500">Thiếu địa chỉ</span>
+                  )}
                 </td>
                 <td className="w-[340px] text-center border border-gray-200">
                   {row[5]}
@@ -254,7 +281,7 @@ const ExcelDisplay1 = ({ headers, body }) => {
                     {row[0]}
                   </td>
                   <td className="w-[160px] text-center border border-gray-200">
-                    {row[1]}
+                    {row[1] || "Sai loại dịch vụ"}
                   </td>
                   <td className="w-[160px] text-center border border-gray-200">
                     {row[2]}
