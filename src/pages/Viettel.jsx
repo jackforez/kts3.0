@@ -166,7 +166,162 @@ const ExcelDisplay = ({ jsonData, query }) => {
     </div>
   );
 };
-
+const ExcelDisplay1 = ({ headers, body }) => {
+  return (
+    <div className="overflow-auto mt-2 max-h-full">
+      <table className="bg-white text-xs rounded-md">
+        <thead className="bg-white sticky top-0">
+          {headers && (
+            <tr className="font-semibold">
+              <td className="w-[40px] text-center border border-gray-200">
+                {headers[0]}
+              </td>
+              <td className="w-[160px] text-center border border-gray-200">
+                {headers[1]}
+              </td>
+              <td className="w-[160px] text-center border border-gray-200">
+                {headers[2]}
+              </td>
+              <td className="w-[160px] text-center border border-gray-200">
+                {headers[3]}
+              </td>
+              <td className="w-[340px] text-center border border-gray-200">
+                {headers[4]}
+              </td>
+              <td className="w-[340px] text-center border border-gray-200">
+                {headers[5]}
+              </td>
+              <td className="w-[120px] text-center border border-gray-200">
+                {headers[6]}
+              </td>
+              <td className="w-[160px] text-center border border-gray-200">
+                {headers[7]}
+              </td>
+              <td className="w-[160px] text-center border border-gray-200">
+                {headers[8]}
+              </td>
+              <td className="w-[160px] text-center border border-gray-200">
+                {headers[9]}
+              </td>
+              <td className="w-[120px] text-center border border-gray-200">
+                {headers[10]}
+              </td>
+              <td className="w-[200px] text-center border border-gray-200">
+                {headers[11]}
+              </td>
+              <td className="w-[140px] text-center border border-gray-200">
+                {headers[12]}
+              </td>
+              <td className="w-[120px] text-center border border-gray-200">
+                {headers[13]}
+              </td>
+              <td className="w-[120px] text-center border border-gray-200">
+                {headers[14]}
+              </td>
+              <td className="w-[60px] text-center border border-gray-200">
+                {headers[15]}
+              </td>
+              <td className="w-[60px] text-center border border-gray-200">
+                {headers[16]}
+              </td>
+              <td className="w-[60px] text-center border border-gray-200">
+                {headers[17]}
+              </td>
+              <td className="w-[120px] text-center border border-gray-200">
+                {headers[18]}
+              </td>
+              <td className="w-[160px] text-center border border-gray-200">
+                {headers[19]}
+              </td>
+              <td className="w-[140px] text-center border border-gray-200">
+                {headers[20]}
+              </td>
+            </tr>
+          )}
+        </thead>
+        <tbody className="">
+          {body
+            .sort((a, b) => {
+              return a[0] - b[0];
+            })
+            .map((row, rowIndex) => {
+              return (
+                <tr
+                  className={`w-full ${row[1] ? "bg-green-200" : "bg-red-100"}`}
+                  key={rowIndex}
+                >
+                  <td className="w-[40px] text-center border border-gray-200">
+                    {row[0]}
+                  </td>
+                  <td className="w-[160px] text-center border border-gray-200">
+                    {row[1]}
+                  </td>
+                  <td className="w-[160px] text-center border border-gray-200">
+                    {row[2]}
+                  </td>
+                  <td className="w-[160px] text-center border border-gray-200">
+                    {row[3]}
+                  </td>
+                  <td className="w-[340px] text-center border border-gray-200">
+                    {row[4]}
+                  </td>
+                  <td className="w-[340px] text-center border border-gray-200">
+                    {row[5]}
+                  </td>
+                  <td className="w-[120px] text-center border border-gray-200">
+                    {row[6]}
+                  </td>
+                  <td className="w-[160px] text-center border border-gray-200">
+                    {row[7]}
+                  </td>
+                  <td className="w-[160px] text-center border border-gray-200">
+                    {}
+                    {ktsCurrencyFomat(row[8].toString())}
+                  </td>
+                  <td className="w-[160px] text-center border border-gray-200">
+                    {row[9]}
+                  </td>
+                  <td className="w-[120px] text-center border border-gray-200">
+                    {row[10]}
+                  </td>
+                  <td className="w-[200px] text-center border border-gray-200">
+                    {row[11]}
+                  </td>
+                  <td className="w-[140px] text-center border border-gray-200">
+                    {row[12]}
+                  </td>
+                  <td className="w-[120px] text-center border border-gray-200">
+                    {row[13]}
+                  </td>
+                  <td className="w-[120px] text-center border border-gray-200">
+                    {row[14]}
+                  </td>
+                  <td className="w-[60px] text-center border border-gray-200">
+                    {row[15]}
+                  </td>
+                  <td className="w-[60px] text-center border border-gray-200">
+                    {row[16]}
+                  </td>
+                  <td className="w-[60px] text-center border border-gray-200">
+                    {row[17]}
+                  </td>
+                  <td className="w-[120px] text-center border border-gray-200">
+                    {row[18]}
+                  </td>
+                  <td className="w-[160px] text-center border border-gray-200">
+                    {row[19]}
+                  </td>
+                  <td className="w-[140px] text-center border border-gray-200">
+                    {row[20]}
+                  </td>
+                </tr>
+              );
+            })}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 const Viettel = () => {
   const { currentUser } = useSelector((state) => state.user);
   const { loading } = useSelector((state) => state.system);
@@ -175,6 +330,8 @@ const Viettel = () => {
   const [jsonData, setJsonData] = useState(null);
   const [details, setDetails] = useState(null);
   const [showFail, setShowFail] = useState(false);
+  const [showSucess, setShowSucess] = useState(false);
+  const [show, setShow] = useState(false);
   const [myData1, setMyData1] = useState([]); // sucess
   const [myData2, setMyData2] = useState([]); //fail
   const dispatch = useDispatch();
@@ -212,8 +369,22 @@ const Viettel = () => {
         s: res.data.data.successNumber,
         f: res.data.data.failNumber,
       });
-      setMyData1(res.data.data.s);
-      setMyData2(res.data.data.f);
+      let data1 = [],
+        data2 = [];
+      res.data.data.s.map((i) => {
+        const rS = jsonData.find((j) => j[0] == i.id);
+        if (rS) {
+          data1.push(rS);
+        }
+      });
+      res.data.data.f.map((i) => {
+        const rF = jsonData.find((j) => j[0] == i.id);
+        if (rF) {
+          data2.push(rF);
+        }
+      });
+      setMyData1(data1);
+      setMyData2(data2);
       toast.success(
         <div>
           <div className="text-green-500">
@@ -296,19 +467,6 @@ const Viettel = () => {
           <span className="px-3 truncate">
             {file?.name || "Chưa có file nào được chọn"}
           </span>
-          {/* {jsonData && (
-            <div className="absolute right-2 top-2">
-              <Button
-                type={"outline-danger"}
-                icon={xMark}
-                iconSize={3}
-                padding={"xs"}
-                callback={() => {
-                  setJsonData(null);
-                }}
-              ></Button>
-            </div>
-          )} */}
         </div>
 
         <div className="space-x-3 flex">
@@ -349,106 +507,41 @@ const Viettel = () => {
       {details && (
         <>
           <div className="bg-white rounded p-2 mt-2 text-sm space-x-8">
-            <span className="text-ktsPrimary cursor-pointer">
+            <Button
+              type="outline-primary"
+              padding={"xs"}
+              callback={() => {
+                setShowFail(false);
+                setShowSucess(false);
+              }}
+            >
               ({details.s + details.f}) tất cả{" "}
-            </span>
-            <span className="text-green-500 cursor-pointer">
+            </Button>
+            <Button
+              type={"outline-success"}
+              padding={"xs"}
+              callback={() => {
+                if (details.s > 0) {
+                  setShowSucess(!showSucess);
+                }
+              }}
+            >
               ({details.s}) thành công
-            </span>
-            <span
-              className="text-red-500 cursor-pointer"
-              onClick={() => {
-                console.log(myData2);
+            </Button>
+            <Button
+              type={"outline-danger"}
+              padding={"xs"}
+              callback={() => {
                 if (details.f > 0) {
                   setShowFail(!showFail);
                 }
-                showFail &&
-                  setMyData2((prev) => {
-                    return [...jsonData[6], prev];
-                  });
               }}
             >
               ({details.f}) thất bại
-            </span>
+            </Button>
           </div>
-          {showFail && (
-            <table className="bg-white text-xs rounded-md">
-              <tbody className="">
-                {myData2.map((row, rowIndex) => {
-                  return (
-                    <tr
-                      className={`w-full ${
-                        row[1] ? "bg-green-200" : "bg-red-100"
-                      }`}
-                      key={rowIndex}
-                    >
-                      <td className="w-[40px] text-center border border-gray-200">
-                        {row[0]}
-                      </td>
-                      <td className="w-[160px] text-center border border-gray-200">
-                        {row[1]}
-                      </td>
-                      <td className="w-[160px] text-center border border-gray-200">
-                        {row[2]}
-                      </td>
-                      <td className="w-[160px] text-center border border-gray-200">
-                        {row[3]}
-                      </td>
-                      <td className="w-[340px] text-center border border-gray-200">
-                        {row[4]}
-                      </td>
-                      <td className="w-[340px] text-center border border-gray-200">
-                        {row[5]}
-                      </td>
-                      <td className="w-[120px] text-center border border-gray-200">
-                        {row[6]}
-                      </td>
-                      <td className="w-[160px] text-center border border-gray-200">
-                        {row[7]}
-                      </td>
-                      <td className="w-[160px] text-center border border-gray-200"></td>
-                      <td className="w-[160px] text-center border border-gray-200">
-                        {row[9]}
-                      </td>
-                      <td className="w-[120px] text-center border border-gray-200">
-                        {row[10]}
-                      </td>
-                      <td className="w-[200px] text-center border border-gray-200">
-                        {row[11]}
-                      </td>
-                      <td className="w-[140px] text-center border border-gray-200">
-                        {row[12]}
-                      </td>
-                      <td className="w-[120px] text-center border border-gray-200">
-                        {row[13]}
-                      </td>
-                      <td className="w-[120px] text-center border border-gray-200">
-                        {row[14]}
-                      </td>
-                      <td className="w-[60px] text-center border border-gray-200">
-                        {row[15]}
-                      </td>
-                      <td className="w-[60px] text-center border border-gray-200">
-                        {row[16]}
-                      </td>
-                      <td className="w-[60px] text-center border border-gray-200">
-                        {row[17]}
-                      </td>
-                      <td className="w-[120px] text-center border border-gray-200">
-                        {row[18]}
-                      </td>
-                      <td className="w-[160px] text-center border border-gray-200">
-                        {row[19]}
-                      </td>
-                      <td className="w-[140px] text-center border border-gray-200">
-                        {row[20]}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
+          {showFail && <ExcelDisplay1 headers={jsonData[6]} body={myData2} />}
+          {showSucess && <ExcelDisplay1 headers={jsonData[6]} body={myData1} />}
         </>
       )}
       {jsonData && <ExcelDisplay jsonData={jsonData} />}
