@@ -12,7 +12,7 @@ const exceptFileTypes = [
   "application/vnd.ms-excel",
   "text/csvs",
 ];
-const ExcelDisplay = ({ jsonData }) => {
+const ExcelDisplay = ({ jsonData, query }) => {
   const headers = jsonData[6];
   const body = jsonData.slice(7);
   return (
@@ -173,6 +173,10 @@ const Viettel = () => {
   const { token } = currentUser || "";
   const [file, setFile] = useState({});
   const [jsonData, setJsonData] = useState(null);
+  const [details, setDetails] = useState(null);
+  const [showFail, setShowFail] = useState(false);
+  const [myData1, setMyData1] = useState([]); // sucess
+  const [myData2, setMyData2] = useState([]); //fail
   const dispatch = useDispatch();
 
   const handleCreateByExcel = async () => {
@@ -201,9 +205,25 @@ const Viettel = () => {
         }
       );
       jsonData.slice(7).map((i) => {
-        i[2] && (i[1] = res.data.find((j) => j.id == i[0])?.ktsNumber);
+        i[2] &&
+          (i[1] = res.data.data.info.find((j) => j.id == i[0])?.ktsNumber);
       });
-      toast.success("Gửi thông tin thành công!");
+      setDetails({
+        s: res.data.data.successNumber,
+        f: res.data.data.failNumber,
+      });
+      setMyData1(res.data.data.s);
+      setMyData2(res.data.data.f);
+      toast.success(
+        <div>
+          <div className="text-green-500">
+            {res.data.data.successNumber} thành công
+          </div>
+          <div className="text-red-500">
+            {res.data.data.failNumber} thất bại
+          </div>
+        </div>
+      );
       dispatch(loaded());
     } catch (err) {
       console.log(err);
@@ -326,77 +346,112 @@ const Viettel = () => {
           </a>
         </div>
       </div>
-
+      {details && (
+        <>
+          <div className="bg-white rounded p-2 mt-2 text-sm space-x-8">
+            <span className="text-ktsPrimary cursor-pointer">
+              ({details.s + details.f}) tất cả{" "}
+            </span>
+            <span className="text-green-500 cursor-pointer">
+              ({details.s}) thành công
+            </span>
+            <span
+              className="text-red-500 cursor-pointer"
+              onClick={() => {
+                console.log(myData2);
+                if (details.f > 0) {
+                  setShowFail(!showFail);
+                }
+                showFail &&
+                  setMyData2((prev) => {
+                    return [...jsonData[6], prev];
+                  });
+              }}
+            >
+              ({details.f}) thất bại
+            </span>
+          </div>
+          {showFail && (
+            <table className="bg-white text-xs rounded-md">
+              <tbody className="">
+                {myData2.map((row, rowIndex) => {
+                  return (
+                    <tr
+                      className={`w-full ${
+                        row[1] ? "bg-green-200" : "bg-red-100"
+                      }`}
+                      key={rowIndex}
+                    >
+                      <td className="w-[40px] text-center border border-gray-200">
+                        {row[0]}
+                      </td>
+                      <td className="w-[160px] text-center border border-gray-200">
+                        {row[1]}
+                      </td>
+                      <td className="w-[160px] text-center border border-gray-200">
+                        {row[2]}
+                      </td>
+                      <td className="w-[160px] text-center border border-gray-200">
+                        {row[3]}
+                      </td>
+                      <td className="w-[340px] text-center border border-gray-200">
+                        {row[4]}
+                      </td>
+                      <td className="w-[340px] text-center border border-gray-200">
+                        {row[5]}
+                      </td>
+                      <td className="w-[120px] text-center border border-gray-200">
+                        {row[6]}
+                      </td>
+                      <td className="w-[160px] text-center border border-gray-200">
+                        {row[7]}
+                      </td>
+                      <td className="w-[160px] text-center border border-gray-200"></td>
+                      <td className="w-[160px] text-center border border-gray-200">
+                        {row[9]}
+                      </td>
+                      <td className="w-[120px] text-center border border-gray-200">
+                        {row[10]}
+                      </td>
+                      <td className="w-[200px] text-center border border-gray-200">
+                        {row[11]}
+                      </td>
+                      <td className="w-[140px] text-center border border-gray-200">
+                        {row[12]}
+                      </td>
+                      <td className="w-[120px] text-center border border-gray-200">
+                        {row[13]}
+                      </td>
+                      <td className="w-[120px] text-center border border-gray-200">
+                        {row[14]}
+                      </td>
+                      <td className="w-[60px] text-center border border-gray-200">
+                        {row[15]}
+                      </td>
+                      <td className="w-[60px] text-center border border-gray-200">
+                        {row[16]}
+                      </td>
+                      <td className="w-[60px] text-center border border-gray-200">
+                        {row[17]}
+                      </td>
+                      <td className="w-[120px] text-center border border-gray-200">
+                        {row[18]}
+                      </td>
+                      <td className="w-[160px] text-center border border-gray-200">
+                        {row[19]}
+                      </td>
+                      <td className="w-[140px] text-center border border-gray-200">
+                        {row[20]}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+        </>
+      )}
       {jsonData && <ExcelDisplay jsonData={jsonData} />}
-      {/* main */}
-      {/* <h3 className="uppercase font-semibold py-3 ">Tạo đơn lẻ</h3>
-      <div className="rounded border border-gray-300 bg-white p-2">
-        <div className="flex justify-between">
-          <h3 className="uppercase font-bold">người nhận</h3>
-        </div>
-        <label className="mt-2 block">Số điện thoại: </label>
-        <Input
-          placehoder={"Số điện thoại người nhận"}
-          type="number"
-          name="phone"
-          value={getter.phone || ""}
-          onChange={handelChangeGetter}
-          padding={"sm"}
-        />
-        <label className="mt-2 block">Họ tên: </label>
-        <Input
-          placehoder={"Họ tên người nhận"}
-          value={getter.name || ""}
-          name="name"
-          onChange={handelChangeGetter}
-          padding={"sm"}
-        />
-        <label className="mt-2 block">Địa chỉ: </label>
-        <Input
-          placehoder={"Số nhà,tên đường người nhận"}
-          value={getter.address || ""}
-          name="address"
-          onChange={handelChangeGetter}
-          padding={"sm"}
-        />
-        <div className="grid md:grid-cols-3 gap-1 pt-1">
-          <div className="w-full z-30">
-            <Selector
-              placehoder={getter.cityFullName || "Tỉnh/Thành"}
-              data={cities}
-              field={["name"]}
-              toShow="name_with_type"
-              size={"sm"}
-              output={setToCity}
-            />
-          </div>
-          <div className="w-full z-20">
-            <Selector
-              placehoder={getter.districtFullName || "Quận/Huyện"}
-              data={districts}
-              field={["name_with_type"]}
-              toShow="name_with_type"
-              size={"sm"}
-              output={setToDistrict}
-            />
-          </div>
-          <div className="w-full z-10">
-            <Selector
-              placehoder={getter.wardFullName || "Phường/Xã"}
-              data={wards}
-              field={["name_with_type"]}
-              toShow="name_with_type"
-              size={"sm"}
-              output={setToWard}
-            />
-          </div>
-        </div>
-        <div className="py-2 text-end">
-          <Button type="success" padding={"sm"} size={"px-4"}>
-            Tạo đơn
-          </Button>
-        </div>
-      </div> */}
     </div>
   );
 };
