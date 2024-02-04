@@ -14,10 +14,9 @@ const exceptFileTypes = [
 ];
 const checkService = (string, arr, services) => {
   const check = arr.some((e) => string.toLowerCase().includes(e));
-  console.log(check);
   const service = services.toString().split(" - ")[0] || "UNKNOW_SERVICE";
   if (check) {
-    return service.toLowerCase().includes("VCN");
+    return service.includes("VCN");
   } else {
     return true;
   }
@@ -118,6 +117,7 @@ const ExcelDisplay = ({ jsonData, query }) => {
         </thead>
         <tbody className="">
           {body.map((row, rowIndex) => {
+            const money = ktsCurrencyFomat(row[8]);
             return (
               <tr
                 className={`w-full ${row[1] ? "bg-green-200" : "bg-red-100"}`}
@@ -170,11 +170,10 @@ const ExcelDisplay = ({ jsonData, query }) => {
                   )}
                 </td>
                 <td className="w-[160px] text-center border border-gray-200">
-                  {}
                   {row[8] ? (
                     ktsCurrencyFomat(row[8])
                   ) : (
-                    <span className="text-red-500">Thiếu giá trị hàng hóa</span>
+                    <span className="text-red-500">Thiếu giá trị hàng</span>
                   )}
                 </td>
                 <td className="w-[160px] text-center border border-gray-200">
@@ -354,9 +353,8 @@ const ExcelDisplay1 = ({ headers, body }) => {
                     )}
                   </td>
                   <td className="w-[160px] text-center border border-gray-200">
-                    {}
                     {row[8] ? (
-                      ktsCurrencyFomat(row[8])
+                      ktsCurrencyFomat(row[8]).toString()
                     ) : (
                       <span className="text-red-500">
                         Thiếu giá trị hàng hóa

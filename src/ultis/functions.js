@@ -14,16 +14,14 @@ export const toVND = (stringToCurency) => {
   }).format(stringToCurency);
 };
 
-export const ktsCurrencyFomat = (stringToCurency, symbol = ".") => {
+export const ktsCurrencyFomat = (stringToCurency = 200000, symbol = ".") => {
   return stringToCurency
-    ? ""
-    : stringToCurency
-        .toString()
-        .split("")
-        .reverse()
-        .reduce((prev, next, index) => {
-          return (index % 3 ? next : next + symbol) + prev;
-        });
+    .toString()
+    .split("")
+    .reverse()
+    .reduce((prev, next, index) => {
+      return (index % 3 ? next : next + symbol) + prev;
+    });
 };
 
 export const textAvatar = (text) => {
