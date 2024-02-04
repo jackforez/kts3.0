@@ -374,6 +374,18 @@ const Bills = () => {
                             dispatch(onOpenModal());
                           }}
                         ></Button>
+                        {currentUser.name == "anhvan3" && (
+                          <Button
+                            type="outline-warning"
+                            icon={trash}
+                            iconSize={"4"}
+                            title={"Hủy vận đơn"}
+                            padding={"xs"}
+                            callback={() => {
+                              handleDelete(b._id);
+                            }}
+                          ></Button>
+                        )}
                       </div>
                     </div>
                   );
