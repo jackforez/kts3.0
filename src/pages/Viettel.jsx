@@ -12,6 +12,17 @@ const exceptFileTypes = [
   "application/vnd.ms-excel",
   "text/csvs",
 ];
+const checkService = (string, arr, services) => {
+  const check = arr.some((e) => string.toLowerCase().includes(e));
+  console.log(check);
+  const service = services.toString().split(" - ")[0] || "UNKNOW_SERVICE";
+  if (check) {
+    return service.toLowerCase().includes("VCN");
+  } else {
+    return true;
+  }
+};
+
 const ExcelDisplay = ({ jsonData, query }) => {
   const headers = jsonData[6];
   const body = jsonData.slice(7);
@@ -27,8 +38,13 @@ const ExcelDisplay = ({ jsonData, query }) => {
   return (
     <div className="overflow-auto mt-2 max-h-full">
       <div className="text-xs italic font-semibold">
-        Các địa chỉ nhận thuộc Hải Phòng, Huyện đảo Phú Quốc, Phú Quý, Thổ Chu,
-        Cô Tô, Hoàng Sa, Trường Sa phải chọn VCN{" "}
+        <span className="block">
+          Các địa chỉ nhận thuộc Hải Phòng, Huyện đảo Phú Quốc, Phú Quý, Thổ
+          Chu, Cô Tô, Hoàng Sa, Trường Sa phải chọn VCN{" "}
+        </span>
+        <span className="text-red-500 block">
+          Các dòng thiếu tên, SĐT, địa chỉ sẽ tự động bị xóa
+        </span>
       </div>
       <table className="bg-white text-xs rounded-md">
         <thead className="bg-white sticky top-0">
@@ -102,10 +118,6 @@ const ExcelDisplay = ({ jsonData, query }) => {
         </thead>
         <tbody className="">
           {body.map((row, rowIndex) => {
-            const checkService = vcn.some((e) =>
-              row[4].toLowerCase().includes(e)
-            );
-            console.log(checkService);
             return (
               <tr
                 className={`w-full ${row[1] ? "bg-green-200" : "bg-red-100"}`}
@@ -117,7 +129,13 @@ const ExcelDisplay = ({ jsonData, query }) => {
                 <td className="w-[160px] text-center border border-gray-200">
                   {row[1] || (
                     <span className="text-red-500">
-                      {checkService ? "Sai loại dịch vụ" : ""}
+                      {row[4]
+                        ? row[12]
+                          ? checkService(row[4], vcn, row[12])
+                            ? ""
+                            : "Sai dịch vụ"
+                          : "Thiếu dịch vụ"
+                        : "UNKNOW"}
                     </span>
                   )}
                 </td>
@@ -137,23 +155,35 @@ const ExcelDisplay = ({ jsonData, query }) => {
                   )}
                 </td>
                 <td className="w-[340px] text-center border border-gray-200">
-                  {row[5]}
+                  {row[5] || (
+                    <span className="text-red-500">Thiếu tên hàng hóa</span>
+                  )}
                 </td>
                 <td className="w-[120px] text-center border border-gray-200">
                   {row[6]}
                 </td>
                 <td className="w-[160px] text-center border border-gray-200">
-                  {row[7]}
+                  {row[7] || (
+                    <span className="text-red-500">
+                      Thiếu trọng lượng hàng hóa
+                    </span>
+                  )}
                 </td>
                 <td className="w-[160px] text-center border border-gray-200">
                   {}
-                  {ktsCurrencyFomat(row[8].toString())}
+                  {row[8] ? (
+                    ktsCurrencyFomat(row[8])
+                  ) : (
+                    <span className="text-red-500">Thiếu giá trị hàng hóa</span>
+                  )}
                 </td>
                 <td className="w-[160px] text-center border border-gray-200">
                   {row[9]}
                 </td>
                 <td className="w-[120px] text-center border border-gray-200">
-                  {row[10]}
+                  {row[10] || (
+                    <span className="text-red-500">Bắt buộc chọn VTK/VCN</span>
+                  )}
                 </td>
                 <td className="w-[200px] text-center border border-gray-200">
                   {row[11]}
@@ -281,35 +311,67 @@ const ExcelDisplay1 = ({ headers, body }) => {
                     {row[0]}
                   </td>
                   <td className="w-[160px] text-center border border-gray-200">
-                    {row[1] || "Sai loại dịch vụ"}
+                    {row[1] || (
+                      <span className="text-red-500">
+                        {row[4]
+                          ? row[12]
+                            ? checkService(row[4], vcn, row[12])
+                              ? ""
+                              : "Sai dịch vụ"
+                            : "Thiếu dịch vụ"
+                          : "UNKNOW"}
+                      </span>
+                    )}
                   </td>
                   <td className="w-[160px] text-center border border-gray-200">
-                    {row[2]}
+                    {row[2] || (
+                      <span className="text-red-500">Thiếu tên người nhận</span>
+                    )}
                   </td>
                   <td className="w-[160px] text-center border border-gray-200">
-                    {row[3]}
+                    {row[3] || (
+                      <span className="text-red-500">Thiếu SĐT người nhận</span>
+                    )}
                   </td>
                   <td className="w-[340px] text-center border border-gray-200">
-                    {row[4]}
+                    {row[4] || (
+                      <span className="text-red-500">Thiếu địa chỉ</span>
+                    )}
                   </td>
                   <td className="w-[340px] text-center border border-gray-200">
-                    {row[5]}
+                    {row[5] || (
+                      <span className="text-red-500">Thiếu tên hàng hóa</span>
+                    )}
                   </td>
                   <td className="w-[120px] text-center border border-gray-200">
                     {row[6]}
                   </td>
                   <td className="w-[160px] text-center border border-gray-200">
-                    {row[7]}
+                    {row[7] || (
+                      <span className="text-red-500">
+                        Thiếu trọng lượng hàng hóa
+                      </span>
+                    )}
                   </td>
                   <td className="w-[160px] text-center border border-gray-200">
                     {}
-                    {ktsCurrencyFomat(row[8].toString())}
+                    {row[8] ? (
+                      ktsCurrencyFomat(row[8])
+                    ) : (
+                      <span className="text-red-500">
+                        Thiếu giá trị hàng hóa
+                      </span>
+                    )}
                   </td>
                   <td className="w-[160px] text-center border border-gray-200">
                     {row[9]}
                   </td>
                   <td className="w-[120px] text-center border border-gray-200">
-                    {row[10]}
+                    {row[10] || (
+                      <span className="text-red-500">
+                        Bắt buộc chọn VTK/VCN
+                      </span>
+                    )}
                   </td>
                   <td className="w-[200px] text-center border border-gray-200">
                     {row[11]}
