@@ -9,7 +9,7 @@ const Navbar = ({ page, setPage, title, links }) => {
   return (
     <nav
       className={`fixed z-30 w-full ${
-        page > 0
+        page > 1
           ? "bg-ktsPrimary"
           : "bg-black text-white backdrop-blur rounded-lg drop-shadow bg-opacity-10"
       } duration-300`}

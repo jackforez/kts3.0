@@ -1,4 +1,4 @@
-export const vnpStatus ={
+export const vnpStatus = {
   0: { vn: "Lưu nháp", cn: "儲存草稿" },
   1: { vn: "Đã tạo", cn: "已開單" },
   2: { vn: "Chuyển tin cho bưu tá", cn: "發送訊息中" },
@@ -24,3 +24,10 @@ export const vnpStatus ={
   22: { vn: "Hủy giao hàng", cn: "取消派件" },
   25: { vn: "Đã thu tiền COD", cn: "已收 COD" },
 };
+export const ktsStatus = [
+  { vn: "Đơn mới", cn: "新单" },
+  { vn: "Đang giao", cn: "正在派件" },
+  { vn: "Giao xong", cn: "已签收" },
+  { vn: "Đơn huỷ", cn: "取消订单" },
+  { vn: "Chuyển hoàn", cn: "退件" },
+]

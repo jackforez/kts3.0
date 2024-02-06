@@ -26,11 +26,12 @@ const ExcelDisplay = ({ jsonData, query }) => {
   const headers = jsonData[6];
   const body = jsonData.slice(7);
   const vcn = [
-    "hải phòng",
+    "Hải phòng",
     "phú quốc",
     "phú quý",
     "thổ chu",
     "cô tô",
+    "vân đồn",
     "hoàng sa",
     "trường sa",
   ];
@@ -38,8 +39,15 @@ const ExcelDisplay = ({ jsonData, query }) => {
     <div className="overflow-auto mt-2 max-h-full">
       <div className="text-xs italic font-semibold">
         <span className="block">
-          Các địa chỉ nhận thuộc Hải Phòng, Huyện đảo Phú Quốc, Phú Quý, Thổ
-          Chu, Cô Tô, Hoàng Sa, Trường Sa phải chọn VCN{" "}
+          Các địa chỉ nhận thuộc
+          {vcn.map((i, index) => {
+            return (
+              <span key={index} className="capitalize px-0.5">
+                {i + ","}
+              </span>
+            );
+          })}
+          phải chọn VCN
         </span>
         <span className="text-red-500 block">
           Các dòng thiếu tên, SĐT, địa chỉ sẽ tự động bị xóa
