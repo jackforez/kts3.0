@@ -288,10 +288,74 @@ const About = ({ slogan, description }) => {
                             );
                           })
                         ) : (
-                          <h3>
-                            Mã vận đơn đang được xử lý, vui lòng thử lại sau
-                            hoặc liên hệ bộ phận CSKH
-                          </h3>
+                          <div className="bg-white h-[70vh]">
+                            <div className=" py-4 z-50 flex w-full items-center justify-center backdrop-blur duration-500 ease-in-out">
+                              <div className="">
+                                <div className="col-span-12 space-y-3  p-4 sm:col-span-9">
+                                  <span>{ktsTitle[1][lang]}: </span>
+                                  <span className="uppercase font-semibold">
+                                    {
+                                      vnpStatus[
+                                        orderDetails[0]?.statusHistory[0]
+                                          .statusCode || 10
+                                      ][lang]
+                                    }
+                                  </span>
+                                </div>
+                                <div className="flex items-start justify-between rounded-t border-b px-7">
+                                  <h3 className="text-xl font-semibold text-gray-900 ">
+                                    {lang === "vn"
+                                      ? "Chi tiết bưu gửi"
+                                      : "查看物流"}
+                                    :{" "}
+                                  </h3>
+                                </div>
+                                <div className="h-[60vh] overflow-auto overflow-y-auto p-3 text-ktsPrimary">
+                                  <div className="col-span-12 sm:col-span-9">
+                                    {orderDetails[0]?.statusHistory.length >
+                                    0 ? (
+                                      orderDetails[0].statusHistory.map(
+                                        (i, index) => {
+                                          const stt = vnpStatus[
+                                            i.statusCode
+                                          ] || {
+                                            10: {
+                                              vn: "Đang vận chuyển",
+                                              cn: "正在出貨",
+                                            },
+                                          };
+                                          return (
+                                            <div
+                                              key={index}
+                                              className="col-span-12 border-l-4 border-gray-300 py-1 relative px-4 sm:col-span-8 sm:space-y-8 sm:before:absolute sm:before:top-2 sm:before:bottom-0 sm:before:-left-3 sm:before:w-0.5"
+                                            >
+                                              <div className="w-4 h-4 bg-green-500 rounded-full absolute top-[50%] -left-2.5"></div>
+                                              <div className="flex flex-col pl-4">
+                                                <h6 className="font-semibold tracking-wide">
+                                                  {stt[lang]}
+                                                </h6>
+                                                <p className="text-xs uppercase tracking-wide">
+                                                  {i.createHour +
+                                                    " - " +
+                                                    i.createdDate}
+                                                </p>
+                                                <p>{i.statusName}</p>
+                                              </div>
+                                            </div>
+                                          );
+                                        }
+                                      )
+                                    ) : (
+                                      <h3>
+                                        Đơn hàng đang được xử lý, vui lòng thử
+                                        lại sau hoặc liên hệ bộ phận CSKH
+                                      </h3>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         )}
                       </div>
                     </div>
