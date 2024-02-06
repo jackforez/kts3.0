@@ -178,10 +178,8 @@ const About = ({ slogan, description }) => {
                     <span className="">{ktsTitle[1][lang]}: </span>
                     <span className="uppercase font-semibold">
                       {
-                        (ktsStatus.find(
-                          (e) =>
-                            e.name ==
-                            orderDetails[orderDetails.length - 1].status
+                        (ktsStatus.find((e) =>
+                          e.vn.includes(orderDetails.reverse()[0].status)
                         ) || { vn: "Đơn mới", cn: "儲存草稿" })[lang]
                       }
                     </span>
@@ -196,8 +194,8 @@ const About = ({ slogan, description }) => {
                       {orderDetails.length > 0 ? (
                         orderDetails.map((i, index) => {
                           const d = new Date(i.time);
-                          const stt = ktsStatus.find(
-                            (e) => e.name == i.status
+                          const stt = ktsStatus.find((e) =>
+                            e.vn.includes(i.status)
                           ) || { vn: "Đơn mới", cn: "儲存草稿" };
                           return (
                             <div
