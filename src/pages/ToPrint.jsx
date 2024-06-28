@@ -35,7 +35,9 @@ const ToPrint = (props) => {
               />
               <div className="pl-2">
                 <span>ID đơn hàng: </span>
-                <span className="font-semibold"> {printData.orderNumber}</span>
+                <span className="font-semibold">
+                  {printData.partnerTrackingId}
+                </span>
               </div>
             </div>
           </div>

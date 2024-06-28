@@ -5,6 +5,7 @@ import { ktsRequest } from "../ultis/connections";
 import { toast } from "react-toastify";
 import { ktsStatus, vnpStatus } from "../ultis/vnpstatus";
 import { ktsTitle } from "../ultis/config";
+import { or } from "firebase/firestore";
 const About = ({ slogan, description }) => {
   const [openResult, setOpenResult] = useState(false);
   const [title, setTitle] = useState("Tra cứu đơn hàng");
@@ -45,7 +46,7 @@ const About = ({ slogan, description }) => {
       });
   };
   return (
-    <div className="w-full h-full bg-[url('./assets/imgs/bg-01.jpg')] bg-cover bg-fixed bg-center bg-no-repeat absolute top-0 z-10">
+    <div className="w-full h-full bg-[url('./assets/imgs/abg.jpg')] bg-cover bg-fixed bg-center bg-no-repeat absolute top-0 z-10">
       <div className="max-w-screen-xl mx-auto h-screen md:pt-[15vh] pt-[20vh] px-2">
         <div className={`flex text-white relative w-full `}>
           <div
@@ -179,7 +180,7 @@ const About = ({ slogan, description }) => {
                     <span className="uppercase font-semibold">
                       {
                         (ktsStatus.find((e) =>
-                          e.vn.includes(orderDetails.reverse()[0].status)
+                          e.vn.includes(orderDetails[0].status)
                         ) || { vn: "Đơn mới", cn: "儲存草稿" })[lang]
                       }
                     </span>
@@ -207,10 +208,14 @@ const About = ({ slogan, description }) => {
                                 <h6 className="font-semibold tracking-wide">
                                   {stt[lang]}
                                 </h6>
-                                <p className="text-xs uppercase tracking-wide">
-                                  <span>{d.toLocaleTimeString()} - </span>
-                                  <span>{d.toLocaleDateString()}</span>
-                                </p>
+                                {index === orderDetails.length - 1 ? (
+                                  <p className="text-xs uppercase tracking-wide">
+                                    <span>{d.toLocaleDateString()} - </span>
+                                    <span>{d.toLocaleTimeString()}</span>
+                                  </p>
+                                ) : (
+                                  <span>{i.time} </span>
+                                )}
                                 <p>{i.description + " - " + i.position}</p>
                               </div>
                             </div>
