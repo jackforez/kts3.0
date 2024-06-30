@@ -1,12 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ToPrint from "./ToPrint";
 import { ktsRequest } from "../ultis/connections";
 import { logout } from "../redux/userSlice";
 import { Button, GridData, Input } from "../components";
-import { copy, excel, mapPin, printer, search, trash } from "../ultis/svgs";
+import {
+  add,
+  copy,
+  excel,
+  mapPin,
+  printer,
+  search,
+  trash,
+  upload,
+} from "../ultis/svgs";
 import { search as myFilter, toVND } from "../ultis/functions";
 import logo from "../assets/logo.svg";
 import {
@@ -18,17 +27,33 @@ import {
 } from "../redux/systemSlice";
 import { STATUS } from "../ultis/config";
 import { Modal } from "../components";
+import DatePicker from "react-datepicker";
 const Bills = () => {
   const currentUser = useSelector((state) => state.user);
   const token = currentUser.currentUser.token;
   const isShop = currentUser.currentUser.role === "shop";
   const { loading, refresh, openModal } = useSelector((state) => state.system);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [bills, setBills] = useState([]);
   const [query, setQuery] = useState("");
   const [showPrint, setShowPrint] = useState(false);
   const [dataPrint, setDataPrint] = useState({});
   const [pID, setPID] = useState("");
+  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(() => {
+    const oneWeekAgo = new Date(endDate);
+    oneWeekAgo.setDate(endDate.getDate() - 7);
+    oneWeekAgo.setHours(23, 59, 59, 999);
+    return oneWeekAgo;
+  });
+  const [queryObj, setQueryObj] = useState({
+    name: "",
+    phone: "",
+    address: "",
+    number: "",
+    taxCode: "",
+  });
   let componentRef = useRef();
   useEffect(() => {
     const setTitle = () => {
@@ -111,8 +136,18 @@ const Bills = () => {
       ) || STATUS[0]
     );
   };
+
+  //   // Lấy ngày hiện tại và đặt giờ, phút, giây, milligiây thành 0 để lấy từ 0h của ngày hiện tại
+  // const today = new Date();
+  // today.setHours(0, 0, 0, 0);
+
+  // // Lấy ngày 7 ngày trước đó và đặt giờ, phút, giây, milligiây thành 23:59:59:999 để lấy đến 23h 59p 59s của ngày đó
+  // const oneWeekAgo = new Date(today);
+  // oneWeekAgo.setDate(today.getDate() - 7);
+  // oneWeekAgo.setHours(23, 59, 59, 999);
+
   return (
-    <div className="p-3">
+    <div className="p-3 space-y-2">
       {showPrint && <ToPrint data={dataPrint} setClose={setShowPrint} />}
       {openModal && (
         <Modal>
@@ -138,17 +173,110 @@ const Bills = () => {
           </div>
         </Modal>
       )}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3">
-        <Input
-          placehoder={"Số điện thoại người nhận ..."}
-          size={"w-1/3"}
-          onChange={(e) => setQuery(e.target.value)}
-          icon={search}
-          padding="sm"
-        />
-        <div className="text-xs text-start flex justify-start capitalize flex-1 gap-2">
+      <div className="grid grid-cols-2 space-x-2 w-full text-xs">
+        <div className="rounded-md border p-2 border-gray-300 space-y-1 bg-white">
+          <div className="flex">
+            <span className="w-1/3">Ngày lên đơn</span>
+            <div className="flex items-center justify-between w-full">
+              <div className=" ">
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  dateFormat="dd/MM/yyyy"
+                  className="bg-gray-50 px-2 py-1.5 border-gray-300 rounded border text-center text-xs focus:outline-none w-full"
+                />
+              </div>
+
+              <div className="">
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  dateFormat="dd/MM/yyyy"
+                  className="bg-gray-50 px-2 py-1.5 border-gray-300 rounded border text-center text-xs focus:outline-none flex-1"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex ">
+            <span className="w-1/3">Số phiếu gửi</span>
+            <Input placeholder padding={"xs"} text="text-right" />
+          </div>
+          <div className="flex ">
+            <span className="w-1/3">Địa chỉ nhận</span>
+            <Input placeholder padding={"xs"} text="text-right" />
+          </div>
+          <div className="flex ">
+            <span className="w-1/3">Thao tác</span>
+            <div className="grid grid-cols-3 w-full gap-2">
+              <div className="w-full justify-center">
+                <Button
+                  type="outline-primary"
+                  icon={search}
+                  iconSize={"4"}
+                  title={"Tìm kiếm"}
+                  padding={"xs"}
+                  size="w-full"
+                  style={"p-1.5"}
+                  disabledBy={loading}
+                ></Button>
+              </div>
+              <div className="w-full justify-center">
+                <Button
+                  type="outline-primary"
+                  icon={upload}
+                  iconSize={"4"}
+                  title={"Xuất ra file excel"}
+                  padding={"xs"}
+                  size="w-full"
+                  style={"p-1.5"}
+                  disabledBy={bills.length < 1}
+                ></Button>
+              </div>
+              <div className="w-full justify-center">
+                <Button
+                  type="outline-success"
+                  icon={add}
+                  iconSize={"4"}
+                  title={"Tạo bill mới"}
+                  padding={"xs"}
+                  size="w-full"
+                  style={"p-1.5"}
+                  callback={() => navigate("/dashboard/bills/new")}
+                ></Button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="rounded-md border p-2 border-gray-300 space-y-1 bg-white">
+          <div className="flex ">
+            <span className="w-1/3">Tên người nhận</span>
+            <Input placeholder padding={"xs"} text="text-right" />
+          </div>
+          <div className="flex ">
+            <span className="w-1/3">Số điện thoại</span>
+            <Input placeholder padding={"xs"} text="text-right" />
+          </div>
+          <div className="flex ">
+            <span className="w-1/3">Địa chỉ</span>
+            <Input placeholder padding={"xs"} text="text-right" />
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-2 rounded-md border border-gray-300">
+        <div className="w-1/3 relative">
+          <Input
+            placeholder
+            padding={"xs"}
+            icon={search}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placehoder={"Tên người nhận, số điện thoại ..."}
+          />
+        </div>
+        <div className="text-xs text-start flex justify-end capitalize flex-1 gap-2 ">
           <span
-            className="inline-block bg-white px-2 pt-0.5 pb-1 rounded-md border border-ktsPrimary cursor-pointer hover:bg-ktsPrimary hover:text-white"
+            className="inline-block bg-white px-2 pt-0.5 pb-1 rounded border border-ktsPrimary cursor-pointer hover:bg-ktsPrimary hover:text-white"
             onClick={() => {
               setQuery("");
             }}
@@ -159,7 +287,7 @@ const Bills = () => {
             return (
               <span
                 key={i}
-                className={`inline-block bg-white px-2 pt-0.5 pb-1 rounded-md border ${st.bdColor}   ${st.textColor} cursor-pointer ${st.hover} hover:text-white`}
+                className={`inline-block bg-white px-2 pt-0.5 pb-1 rounded border ${st.bdColor}   ${st.textColor} cursor-pointer ${st.hover} hover:text-white`}
                 onClick={() => setQuery(st.name.toString().toLowerCase())}
               >
                 {st.name} ({searchByStatus(st.name.toString())})
@@ -167,27 +295,6 @@ const Bills = () => {
             );
           })}
         </div>
-        <Link
-          to="/dashboard/bills/new"
-          className="order-2 flex items-center bg-white gap-1 rounded border border-primary-600 p-1.5 text-xs text-primary-600 hover:bg-primary-600 hover:text-white md:text-base lg:order-3"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="h-6 w-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
-          </svg>
-
-          <span className="hidden md:block">Tạo mới</span>
-        </Link>
       </div>
       <div className="border border-ktsPrimary rounded-md">
         <GridData headers={headers}>

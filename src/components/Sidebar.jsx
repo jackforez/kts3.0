@@ -26,7 +26,7 @@ const Sidebar = () => {
       >
         <img
           src={arrow}
-          className={`absolute -right-3 top-[2vh] w-7 cursor-pointer rounded-full duration-500
+          className={`absolute -right-3 bottom-2.5 w-7 cursor-pointer rounded-full duration-500
            border border-ktsPrimary  ${!open && "rotate-180"}`}
           onClick={() => setOpen(!open)}
         />
@@ -150,7 +150,7 @@ const Sidebar = () => {
           to="/dashboard/changelogs"
           className="text-white absolute bottom-3"
         >
-          v3.1.1
+          v3.1.2
         </Link>
       </div>
     </div>

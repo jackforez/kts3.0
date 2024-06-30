@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { Home, Layout, Login, Register } from "./pages";
 import { NotFound } from "./components";
 import "react-toastify/dist/ReactToastify.css";
+import "react-datepicker/dist/react-datepicker.css";
 import { useEffect, useState } from "react";
 
 function App() {
