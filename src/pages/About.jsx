@@ -42,6 +42,7 @@ const About = ({ slogan, description }) => {
       })
       .catch(function (error) {
         setLoading(false);
+        console.log(error);
         toast.warn("Mã vận đơn đang được xử lý, vui lòng thử lại sau!");
       });
   };
