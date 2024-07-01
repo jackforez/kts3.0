@@ -41,8 +41,8 @@ const Button = ({
       className={`${style} ${group ? "rounded-r" : "rounded"} ${
         padding === "xs" ? "p-1" : padding === "sm" ? "p-2" : "p-3"
       } ${
-        !disabledBy ? `active:scale-90 ${bg}` : "bg-gray-300"
-      } duration-500 ${sz}`}
+        !disabledBy ? `active:scale-95 ${bg}` : "bg-gray-300"
+      } duration-200 ${sz}`}
       disabled={disabledBy}
       title={title}
       onClick={callback}
