@@ -28,6 +28,7 @@ import {
 import { STATUS } from "../ultis/config";
 import { Modal } from "../components";
 import DatePicker from "react-datepicker";
+
 const Bills = () => {
   const currentUser = useSelector((state) => state.user);
   const token = currentUser.currentUser.token;
@@ -66,6 +67,7 @@ const Bills = () => {
       return;
     }
     try {
+      dispatch(onLoading());
       const res = await ktsRequest.get(
         `v2/bills?from=${startDate}&to=${endDate}&orderId=${orderId}&phone=${phone}&address=${address}&name=${name}`,
         {
@@ -288,8 +290,8 @@ const Bills = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-2 rounded-md border border-gray-300">
-        <div className="w-1/3 relative">
+      <div className="flex flex-wrap items-center justify-between bg-white p-2 rounded-md border border-gray-300">
+        <div className="w-full lg:w-1/3 relative">
           <Input
             placeholder
             padding={"xs"}
@@ -298,9 +300,9 @@ const Bills = () => {
             placehoder={"Số phiếu gửi, tên người nhận, số điện thoại ..."}
           />
         </div>
-        <div className="text-xs text-start flex justify-end capitalize flex-1 gap-2 ">
+        <div className="text-xs text-start flex flex-wrap justify-end items-center capitalize gap-2 w-full lg:w-2/3">
           <span
-            className="inline-block bg-white px-2 pt-0.5 pb-1 rounded border border-ktsPrimary cursor-pointer hover:bg-ktsPrimary hover:text-white"
+            className=" bg-white px-2 pt-0.5 pb-1 rounded border border-ktsPrimary cursor-pointer hover:bg-ktsPrimary hover:text-white"
             onClick={() => {
               setQuery("");
             }}
@@ -311,7 +313,7 @@ const Bills = () => {
             return (
               <span
                 key={i}
-                className={`inline-block bg-white px-2 pt-0.5 pb-1 rounded border ${st.bdColor}   ${st.textColor} cursor-pointer ${st.hover} hover:text-white`}
+                className={`bg-white px-2 pt-0.5 pb-1 rounded border ${st.bdColor}   ${st.textColor} cursor-pointer ${st.hover} hover:text-white`}
                 onClick={() => setQuery(st.name.toString().toLowerCase())}
               >
                 {st.name} ({searchByStatus(st.name.toString())})
@@ -320,228 +322,226 @@ const Bills = () => {
           })}
         </div>
       </div>
-      <div className="border border-ktsPrimary rounded-md">
+      <div className="border border-ktsPrimary rounded-md bg-white">
         <GridData headers={headers}>
-          <div className="divide-y text-sm divide-dashed divide-ktsPrimary bg-white shadow-lg rounded-md">
-            {myFilter(bills, query, [
-              "toPhone",
-              "toName",
-              "orderNumber",
-              "status",
-            ]).length > 0 ? (
-              myFilter(bills, query, [
+          {loading ? (
+            <div className="flex h-full w-full items-center justify-center flex-col p-6  rounded-lg">
+              <img src={logo} alt="" className="animate-bounce w-20" />
+              <div>Đang tải dữ liệu ...</div>
+            </div>
+          ) : (
+            <div className="divide-y text-sm divide-dashed divide-ktsPrimary shadow-lg rounded-md">
+              {myFilter(bills, query, [
                 "toPhone",
                 "toName",
                 "orderNumber",
                 "status",
-              ]).map((b, i) => {
-                const st = getStatus(b.status);
-                return isShop ? (
-                  <div className="px-2 py-1.5 flex items-center" key={i}>
-                    <div className="w-2/12 space-x-1">
-                      <span
-                        className={`${st.bgColor} px-1 inline-block py-0.5 rounded ${st.textColor} font-semibold text-xs`}
-                      >
-                        {b.status}
-                      </span>
-
-                      <span> {b.orderNumber}</span>
-                      <div className="flex items-center">
-                        <span className="px-1">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="#081A51"
-                            className={`w-4 h-4 text-primary inline`}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d={mapPin}
-                            />
-                          </svg>
-                        </span>
-                        <Link
-                          to={`/dashboard/tracking?order=${b.partnerTrackingId}`}
-                          className="text-sm"
+              ]).length > 0 ? (
+                myFilter(bills, query, [
+                  "toPhone",
+                  "toName",
+                  "orderNumber",
+                  "status",
+                ]).map((b, i) => {
+                  const st = getStatus(b.status);
+                  return isShop ? (
+                    <div className="px-2 py-1.5 flex items-center" key={i}>
+                      <div className="w-2/12 space-x-1">
+                        <span
+                          className={`${st.bgColor} px-1 inline-block py-0.5 rounded ${st.textColor} font-semibold text-xs`}
                         >
-                          {b.partnerTrackingId}
-                        </Link>
-                      </div>
-                    </div>
-                    <div className="w-2/12 space-x-1">
-                      <span className="bg-white px-1 inline-block py-0.5  text-ktsPrimary font-semibold text-xs">
-                        {new Date(b.createdAt).toLocaleTimeString() +
-                          " - " +
-                          new Date(b.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="w-4/12">
-                      <div>
-                        <span className="font-semibold">Từ: </span>{" "}
-                        <span>{b.fromName + " - " + b.fromPhone}</span>
-                      </div>
-                      <div>
-                        <span className="font-semibold">Tới: </span>{" "}
-                        <span>{b.toName + " - " + b.toPhone}</span>
-                      </div>
-                    </div>
-                    <div className="w-2/12 text-end">
-                      <span>{toVND(b.shopPay ? b.costP : 0)}</span>
-                    </div>
-                    <div className="w-1/12 text-end">
-                      <span>{toVND(b.cod)}</span>
-                    </div>
-                    <div className="w-1/12 flex flex-col md:flex-row justify-between md:justify-end gap-2">
-                      <Button
-                        type="outline-primary"
-                        icon={printer}
-                        iconSize={"4"}
-                        title={"In vận đơn"}
-                        padding={"xs"}
-                        callback={(e) => {
-                          setShowPrint(true);
-                          setDataPrint(JSON.stringify(b));
-                        }}
-                      ></Button>
-                      <Button
-                        type="outline-danger"
-                        icon={trash}
-                        iconSize={"4"}
-                        title={"Hủy vận đơn"}
-                        padding={"xs"}
-                        callback={() => {
-                          setPID({
-                            orderNumber: b.orderNumber,
-                            trackingID: b.partnerTrackingId,
-                          });
-                          dispatch(onOpenModal());
-                        }}
-                      ></Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="px-2 py-1.5 flex items-center" key={i}>
-                    <div className="w-2/12 space-x-1">
-                      <span
-                        className={`${st.bgColor} px-1 inline-block py-0.5 rounded ${st.textColor} font-semibold text-xs`}
-                      >
-                        {b.status}
-                      </span>
-
-                      <span> {b.orderNumber}</span>
-                      <div className="flex items-center">
-                        <span className="px-1">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="#081A51"
-                            className={`w-4 h-4 text-primary inline`}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d={mapPin}
-                            />
-                          </svg>
+                          {b.status}
                         </span>
-                        <Link
-                          to={`/dashboard/tracking?order=${b.partnerTrackingId}`}
-                          className="text-sm"
-                        >
-                          {b.partnerTrackingId}
-                        </Link>
+
+                        <span> {b.orderNumber}</span>
+                        <div className="flex items-center">
+                          <span className="px-1">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="#081A51"
+                              className={`w-4 h-4 text-primary inline`}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d={mapPin}
+                              />
+                            </svg>
+                          </span>
+                          <Link
+                            to={`/dashboard/tracking?order=${b.partnerTrackingId}`}
+                            className="text-sm"
+                          >
+                            {b.partnerTrackingId}
+                          </Link>
+                        </div>
                       </div>
-                    </div>
-                    <div className="w-2/12 space-x-1">
-                      <span className="bg-white px-1 inline-block py-0.5  text-ktsPrimary font-semibold text-xs">
-                        {new Date(b.createdAt).toLocaleTimeString() +
-                          " - " +
-                          new Date(b.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="w-3/12">
-                      <div>
-                        <span className="font-semibold">Từ: </span>{" "}
-                        <span>{b.fromName + " - " + b.fromPhone}</span>
+                      <div className="w-2/12 space-x-1">
+                        <span className="bg-white px-1 inline-block py-0.5  text-ktsPrimary font-semibold text-xs">
+                          {new Date(b.createdAt).toLocaleTimeString() +
+                            " - " +
+                            new Date(b.createdAt).toLocaleDateString()}
+                        </span>
                       </div>
-                      <div>
-                        <span className="font-semibold">Tới: </span>{" "}
-                        <span>{b.toName + " - " + b.toPhone}</span>
+                      <div className="w-4/12">
+                        <div>
+                          <span className="font-semibold">Từ: </span>{" "}
+                          <span>{b.fromName + " - " + b.fromPhone}</span>
+                        </div>
+                        <div>
+                          <span className="font-semibold">Tới: </span>{" "}
+                          <span>{b.toName + " - " + b.toPhone}</span>
+                        </div>
                       </div>
-                    </div>
-                    <div className="w-1/12 text-end">
-                      <span>{toVND(b.shopPay ? b.costP : 0)}</span>
-                    </div>
-                    <div className="w-1/12 text-end">
-                      <span>{toVND(b.cod)}</span>
-                    </div>
-                    <div className="w-1/12 text-end">
-                      <span>{toVND(b.costP)}</span>
-                    </div>
-                    <div className="w-1/12 text-end">
-                      <span className="font-semibold">{toVND(b.costK)}</span>
-                    </div>
-                    <div className="w-1/12 flex flex-col md:flex-row justify-between md:justify-end gap-2">
-                      <Button
-                        type="outline-primary"
-                        icon={printer}
-                        iconSize={"4"}
-                        title={"In vận đơn"}
-                        padding={"xs"}
-                        callback={(e) => {
-                          setShowPrint(true);
-                          setDataPrint(JSON.stringify(b));
-                        }}
-                      ></Button>
-                      <Button
-                        type="outline-danger"
-                        icon={trash}
-                        iconSize={"4"}
-                        title={"Hủy vận đơn"}
-                        padding={"xs"}
-                        callback={() => {
-                          setPID({
-                            id: b._id,
-                            orderNumber: b.orderNumber,
-                            trackingID: b.partnerTrackingId,
-                          });
-                          dispatch(onOpenModal());
-                        }}
-                      ></Button>
-                      {currentUser.name == "anhvan3" && (
+                      <div className="w-2/12 text-end">
+                        <span>{toVND(b.shopPay ? b.costP : 0)}</span>
+                      </div>
+                      <div className="w-1/12 text-end">
+                        <span>{toVND(b.cod)}</span>
+                      </div>
+                      <div className="w-1/12 flex flex-col md:flex-row justify-between md:justify-end gap-2">
                         <Button
-                          type="outline-warning"
+                          type="outline-primary"
+                          icon={printer}
+                          iconSize={"4"}
+                          title={"In vận đơn"}
+                          padding={"xs"}
+                          callback={(e) => {
+                            setShowPrint(true);
+                            setDataPrint(JSON.stringify(b));
+                          }}
+                        ></Button>
+                        <Button
+                          type="outline-danger"
                           icon={trash}
                           iconSize={"4"}
                           title={"Hủy vận đơn"}
                           padding={"xs"}
                           callback={() => {
-                            handleDelete(b._id);
+                            setPID({
+                              orderNumber: b.orderNumber,
+                              trackingID: b.partnerTrackingId,
+                            });
+                            dispatch(onOpenModal());
                           }}
                         ></Button>
-                      )}
+                      </div>
                     </div>
-                  </div>
-                );
-              })
-            ) : (
-              <div className="py-3 text-center">
-                {loading ? (
-                  <div className="flex h-full w-full items-center justify-center flex-col">
-                    <img src={logo} alt="" className="animate-bounce w-20" />
-                    <div>Đang tải dữ liệu ...</div>
-                  </div>
-                ) : (
-                  "Không có dữ liệu"
-                )}
-              </div>
-            )}
-          </div>
+                  ) : (
+                    <div className="px-2 py-1.5 flex items-center" key={i}>
+                      <div className="w-2/12 space-x-1">
+                        <span
+                          className={`${st.bgColor} px-1 inline-block py-0.5 rounded ${st.textColor} font-semibold text-xs`}
+                        >
+                          {b.status}
+                        </span>
+
+                        <span> {b.orderNumber}</span>
+                        <div className="flex items-center">
+                          <span className="px-1">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="#081A51"
+                              className={`w-4 h-4 text-primary inline`}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d={mapPin}
+                              />
+                            </svg>
+                          </span>
+                          <Link
+                            to={`/dashboard/tracking?order=${b.partnerTrackingId}`}
+                            className="text-sm"
+                          >
+                            {b.partnerTrackingId}
+                          </Link>
+                        </div>
+                      </div>
+                      <div className="w-2/12 space-x-1">
+                        <span className="bg-white px-1 inline-block py-0.5  text-ktsPrimary font-semibold text-xs">
+                          {new Date(b.createdAt).toLocaleTimeString() +
+                            " - " +
+                            new Date(b.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <div className="w-3/12">
+                        <div>
+                          <span className="font-semibold">Từ: </span>{" "}
+                          <span>{b.fromName + " - " + b.fromPhone}</span>
+                        </div>
+                        <div>
+                          <span className="font-semibold">Tới: </span>{" "}
+                          <span>{b.toName + " - " + b.toPhone}</span>
+                        </div>
+                      </div>
+                      <div className="w-1/12 text-end">
+                        <span>{toVND(b.shopPay ? b.costP : 0)}</span>
+                      </div>
+                      <div className="w-1/12 text-end">
+                        <span>{toVND(b.cod)}</span>
+                      </div>
+                      <div className="w-1/12 text-end">
+                        <span>{toVND(b.costP)}</span>
+                      </div>
+                      <div className="w-1/12 text-end">
+                        <span className="font-semibold">{toVND(b.costK)}</span>
+                      </div>
+                      <div className="w-1/12 flex flex-col md:flex-row justify-between md:justify-end gap-2">
+                        <Button
+                          type="outline-primary"
+                          icon={printer}
+                          iconSize={"4"}
+                          title={"In vận đơn"}
+                          padding={"xs"}
+                          callback={(e) => {
+                            setShowPrint(true);
+                            setDataPrint(JSON.stringify(b));
+                          }}
+                        ></Button>
+                        <Button
+                          type="outline-danger"
+                          icon={trash}
+                          iconSize={"4"}
+                          title={"Hủy vận đơn"}
+                          padding={"xs"}
+                          callback={() => {
+                            setPID({
+                              id: b._id,
+                              orderNumber: b.orderNumber,
+                              trackingID: b.partnerTrackingId,
+                            });
+                            dispatch(onOpenModal());
+                          }}
+                        ></Button>
+                        {currentUser.name == "anhvan3" && (
+                          <Button
+                            type="outline-warning"
+                            icon={trash}
+                            iconSize={"4"}
+                            title={"Hủy vận đơn"}
+                            padding={"xs"}
+                            callback={() => {
+                              handleDelete(b._id);
+                            }}
+                          ></Button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="py-3 text-center">Không có dữ liệu</div>
+              )}
+            </div>
+          )}
         </GridData>
       </div>
     </div>
