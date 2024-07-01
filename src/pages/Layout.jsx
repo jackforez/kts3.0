@@ -45,7 +45,7 @@ const Layout = () => {
       <Sidebar />
       <div className="flex-1">
         {/* <Header /> */}
-        <div className="md:h-[100vh] h-[84vh] w-full overflow-y-auto rounded">
+        <div className="md:h-[100vh] h-[92vh] w-full overflow-y-auto rounded">
           <Routes path="/">
             <Route index element={<Dashboard />} />
             <Route path="bills" element={<Bills />} />
