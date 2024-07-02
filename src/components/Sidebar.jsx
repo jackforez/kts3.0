@@ -72,9 +72,13 @@ const Sidebar = () => {
           </svg>
         </div>
         <div className="pt-3">
-          {Menus.map(
-            (Menu, index) =>
-              Menu.role.includes(currentUser?.role) && (
+          {Menus.map((Menu, index) => {
+            const check1 = Menu.role.includes(currentUser?.role);
+            const check2 =
+              !Menu.role.includes(currentUser?.role) &&
+              import.meta.env.VITE_KTS_VT.includes(currentUser.name);
+            return (
+              (check1 || check2) && (
                 <NavLink
                   to={Menu.path}
                   key={index}
@@ -112,7 +116,8 @@ const Sidebar = () => {
                   </span>
                 </NavLink>
               )
-          )}
+            );
+          })}
         </div>
         <div
           className={`bottom-10 mt-6 flex cursor-pointer items-center gap-x-4 rounded-md p-2 text-sm font-semibold text-gray-300 hover:bg-ktsSecondary hover:font-bold hover:text-white`}
