@@ -30,7 +30,7 @@ const Sidebar = () => {
            border border-ktsPrimary  ${!open && "rotate-180"}`}
           onClick={() => setOpen(!open)}
         />
-        <div className="flex items-center justify-center gap-x-4">
+        <div className="flex items-center justify-center gap-x-4 pt-4">
           <svg
             fill="white"
             viewBox="0 0 145 55"
