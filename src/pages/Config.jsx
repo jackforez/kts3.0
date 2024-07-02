@@ -147,7 +147,7 @@ const Config = () => {
     });
   };
   return (
-    <div className={`p-2 overflow-auto text-sm`}>
+    <div className={`p-2 overflow-auto text-sm flex-1`}>
       <div>
         <h3 className="font-semibold uppercase ">Slogan</h3>
         <div>

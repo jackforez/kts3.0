@@ -45,7 +45,7 @@ const Accounts = () => {
     fetchCost();
   }, []);
   return (
-    <div className="flex h-full flex-col gap-2 bg-gray-200 p-2">
+    <div className="flex flex-1 h-full flex-col gap-2 bg-gray-200 p-2 overflow-auto">
       {data.map((i) => {
         return (
           <Card

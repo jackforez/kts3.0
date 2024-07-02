@@ -147,7 +147,7 @@ const Partners = () => {
     { title: "Thao tác", size: "w-2/12 text-center" },
   ];
   return (
-    <div className="h-full overflow-auto bg-slate-200 p-3">
+    <div className="flex-1 overflow-auto bg-slate-200 p-3">
       {openModal && (
         <Modal>
           <div className="p-2">
