@@ -121,7 +121,7 @@ const Bills = () => {
     : [
         { title: "Đơn hàng ", size: "w-2/12" },
         { title: "Ngày tạo đơn", size: "w-2/12" },
-        { title: "người gửi/nhận", size: "w-3/12" },
+        { title: "người gửi/nhận", size: "w-2/12" },
         { title: "shop trả cước", size: "w-2/12 text-end" },
         { title: "COD", size: "w-1/12 text-end" },
         { title: "cước shop", size: "w-1/12 text-end" },
@@ -330,7 +330,7 @@ const Bills = () => {
               <div>Đang tải dữ liệu ...</div>
             </div>
           ) : (
-            <div className="divide-y text-sm divide-dashed divide-ktsPrimary shadow-lg rounded-md">
+            <div className="divide-y text-xs divide-dashed divide-ktsPrimary shadow-lg rounded-md">
               {myFilter(bills, query, [
                 "toPhone",
                 "toName",
