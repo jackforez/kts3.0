@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import ToPrint from "./ToPrint";
 import { ktsRequest } from "../ultis/connections";
 import { logout } from "../redux/userSlice";
-import { Button, GridData, Input } from "../components";
+import { Button, DataTable, GridData, Input } from "../components";
 import {
   add,
   copy,
@@ -54,6 +54,12 @@ const Bills = () => {
     name: "",
     phone: "",
   });
+  const [pagiCofig, setPagiCofig] = useState({
+    rpp: 20,
+    crp: 0,
+    actp: 1,
+  });
+  const keys = ["toPhone", "toName", "orderNumber", "status"];
   let componentRef = useRef();
   useEffect(() => {
     const setTitle = () => {
@@ -322,7 +328,7 @@ const Bills = () => {
           })}
         </div>
       </div>
-      <div className="border border-ktsPrimary rounded-md bg-white">
+      {/* <div className="border border-ktsPrimary rounded-md bg-white">
         <GridData headers={headers}>
           {loading ? (
             <div className="flex h-full w-full items-center justify-center flex-col p-6  rounded-lg">
@@ -543,7 +549,36 @@ const Bills = () => {
             </div>
           )}
         </GridData>
-      </div>
+      </div> */}
+      <DataTable
+        headers={headers}
+        // query={setQuery}
+        config={setPagiCofig}
+        len={Math.ceil(myFilter(bills, query, keys).length / pagiCofig.rpp)}
+      >
+        {myFilter(bills, query, keys).length > 0 &&
+          myFilter(bills, query, keys)
+            .slice(
+              (pagiCofig.actp - 1) * pagiCofig.rpp,
+              pagiCofig.actp * pagiCofig.rpp
+            )
+            .map((i, index) => {
+              return (
+                <tr
+                  class="bg-white hover:bg-slate-200 cursor-pointer"
+                  key={index}
+                >
+                  {/* <td className="p-2">
+                    {index + 1 + (pagiCofig.actp - 1) * pagiCofig.rpp}
+                  </td> */}
+                  <td className="p-2">
+                    {new Date(i.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="p-2">{i.orderNumber} </td>
+                </tr>
+              );
+            })}
+      </DataTable>
     </div>
   );
 };

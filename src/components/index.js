@@ -12,3 +12,5 @@ export { default as Navigator } from "./Navigator";
 export { default as Card } from "./Card";
 export { default as Ratio } from "./Ratio";
 export { default as Modal } from "./Modal";
+export { default as DataTable } from "./DataTable";
+export { default as Loading } from "./Loading";
