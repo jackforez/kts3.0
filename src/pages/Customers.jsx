@@ -221,7 +221,7 @@ const Customers = () => {
     { title: "Thao tác", size: "w-1/12" },
   ];
   return (
-    <div className="h-full overflow-auto bg-slate-200 p-3">
+    <div className="h-full overflow-auto bg-slate-200 p-3 flex-1">
       {openModal && (
         <Modal>
           <div className="p-2">

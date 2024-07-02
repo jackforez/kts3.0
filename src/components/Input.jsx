@@ -33,7 +33,7 @@ const Input = ({
         }
         border border-gray-300 bg-gray-50 ${
           padding === "xs" ? "p-1" : padding === "sm" ? "p-2" : "p-3"
-        } text-sm text-gray-900 outline-0 `}
+        } text-xs text-gray-900 outline-0 `}
       />
       {icon && (
         <svg
@@ -43,7 +43,7 @@ const Input = ({
           strokeWidth={1.5}
           stroke="currentColor"
           className={`w-4 h-4 text-gray-600 absolute ${
-            padding === "xs" ? "top-2" : padding === "sm" ? "top-3" : "top-4"
+            padding === "xs" ? "top-1.5" : padding === "sm" ? "top-3" : "top-4"
           } right-3`}
         >
           <path strokeLinecap="round" strokeLinejoin="round" d={icon} />

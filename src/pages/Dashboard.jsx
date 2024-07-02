@@ -95,7 +95,7 @@ const Dashboard = () => {
     { title: "cước KTS", size: "w-1/12 text-end" },
   ];
   return (
-    <div>
+    <div className="flex-1">
       {!isAdmin ? (
         <div className="flex flex-col gap-2 p-2">
           <div>

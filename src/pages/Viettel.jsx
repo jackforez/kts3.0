@@ -7,6 +7,7 @@ import * as XLSX from "xlsx";
 import { loaded, onLoading } from "../redux/systemSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { ktsCurrencyFomat } from "../ultis/functions";
+import { Navigate, useNavigate } from "react-router-dom";
 const exceptFileTypes = [
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   "application/vnd.ms-excel",
@@ -430,7 +431,18 @@ const Viettel = () => {
   const [myData1, setMyData1] = useState([]); // sucess
   const [myData2, setMyData2] = useState([]); //fail
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (
+      !import.meta.env.VITE_KTS_LV0.includes(currentUser.role) &&
+      !import.meta.env.VITE_KTS_VT.includes(currentUser.name)
+    ) {
+      toast.error(
+        "Bạn không được cấp quyền truy cập trang này, vui lòng liên hệ Quản Trị Viên"
+      );
+      return navigate("/dashboard");
+    }
+  }, []);
   const handleCreateByExcel = async () => {
     dispatch(onLoading());
     if (!jsonData) {
@@ -537,10 +549,10 @@ const Viettel = () => {
 
   return (
     // content
-    <div className="p-3 flex flex-col">
+    <div className="p-3 flex flex-col flex-1">
       {/* header */}
       <h3 className="uppercase font-semibold py-3 ">Tạo đơn từ file excel</h3>
-      <div className="flex justify-between h-full">
+      <div className="flex justify-between">
         <div className="w-1/2 bg-white p-1 rounded flex items-center relative">
           <input
             type="file"

@@ -20,9 +20,9 @@ const DataTable = ({ headers, children, config, len = 5 }) => {
     });
   }, [len]);
   return (
-    <div className="flex flex-col flex-1 rounded-md justify-between gap-2">
-      <div className="flex flex-1 flex-col">
-        <div class="text-xs uppercase text-white bg-ktsPrimary py-2 px-6 flex">
+    <div className="flex flex-col flex-1 rounded-md justify-between gap-2 text-xs">
+      <div className="flex flex-1 flex-col rounded-md overflow-hidden border border-ktsPrimary">
+        <div class="uppercase text-white bg-ktsPrimary py-2 px-6 flex">
           {headers &&
             headers.map((h, i) => {
               return (
@@ -32,11 +32,13 @@ const DataTable = ({ headers, children, config, len = 5 }) => {
               );
             })}
         </div>
-        <div className="border-gray-300 bg-white flex flex-1 flex-col overflow-auto rounded-md">
+        <div className="flex flex-1 flex-col overflow-auto rounded-md">
           {loading ? (
             <Loading />
           ) : len > 0 ? (
-            <div className="text-xs max-h-[30rem]">{children}</div>
+            <div className="max-h-[40em] md:h-0 divide-y divide-red-400">
+              {children}
+            </div>
           ) : (
             <div className="flex-1 flex justify-center items-center">
               Không có dữ liệu
@@ -44,7 +46,7 @@ const DataTable = ({ headers, children, config, len = 5 }) => {
           )}
         </div>
       </div>
-      <div className="p-2 flex justify-between items-center bg-white rounded">
+      <div className="p-2 flex justify-between items-center bg-white rounded-md border border-gray-300">
         <Input
           type={"number"}
           size={"w-12"}
@@ -84,7 +86,7 @@ const DataTable = ({ headers, children, config, len = 5 }) => {
                 <button
                   className={`px-2 hover:text-primary hover:underline hover:underline-offset-4 ${
                     activePage == i + prePage + 1
-                      ? "text-green-500 underline underline-offset-4"
+                      ? "text-ktPrimary underline underline-offset-4"
                       : ""
                   }`}
                   onClick={() => {
