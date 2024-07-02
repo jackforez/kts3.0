@@ -426,14 +426,14 @@ const Bills = () => {
               fetchBills(queryObj);
             }}
           ></Button>
-          <div className=" ">
+          <div className="">
             <DatePicker
               selected={startDate}
               onChange={(date) => {
                 setStartDate(date);
               }}
               dateFormat="dd/MM/yyyy"
-              className="bg-gray-50 px-2 py-1 border-gray-300 rounded border text-center text-xs focus:outline-none w-28"
+              className="bg-gray-50 px-2 py-[5px] border-gray-300 rounded border text-center text-xs focus:outline-none w-28"
             />
           </div>
 
@@ -442,7 +442,7 @@ const Bills = () => {
               selected={endDate}
               onChange={(date) => setEndDate(date)}
               dateFormat="dd/MM/yyyy"
-              className="bg-gray-50 px-2 py-1 border-gray-300 rounded border text-center text-xs focus:outline-none w-28"
+              className="bg-gray-50 px-2 py-[5px] border-gray-300 rounded border text-center text-xs focus:outline-none w-28"
             />
           </div>
 
