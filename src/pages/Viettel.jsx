@@ -553,7 +553,7 @@ const Viettel = () => {
       {/* header */}
       <h3 className="uppercase font-semibold py-3 ">Tạo đơn từ file excel</h3>
       <div className="flex justify-between">
-        <div className="w-1/2 bg-white p-1 rounded flex items-center relative">
+        <div className="w-1/2 bg-white p-1 rounded flex items-center relative border text-sm">
           <input
             type="file"
             className="hidden"
@@ -576,7 +576,7 @@ const Viettel = () => {
           </span>
         </div>
 
-        <div className="space-x-3 flex">
+        <div className="space-x-3 flex text-sm">
           <Button
             type="success"
             callback={handleCreateByExcel}
@@ -591,7 +591,7 @@ const Viettel = () => {
           <a
             href="/Downloads/kts_template.xlsx"
             download
-            className="bg-white rounded flex items-center justify-around px-3"
+            className="bg-white rounded flex items-center justify-around px-3 border"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
