@@ -23,6 +23,7 @@ export const vnpStatus = {
   21: { vn: "Đã trả tiền COD", cn: "已付 COD" },
   22: { vn: "Hủy giao hàng", cn: "取消派件" },
   25: { vn: "Đã thu tiền COD", cn: "已收 COD" },
+  99: { vn: "Đã giao hàng", cn: "已簽收" }
 };
 export const ktsStatus = [
   { vn: "Đơn mới", cn: "新单" },
